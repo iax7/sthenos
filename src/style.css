@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply min-h-screen bg-gray-100 text-gray-800 antialiased;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white shadow-sm border border-gray-200 rounded-lg p-5 space-y-5 mt-6 w-full max-w-xl;
+  }
+
+  .form-label {
+    @apply text-xs font-semibold uppercase text-gray-600 mb-1 tracking-wide;
+  }
+
+  .form-input {
+    @apply px-3 py-2 rounded-md border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn {
+    @apply px-3 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-700 text-white;
+  }
+
+  .btn-ghost {
+    @apply px-2 py-1 rounded-md font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition;
+  }
+
+  .link-edit {
+    @apply text-sm text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline cursor-pointer select-none;
+  }
+
+  .number-stepper {
+    @apply inline-flex items-stretch rounded-md border border-gray-300 overflow-hidden bg-white shadow-sm;
+  }
+
+  .number-stepper-dark {
+    @apply inline-flex items-stretch rounded-md border border-gray-700 overflow-hidden bg-gray-800 text-gray-100 shadow-sm;
+  }
+
+  .number-stepper-btn {
+    @apply px-3 py-2 font-medium text-sm flex items-center justify-center select-none transition;
+  }
+
+  .number-stepper-btn-fixed {
+    @apply w-10;
+  }
+
+  .number-stepper-btn:hover:not(:disabled) {
+    @apply bg-gray-100;
+  }
+
+  .number-stepper-btn:disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+
+  .number-stepper-value {
+    @apply px-4 py-2 text-center text-sm font-semibold border-x border-gray-300 flex items-center justify-center bg-white flex-grow;
+  }
+
+  .number-stepper-input {
+    @apply px-0 py-2 text-center text-sm font-semibold border-x border-gray-300 bg-transparent w-full focus:outline-none focus:ring-0 appearance-none;
+  }
+
+  .dark .number-stepper-value {
+    @apply border-gray-700 bg-gray-800;
+  }
+
+  .icon-btn {
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-md border border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition;
+  }
+
+  .icon-btn-danger {
+    @apply text-red-600 hover:text-red-700 hover:bg-red-50 focus:ring-red-500;
+  }
+
+  .menu-dropdown {
+    @apply absolute right-0 mt-2 w-40 rounded-md border border-gray-200 bg-white shadow-sm z-10;
+  }
+
+  .menu-item-btn {
+    @apply w-full text-left px-3 py-2 hover:bg-gray-50 text-sm transition;
+  }
+
+  .toast-container {
+    @apply fixed top-4 right-4 flex flex-col gap-2 z-50;
+  }
+
+  .toast {
+    @apply px-4 py-3 rounded-md shadow-md border text-sm font-medium bg-white text-gray-800 flex items-center gap-3;
+    animation: toast-enter 0.15s ease-out;
+  }
+
+  .toast-success {
+    @apply border-green-300 bg-green-50 text-green-800;
+  }
+
+  .toast-error {
+    @apply border-red-300 bg-red-50 text-red-800;
+  }
+
+  @keyframes toast-enter {
+    0% {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .exercise__cell--title {
+    @apply px-2 py-1 border-b border-gray-400 text-center;
+  }
+
+  .exercise__cell {
+    @apply px-2 py-1 border-b border-gray-200;
+  }
+
+  .exercise__cell--numeric {
+    @apply font-mono text-right w-21;
+  }
+}

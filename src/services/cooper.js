@@ -1,5 +1,6 @@
+const COOPER_TRIP_SIZE_METERS = 320;
 // https://es.wikipedia.org/wiki/Test_de_Cooper
-const cooperRanges = {
+const COOPER_RANGES = {
   // Women (F)
   f: {
     0: [1300, 1500, 1750, 1951], // 11-12
@@ -46,24 +47,19 @@ const cooperResults = (value, [veryBad, bad, normal, good]) => {
 
 // console.log(evaluateCooper(2200, 25, 'm')); // 3
 // console.log(evaluateCooper(1800, 35, 'f')); // 3
-const evaluateCooper = (distanceMeters, age, genderKey) => {
+export const evaluateCooper = (distanceMeters, age, genderKey) => {
   const ageIndex = getAgeIndex(age);
-  if (ageIndex === null) return "Age out of range";
+  if (ageIndex === null) return null;
 
-  const ranges = cooperRanges[genderKey][ageIndex];
+  const ranges = COOPER_RANGES[genderKey][ageIndex];
 
   return cooperResults(distanceMeters, ranges);
 };
 
-/**
- * Calculates the VO2 max based on the distance covered in the Cooper test.
- * @param {number} distance - Distance covered in meters during the test.
- * @returns {number} VO2 max value (ml/kg/min)
- */
-const calculateVO2Max = (distanceMeters) => {
-  const distanceKm = distanceMeters / 1000;
-  const vo2MaxOriginal = (distanceMeters - 504.9) / 44.73;
-  const vo2MaxModified = 22.351 * distanceKm - 11.288; // Modified formula for sedentary individuals
+export const toMeters = (laps) => {
+  return laps * COOPER_TRIP_SIZE_METERS;
+};
 
-  return vo2MaxModified;
+export const toKilometers = (meters) => {
+  return (meters / 1000).toFixed(2);
 };
