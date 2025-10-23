@@ -1,6 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive, onMounted, onUnmounted, ref } from 'vue'
 import BaseButton from './ui/BaseButton.vue'
+import IconDotsVertical from './icons/IconDotsVertical.vue'
 import IconEdit from './icons/IconEdit.vue'
 import IconTrash from './icons/IconTrash.vue'
 import CooperLevelIcon from './icons/CooperLevelIcon.vue'
@@ -14,10 +15,36 @@ const props = defineProps({
 const profile = loadProfile()
 const genderKey = profile?.gender?.toLowerCase() || 'm'
 const age = profile?.age || 0
-const rows = computed(() => props.tests.slice().map(r => {
+
+const menuState = reactive({ openIndex: null, position: { top: 0, right: 0 } })
+
+function openMenu(idx, event) {
+  if (menuState.openIndex === idx) {
+    menuState.openIndex = null
+    return
+  }
+  const rect = event.currentTarget.getBoundingClientRect()
+  menuState.position.top = rect.bottom + window.scrollY
+  menuState.position.right = window.innerWidth - rect.right
+  menuState.openIndex = idx
+}
+
+function closeOnOutside(e) {
+  if (menuState.openIndex === null) return
+  const menuEl = document.querySelector(`[data-menu-idx="${menuState.openIndex}"]`)
+  const btnEl = document.querySelector(`[data-menu-btn="${menuState.openIndex}"]`)
+  if (menuEl && !menuEl.contains(e.target) && btnEl && !btnEl.contains(e.target)) {
+    menuState.openIndex = null
+  }
+}
+
+onMounted(() => document.addEventListener('click', closeOnOutside))
+onUnmounted(() => document.removeEventListener('click', closeOnOutside))
+
+const rows = computed(() => props.tests.slice().map((r, idx) => {
   const meters = toMeters(r.cooper || 0)
   const level = evaluateCooper(meters, age, genderKey)
-  return { ...r, _cooperMeters: meters, _cooperKm: toKilometers(meters), _cooperLevel: level }
+  return { ...r, _cooperMeters: meters, _cooperKm: toKilometers(meters), _cooperLevel: level, _idx: idx }
 }))
 
 function formatPrettyDate(dateStr) {
@@ -28,7 +55,7 @@ function formatPrettyDate(dateStr) {
   if (isNaN(d.getTime())) return dateStr
   const locale = navigator?.language || navigator?.userLanguage || 'en'
   const monthName = d.toLocaleDateString(locale, { month: 'long' })
-  return `${y} ${monthName}`
+  return { year: y, month: monthName }
 }
 </script>
 
@@ -50,18 +77,41 @@ function formatPrettyDate(dateStr) {
       <thead class="bg-gray-50">
         <tr class="text-left">
           <th class="exercise__cell--title">Date</th>
-          <th class="exercise__cell--title">Pull Ups</th>
-          <th class="exercise__cell--title">Push Ups</th>
-          <th class="exercise__cell--title">Squats</th>
-          <th class="exercise__cell--title">V-Ups</th>
-          <th class="exercise__cell--title">Burpees</th>
-          <th class="exercise__cell--title">Km.</th>
-          <th class="exercise__cell--title text-right">Actions</th>
+          <th class="exercise__cell--title">
+            <span class="inline sm:hidden font-bold uppercase text-xs">PU</span>
+            <span class="hidden sm:inline" title="Pull Ups">Pull Ups</span>
+          </th>
+          <th class="exercise__cell--title">
+            <span class="inline sm:hidden font-bold uppercase text-xs">PS</span>
+            <span class="hidden sm:inline" title="Push Ups">Push Ups</span>
+          </th>
+          <th class="exercise__cell--title">
+            <span class="inline sm:hidden font-bold uppercase text-xs">SQT</span>
+            <span class="hidden sm:inline" title="Squats">Squats</span>
+          </th>
+          <th class="exercise__cell--title">
+            <span class="inline sm:hidden font-bold uppercase text-xs">VU</span>
+            <span class="hidden sm:inline" title="V-Ups">V-Ups</span>
+          </th>
+          <th class="exercise__cell--title">
+            <span class="inline sm:hidden font-bold uppercase text-xs">BUR</span>
+            <span class="hidden sm:inline" title="Burpees">Burpees</span>
+          </th>
+          <th class="exercise__cell--title">
+            <span class="inline sm:hidden font-bold uppercase text-xs">KM</span>
+            <span class="hidden sm:inline" title="Km.">Km.</span>
+          </th>
+          <th class="exercise__cell--title">
+            <span class="inline sm:hidden font-bold uppercase text-xs">Ac</span>
+            <span class="hidden sm:inline" title="Actions">Actions</span>
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(t,i) in rows" :key="i">
-          <td class="exercise__cell font-semibold">{{ formatPrettyDate(t.date) }}</td>
+          <td class="exercise__cell font-semibold">
+            <span class="hidden sm:inline">{{ formatPrettyDate(t.date).year }}&nbsp;</span>{{ formatPrettyDate(t.date).month }}
+          </td>
           <td class="exercise__cell exercise__cell--numeric">{{ t.pullup?.reps }}</td>
           <td class="exercise__cell exercise__cell--numeric">{{ t.pushup?.reps }}</td>
           <td class="exercise__cell exercise__cell--numeric">{{ t.squats?.reps }}</td>
@@ -74,12 +124,47 @@ function formatPrettyDate(dateStr) {
             </div>
           </td>
           <td class="exercise__cell text-right">
-            <button type="button" class="icon-btn inline-flex items-center justify-center w-7 h-7" @click="$emit('edit', i)" aria-label="Edit test">
-              <IconEdit />
+            <button
+              type="button"
+              :data-menu-btn="t._idx"
+              class="icon-btn w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none"
+              @click="openMenu(t._idx, $event)"
+              aria-label="Actions"
+            >
+              <IconDotsVertical />
             </button>
-            <button type="button" class="icon-btn icon-btn-danger inline-flex items-center justify-center w-7 h-7" @click="$emit('delete', i)" aria-label="Delete test">
-              <IconTrash />
-            </button>
+            <Teleport to="body">
+              <div
+                v-if="menuState.openIndex === t._idx"
+                :data-menu-idx="t._idx"
+                class="fixed w-44 rounded-md border border-gray-200 bg-white shadow-lg z-50"
+                :style="{ top: menuState.position.top + 'px', right: menuState.position.right + 'px' }"
+              >
+                <ul class="py-1 text-sm">
+                  <li>
+                    <button
+                      type="button"
+                      class="w-full flex items-center gap-2 text-left px-3 py-2 hover:bg-gray-100"
+                      @click="$emit('edit', i); menuState.openIndex = null"
+                    >
+                      <IconEdit />
+                      <span>Edit</span>
+                    </button>
+                  </li>
+                  <hr class="my-1 border-gray-200" />
+                  <li>
+                    <button
+                      type="button"
+                      class="w-full flex items-center gap-2 text-left px-3 py-2 hover:bg-red-100 text-red-600"
+                      @click="$emit('delete', i); menuState.openIndex = null"
+                    >
+                      <IconTrash />
+                      <span>Delete</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </Teleport>
           </td>
         </tr>
         <tr v-if="rows.length === 0">
