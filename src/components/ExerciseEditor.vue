@@ -3,6 +3,7 @@ import { useRoute, useRouter } from "vue-router";
 import ExerciseTestForm from "./ExerciseTestForm.vue";
 import { loadProfile } from "../services/profileStore.js";
 import BaseButton from "./ui/BaseButton.vue";
+import { ArrowLeftCircleIcon } from '@heroicons/vue/24/outline'
 import Card from "./ui/Card.vue";
 import { ref } from "vue";
 
@@ -26,9 +27,10 @@ function goBack() {
       <h1 class="text-xl font-semibold">
         {{ isEdit ? "Edit Exercise" : "New Exercise" }}
       </h1>
-      <BaseButton variant="secondary" type="button" @click="goBack"
-        >Back</BaseButton
-      >
+      <BaseButton variant="secondary" type="button" @click="goBack">
+        <ArrowLeftCircleIcon class="w-5 h-5 mr-1" />
+        <span>Back</span>
+      </BaseButton>
     </div>
     <ExerciseTestForm
       v-if="isEdit && test"

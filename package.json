@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
     "@tailwindcss/vite": "^4.1.15",
     "chart.js": "^4.5.1",
     "chartjs-plugin-datalabels": "^2.2.0",

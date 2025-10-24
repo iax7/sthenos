@@ -33,7 +33,7 @@ function getColorClass(item) {
     <div
       v-for="it in items"
       :key="it.key"
-      class="border rounded-md px-3 py-2 w-20 text-center transition-colors"
+      class="border rounded-md px-3 py-2 w-22 text-center transition-colors text-gray-600"
       :class="{
         'border-gray-300 hover:bg-gray-50': getColorClass(it) === '',
         'bg-green-50 border-green-300 text-green-700 hover:bg-green-100': getColorClass(it) === 'positive',
@@ -43,7 +43,7 @@ function getColorClass(item) {
       <div
         class="text-xs uppercase tracking-wide font-medium"
         :class="{
-          'text-gray-500': getColorClass(it) === '',
+          'text-gray-400': getColorClass(it) === '',
           'text-green-700/80': getColorClass(it) === 'positive',
           'text-red-700/80': getColorClass(it) === 'negative'
         }"

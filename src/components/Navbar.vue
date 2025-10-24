@@ -4,9 +4,7 @@ import { useRouter } from 'vue-router'
 import { useToasts } from '../composables/useToasts.js'
 import { getProfileData, importProfile, clearProfile } from '../services/profileStore.js'
 import IconMenu from './icons/IconMenu.vue'
-import IconDownload from './icons/IconDownload.vue'
-import IconUpload from './icons/IconUpload.vue'
-import IconClear from './icons/IconClear.vue'
+import { ArrowUpTrayIcon, ArrowDownTrayIcon, TrashIcon } from '@heroicons/vue/24/outline'
 
 const emit = defineEmits(['clear', 'imported'])
 
@@ -99,20 +97,20 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
           <ul class="py-1 text-sm">
             <li>
               <button type="button" class="w-full flex items-center gap-2 text-left px-3 py-2 hover:bg-gray-100" @click="downloadProfile">
-                 <IconDownload />
+                 <ArrowDownTrayIcon class="w-5 h-5" />
                 <span>Download data</span>
               </button>
             </li>
             <li>
               <button type="button" class="w-full flex items-center gap-2 text-left px-3 py-2 hover:bg-gray-100" @click="triggerUpload">
-                 <IconUpload />
+                 <ArrowUpTrayIcon class="w-5 h-5" />
                 <span>Upload data</span>
               </button>
             </li>
             <hr class="my-1 border-gray-200" />
             <li>
               <button type="button" class="w-full flex items-center gap-2 text-left px-3 py-2 hover:bg-red-100 text-red-600" @click="confirmClear">
-                 <IconClear />
+                 <TrashIcon class="w-5 h-5" />
                 <span>Clear all data</span>
               </button>
             </li>

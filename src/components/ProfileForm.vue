@@ -96,7 +96,7 @@ function cancel() {
           </div>
           <div class="flex gap-2 justify-end">
             <BaseButton type="submit" :disabled="!canSave">{{ isEditing ? 'Update' : 'Save' }}</BaseButton>
-            <BaseButton v-if="isEditing" type="button" @click="cancel">Cancel</BaseButton>
+            <BaseButton v-if="isEditing" type="button" variant="secondary" @click="cancel">Cancel</BaseButton>
           </div>
         </form>
     </Card>

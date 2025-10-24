@@ -7,6 +7,7 @@ import ExerciseMetricInput from './ExerciseMetricInput.vue'
 import { appendTest, updateTest } from '../services/profileStore.js'
 import { useToasts } from '../composables/useToasts.js'
 import { PULL_UP_VERSIONS, PUSH_UP_VERSIONS, SQUAT_VERSIONS, VUP_VERSIONS, BURPEE_VERSIONS } from '../services/exerciseVersions.js'
+import { BackwardIcon } from '@heroicons/vue/24/solid'
 
 const props = defineProps({
   mode: { type: String, default: 'create' }, // 'create' | 'edit'
@@ -107,7 +108,7 @@ function save() {
         <ExerciseMetricInput label="Burpees" v-model:count="burpees" v-model:version="burpeesVersion" :versions="BURPEE_VERSIONS" />
         <div class="flex flex-col">
           <label class="form-label">Laps</label>
-          <BaseInput v-model="laps" type="number" min="0" step="0.5" placeholder="e.g. 6.5" required />
+          <BaseInput v-model="laps" type="number" min="0" step="0.5" placeholder="Count" required />
         </div>
       </div>
       <div class="flex gap-2 justify-end">
