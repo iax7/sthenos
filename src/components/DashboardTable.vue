@@ -1,5 +1,6 @@
 <script setup>
 import { computed, reactive, onMounted, onUnmounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import BaseButton from "./ui/BaseButton.vue";
 import IconDotsVertical from "./icons/IconDotsVertical.vue";
 import IconEdit from "./icons/IconEdit.vue";
@@ -12,6 +13,8 @@ import { PlusIcon } from "@heroicons/vue/24/solid";
 const props = defineProps({
   tests: { type: Array, default: () => [] },
 });
+
+const { t } = useI18n();
 
 const profile = loadProfile();
 const genderKey = profile?.gender?.toLowerCase() || "m";
@@ -80,7 +83,7 @@ function formatPrettyDate(dateStr) {
 <template>
   <div class="mt-6 w-full overflow-x-auto">
     <div class="mb-3 flex items-center justify-between">
-      <h2>Exercise Tests</h2>
+      <h2>{{ t('dashboard.table.title') }}</h2>
       <BaseButton
         type="button"
         variant="primary"
@@ -89,7 +92,7 @@ function formatPrettyDate(dateStr) {
         aria-label="Create new test entry"
       >
         <PlusIcon class="h-5 w-5" />
-        <span>New Entry</span>
+        <span>{{ t('dashboard.table.newEntry') }}</span>
       </BaseButton>
     </div>
     <table
@@ -97,38 +100,34 @@ function formatPrettyDate(dateStr) {
     >
       <thead class="bg-gray-50">
         <tr class="text-left">
-          <th class="exercise__cell--title">Date</th>
+          <th class="exercise__cell--title">{{ t('dashboard.table.headers.date') }}</th>
           <th class="exercise__cell--title">
-            <span class="inline text-xs font-bold uppercase sm:hidden">PU</span>
-            <span class="hidden sm:inline" title="Pull Ups">Pull Ups</span>
+            <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.pullUpsShort') }}</span>
+            <span class="hidden sm:inline" :title="t('dashboard.table.headers.pullUps')">{{ t('dashboard.table.headers.pullUps') }}</span>
           </th>
           <th class="exercise__cell--title">
-            <span class="inline text-xs font-bold uppercase sm:hidden">PS</span>
-            <span class="hidden sm:inline" title="Push Ups">Push Ups</span>
+            <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.pushUpsShort') }}</span>
+            <span class="hidden sm:inline" :title="t('dashboard.table.headers.pushUps')">{{ t('dashboard.table.headers.pushUps') }}</span>
           </th>
           <th class="exercise__cell--title">
-            <span class="inline text-xs font-bold uppercase sm:hidden"
-              >SQT</span
-            >
-            <span class="hidden sm:inline" title="Squats">Squats</span>
+            <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.squatsShort') }}</span>
+            <span class="hidden sm:inline" :title="t('dashboard.table.headers.squats')">{{ t('dashboard.table.headers.squats') }}</span>
           </th>
           <th class="exercise__cell--title">
-            <span class="inline text-xs font-bold uppercase sm:hidden">VU</span>
-            <span class="hidden sm:inline" title="V-Ups">V-Ups</span>
+            <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.vUpsShort') }}</span>
+            <span class="hidden sm:inline" :title="t('dashboard.table.headers.vUps')">{{ t('dashboard.table.headers.vUps') }}</span>
           </th>
           <th class="exercise__cell--title">
-            <span class="inline text-xs font-bold uppercase sm:hidden"
-              >BUR</span
-            >
-            <span class="hidden sm:inline" title="Burpees">Burpees</span>
+            <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.burpeesShort') }}</span>
+            <span class="hidden sm:inline" :title="t('dashboard.table.headers.burpees')">{{ t('dashboard.table.headers.burpees') }}</span>
           </th>
           <th class="exercise__cell--title">
-            <span class="inline text-xs font-bold uppercase sm:hidden">KM</span>
-            <span class="hidden sm:inline" title="Km.">Km.</span>
+            <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.kmShort') }}</span>
+            <span class="hidden sm:inline" :title="t('dashboard.table.headers.km')">{{ t('dashboard.table.headers.km') }}</span>
           </th>
           <th class="exercise__cell--title">
-            <span class="inline text-xs font-bold uppercase sm:hidden">Ac</span>
-            <span class="hidden sm:inline" title="Actions">Actions</span>
+            <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.actionsShort') }}</span>
+            <span class="hidden sm:inline" :title="t('dashboard.table.headers.actions')">{{ t('dashboard.table.headers.actions') }}</span>
           </th>
         </tr>
       </thead>
@@ -191,7 +190,7 @@ function formatPrettyDate(dateStr) {
                       "
                     >
                       <IconEdit />
-                      <span>Edit</span>
+                      <span>{{ $t('dashboard.table.actions.edit') }}</span>
                     </button>
                   </li>
                   <hr class="my-1 border-gray-200" />
@@ -205,7 +204,7 @@ function formatPrettyDate(dateStr) {
                       "
                     >
                       <IconTrash />
-                      <span>Delete</span>
+                      <span>{{ $t('dashboard.table.actions.delete') }}</span>
                     </button>
                   </li>
                 </ul>
@@ -215,7 +214,7 @@ function formatPrettyDate(dateStr) {
         </tr>
         <tr v-if="rows.length === 0">
           <td colspan="8" class="px-3 py-4 text-center text-gray-500">
-            No tests recorded.
+            {{ t('dashboard.table.noTests') }}
           </td>
         </tr>
       </tbody>

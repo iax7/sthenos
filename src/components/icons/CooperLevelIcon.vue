@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   level: { type: Number, default: null }, // 1-5 from evaluateCooper
@@ -8,20 +9,22 @@ const props = defineProps({
 })
 
 // Map Cooper result numeric level (1-5) to metadata (label, color, short code)
+const { t } = useI18n()
+
 const cooperLevelMeta = (level) => {
   switch (level) {
     case 1:
-      return { level, label: "Muy Bajo", color: "#dc2626", short: "VB" };
+      return { level, labelKey: 'cooper.very_low', color: '#dc2626', short: 'VB' };
     case 2:
-      return { level, label: "Bajo", color: "#f97316", short: "B" };
+      return { level, labelKey: 'cooper.low', color: '#f97316', short: 'B' };
     case 3:
-      return { level, label: "Normal", color: "#facc15", short: "N" };
+      return { level, labelKey: 'cooper.normal', color: '#facc15', short: 'N' };
     case 4:
-      return { level, label: "Bueno", color: "#22c55e", short: "G" };
+      return { level, labelKey: 'cooper.good', color: '#22c55e', short: 'G' };
     case 5:
-      return { level, label: "Muy Bueno", color: "#0ea5e9", short: "VG" };
+      return { level, labelKey: 'cooper.very_good', color: '#0ea5e9', short: 'VG' };
     default:
-      return { level: null, label: "N/A", color: "#6b7280", short: "-" };
+      return { level: null, labelKey: 'cooper.na', color: '#6b7280', short: '-' };
   }
 }
 
@@ -38,7 +41,7 @@ const radius = computed(() => props.size / 2)
       </text>
     </svg>
     <div class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 font-medium text-gray-100 opacity-0 group-hover:opacity-100 transition">
-      {{ meta.label }}
+      {{ t(meta.labelKey) }}
     </div>
   </div>
 </template>

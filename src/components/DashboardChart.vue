@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { Line } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -38,6 +39,8 @@ ChartJS.register(
 const props = defineProps({
   tests: { type: Array, default: () => [] },
 });
+
+const { t } = useI18n();
 
 const METRICS = [
   { key: "pullup", label: "Pull Ups", get: (t) => t.pullup?.reps ?? null, versions: PULL_UP_VERSIONS },
@@ -131,7 +134,7 @@ const chartOptions = computed(() => ({
           let versionLabel = '';
           if (dataPoint?.version && metric?.versions) {
             const versionObj = metric.versions.find(v => v.value === dataPoint.version);
-            versionLabel = versionObj ? ` (${versionObj.label})` : ` (${dataPoint.version})`;
+            versionLabel = versionObj ? ` (${t(versionObj.labelKey)})` : ` (${dataPoint.version})`;
           }
           return `${context.parsed.y}${versionLabel}`;
         }
@@ -177,7 +180,7 @@ const chartOptions = computed(() => ({
 <template>
   <Card>
     <div class="mb-4 flex items-center justify-between">
-      <h2>Performance Trend</h2>
+      <h2>{{ t('dashboard.chart.title') }}</h2>
       <select
         v-model="selectedMetric"
         class="form-input"
@@ -188,7 +191,7 @@ const chartOptions = computed(() => ({
       </select>
     </div>
     <div v-if="filtered.length < 2" class="text-sm text-gray-500">
-      Not enough data points for a trend (need at least 2).
+      {{ t('dashboard.chart.notEnoughData') }}
     </div>
     <div v-else>
       <div class="h-60 w-full">

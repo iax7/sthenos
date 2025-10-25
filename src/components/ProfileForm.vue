@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useToasts } from '../composables/useToasts.js'
 import { loadProfile, saveProfile } from '../services/profileStore.js'
 import { useRouter } from 'vue-router'
@@ -7,6 +8,8 @@ import Card from './ui/Card.vue'
 import BaseInput from './ui/BaseInput.vue'
 import BaseButton from './ui/BaseButton.vue'
 import BaseNumberStepper from './ui/BaseNumberStepper.vue'
+
+const { t } = useI18n()
 
 // Reactive state
 const name = ref('')
@@ -48,11 +51,11 @@ function cancel() {
     <Card>
         <form @submit.prevent="save" class="space-y-4">
           <div class="flex flex-col">
-            <label class="form-label">Name</label>
-            <BaseInput v-model="name" placeholder="Your name" required />
+            <label class="form-label">{{ t('profile.name') }}</label>
+            <BaseInput v-model="name" :placeholder="t('profile.namePlaceholder')" required />
           </div>
           <div class="flex flex-col">
-            <label class="form-label">Gender</label>
+            <label class="form-label">{{ t('profile.gender') }}</label>
             <div class="space-y-2">
               <label
                 :class="[
@@ -61,7 +64,7 @@ function cancel() {
                 ]"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-sm font-medium text-gray-800">Male</span>
+                  <span class="text-sm font-medium text-gray-800">{{ t('profile.male') }}</span>
                   <input
                     type="radio"
                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
@@ -78,7 +81,7 @@ function cancel() {
                 ]"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-sm font-medium text-gray-800">Female</span>
+                  <span class="text-sm font-medium text-gray-800">{{ t('profile.female') }}</span>
                   <input
                     type="radio"
                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
@@ -91,12 +94,12 @@ function cancel() {
             </div>
           </div>
           <div class="flex flex-col">
-            <label class="form-label">Age</label>
-            <BaseNumberStepper v-model="age" :min="11" :max="120" :step="1" label="Age" />
+            <label class="form-label">{{ t('profile.age') }}</label>
+            <BaseNumberStepper v-model="age" :min="11" :max="120" :step="1" :label="t('profile.age')" />
           </div>
           <div class="flex gap-2 justify-end">
-            <BaseButton type="submit" :disabled="!canSave">{{ isEditing ? 'Update' : 'Save' }}</BaseButton>
-            <BaseButton v-if="isEditing" type="button" variant="secondary" @click="cancel">Cancel</BaseButton>
+            <BaseButton type="submit" :disabled="!canSave">{{ isEditing ? t('app.update') : t('app.save') }}</BaseButton>
+            <BaseButton v-if="isEditing" type="button" variant="secondary" @click="cancel">{{ t('app.cancel') }}</BaseButton>
           </div>
         </form>
     </Card>

@@ -1,0 +1,99 @@
+{
+  "app": {
+    "back": "Back",
+    "save": "Save",
+    "update": "Update",
+    "cancel": "Cancel"
+  },
+  "profile": {
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "age": "Age",
+    "edit": "Edit Profile"
+  },
+  "nav": {
+    "title": "Performance Tests",
+    "download": "Download data",
+    "upload": "Upload data",
+    "clear": "Clear all data",
+    "jsonDownloaded": "Data Downloaded",
+    "profileImported": "Profile Imported",
+    "importFailed": "Error importing file",
+    "invalidJson": "Invalid JSON file",
+    "clearConfirm": "Clear all local profile data?",
+    "localDataCleared": "Local data cleared"
+  },
+  "exercise": {
+    "editor": {
+      "titleNew": "New Exercise",
+      "titleEdit": "Edit Exercise",
+      "back": "Back",
+      "invalidTest": "Invalid test index."
+    },
+    "pullup": {
+      "complete": "Complete",
+      "negative": "Negative",
+      "bands": "Bands",
+      "half": "Half"
+    },
+    "pushup": {
+      "complete": "Complete",
+      "half": "Half",
+      "reverence": "Reverence"
+    },
+    "squat": {
+      "complete": "Complete"
+    },
+    "vup": {
+      "complete": "Complete",
+      "half": "Half"
+    },
+    "burpee": {
+      "complete": "Complete",
+      "no_flex": "No flex"
+    }
+  },
+  "cooper": {
+    "very_low": "Very Low",
+    "low": "Low",
+    "normal": "Normal",
+    "good": "Good",
+    "very_good": "Very Good",
+    "na": "N/A"
+  },
+  "dashboard": {
+    "table": {
+      "title": "Exercise Tests",
+      "newEntry": "New",
+      "noTests": "No tests recorded.",
+      "headers": {
+        "date": "Date",
+        "pullUps": "Pull Ups",
+        "pullUpsShort": "PU",
+        "pushUps": "Push Ups",
+        "pushUpsShort": "PS",
+        "squats": "Squats",
+        "squatsShort": "SQT",
+        "vUps": "V-Ups",
+        "vUpsShort": "VU",
+        "burpees": "Burpees",
+        "burpeesShort": "BUR",
+        "km": "Km.",
+        "kmShort": "KM",
+        "actions": "Actions",
+        "actionsShort": "Ac"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "chart": {
+      "title": "Performance Trend",
+      "notEnoughData": "Not enough data points for a trend (need at least 2)."
+    }
+  }
+}

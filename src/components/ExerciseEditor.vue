@@ -1,5 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import ExerciseTestForm from "./ExerciseTestForm.vue";
 import { loadProfile } from "../services/profileStore.js";
 import BaseButton from "./ui/BaseButton.vue";
@@ -9,6 +10,7 @@ import { ref } from "vue";
 
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
 const profile = ref(loadProfile());
 const tests = ref(profile.value?.tests || []);
 
@@ -25,11 +27,11 @@ function goBack() {
   <div class="mx-auto w-full max-w-3xl px-4 py-6">
     <div class="mb-4 flex items-center justify-between">
       <h1 class="text-xl font-semibold">
-        {{ isEdit ? "Edit Exercise" : "New Exercise" }}
+        {{ isEdit ? t('exercise.editor.titleEdit') : t('exercise.editor.titleNew') }}
       </h1>
       <BaseButton variant="secondary" type="button" @click="goBack">
         <ArrowLeftCircleIcon class="w-5 h-5 mr-1" />
-        <span>Back</span>
+        <span>{{ t('exercise.editor.back') }}</span>
       </BaseButton>
     </div>
     <ExerciseTestForm
@@ -41,13 +43,5 @@ function goBack() {
       @cancel="goBack"
     />
     <ExerciseTestForm v-else mode="create" @done="goBack" @cancel="goBack" />
-    <div v-if="isEdit && !test" class="mt-6">
-      <Card>
-        <p class="text-sm text-red-600">
-          Invalid test index.
-          <button class="underline" @click="goBack">Return</button>
-        </p>
-      </Card>
-    </div>
   </div>
 </template>

@@ -1,0 +1,99 @@
+{
+  "app": {
+    "back": "Regresar",
+    "save": "Guardar",
+    "update": "Actualizar",
+    "cancel": "Cancelar"
+  },
+  "profile": {
+    "name": "Nombre",
+    "namePlaceholder": "Tu nombre",
+    "gender": "Género",
+    "male": "Masculino",
+    "female": "Femenino",
+    "age": "Edad",
+    "edit": "Editar Perfil"
+  },
+  "nav": {
+    "title": "Pruebas de Rendimiento",
+    "download": "Descargar datos",
+    "upload": "Subir datos",
+    "clear": "Borrar todo",
+    "jsonDownloaded": "Datos descargados",
+    "profileImported": "Perfil importado",
+    "importFailed": "Error al importar",
+    "invalidJson": "Archivo JSON inválido",
+    "clearConfirm": "¿Borrar todos los datos de perfil locales?",
+    "localDataCleared": "Datos locales borrados"
+  },
+  "exercise": {
+    "editor": {
+      "titleNew": "Nuevo Ejercicio",
+      "titleEdit": "Editar Ejercicio",
+      "back": "Volver",
+      "invalidTest": "Índice de prueba inválido."
+    },
+    "pullup": {
+      "complete": "Completa",
+      "negative": "Negativa",
+      "bands": "Ligas",
+      "half": "Media"
+    },
+    "pushup": {
+      "complete": "Completa",
+      "half": "Media",
+      "reverence": "Reverencia"
+    },
+    "squat": {
+      "complete": "Completa"
+    },
+    "vup": {
+      "complete": "Completa",
+      "half": "Media"
+    },
+    "burpee": {
+      "complete": "Completa",
+      "no_flex": "Sin flexión"
+    }
+  },
+  "cooper": {
+    "very_low": "Muy bajo",
+    "low": "Bajo",
+    "normal": "Normal",
+    "good": "Bueno",
+    "very_good": "Muy bueno",
+    "na": "N/A"
+  },
+  "dashboard": {
+    "table": {
+      "title": "Pruebas de Ejercicio",
+      "newEntry": "Nuevo",
+      "noTests": "No hay pruebas registradas.",
+      "headers": {
+        "date": "Fecha",
+        "pullUps": "Pull Ups",
+        "pullUpsShort": "PU",
+        "pushUps": "Push Ups",
+        "pushUpsShort": "PS",
+        "squats": "Squats",
+        "squatsShort": "SQT",
+        "vUps": "V-Ups",
+        "vUpsShort": "VU",
+        "burpees": "Burpees",
+        "burpeesShort": "BUR",
+        "km": "Km.",
+        "kmShort": "KM",
+        "actions": "Acciones",
+        "actionsShort": "Ac"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar"
+      }
+    },
+    "chart": {
+      "title": "Tendencias de Rendimiento",
+      "notEnoughData": "No hay suficientes datos para una tendencia (se necesitan al menos 2)."
+    }
+  }
+}

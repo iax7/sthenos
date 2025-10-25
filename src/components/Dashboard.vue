@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useI18n } from "vue-i18n";
 import { loadProfile, deleteTest } from "../services/profileStore.js";
 import { useRouter } from "vue-router";
 import DashboardTable from "./DashboardTable.vue";
@@ -11,6 +12,8 @@ const profile = ref(loadProfile());
 const tests = ref(profile.value?.tests || []);
 const { pushToast } = useToasts();
 const router = useRouter();
+
+const { t } = useI18n();
 
 function refresh() {
   profile.value = loadProfile();
