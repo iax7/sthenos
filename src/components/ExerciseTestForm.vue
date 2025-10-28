@@ -1,19 +1,19 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import Card from "./ui/Card.vue";
-import BaseInput from "./ui/BaseInput.vue";
-import BaseButton from "./ui/BaseButton.vue";
-import ExerciseMetricInput from "./ui/ExerciseMetricInput.vue";
-import { appendTest, updateTest, createTestMetric } from "../services/profileStore.js";
-import { useToasts } from "../composables/useToasts.js";
+import Card from "@/components/ui/Card.vue";
+import BaseInput from "@/components/ui/BaseInput.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import ExerciseMetricInput from "@/components/ui/ExerciseMetricInput.vue";
+import { appendTest, updateTest, createTestMetric } from "@/services/profileStore.js";
+import { useToasts } from "@/composables/useToasts.js";
 import {
   PULL_UP_VERSIONS,
   PUSH_UP_VERSIONS,
   SQUAT_VERSIONS,
   VUP_VERSIONS,
   BURPEE_VERSIONS,
-} from "../services/exerciseVersions.js";
+} from "@/services/exerciseVersions.js";
 
 const { t } = useI18n();
 
@@ -29,51 +29,30 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-// state
-const date = ref(
-  props.mode === "edit" && props.test?.date ? props.test.date : todayISO(),
-);
-const pullUps = ref(
-  props.mode === "edit" ? (props.test?.pullup?.reps ?? 0) : "",
-);
-const pullUpsVersion = ref(
-  props.mode === "edit"
-    ? (props.test?.pullup?.version ?? props.test?.pullUpsVersion ?? "")
-    : "",
-);
-const pushUps = ref(
-  props.mode === "edit" ? (props.test?.pushup?.reps ?? 0) : "",
-);
-const pushUpsVersion = ref(
-  props.mode === "edit"
-    ? (props.test?.pushup?.version ?? props.test?.pushUpsVersion ?? "")
-    : "",
-);
-const squats = ref(
-  props.mode === "edit" ? (props.test?.squats?.reps ?? 0) : "",
-);
-const squatsVersion = ref(
-  props.mode === "edit"
-    ? (props.test?.squats?.version ?? props.test?.squatsVersion ?? "")
-    : "",
-);
-const vups = ref(props.mode === "edit" ? (props.test?.vups?.reps ?? 0) : "");
-const vupsVersion = ref(
-  props.mode === "edit"
-    ? (props.test?.vups?.version ?? props.test?.vupsVersion ?? "")
-    : "",
-);
-const burpees = ref(
-  props.mode === "edit" ? (props.test?.burpees?.reps ?? 0) : "",
-);
-const burpeesVersion = ref(
-  props.mode === "edit"
-    ? (props.test?.burpees?.version ?? props.test?.burpeesVersion ?? "")
-    : "",
-);
-const laps = ref(
-  props.mode === "edit" ? (props.test?.cooper ?? props.test?.laps ?? 0) : "",
-);
+function initValue(path, defaultValue = "") {
+  if (props.mode !== "edit" || !props.test) return defaultValue;
+  const keys = path.split(".");
+  let value = props.test;
+  for (const key of keys) {
+    value = value?.[key];
+    if (value === undefined) return defaultValue;
+  }
+  return value ?? defaultValue;
+}
+
+// State
+const date = ref(initValue("date", todayISO()));
+const pullUps = ref(initValue("pullup.reps", ""));
+const pullUpsVersion = ref(initValue("pullup.version", ""));
+const pushUps = ref(initValue("pushup.reps", ""));
+const pushUpsVersion = ref(initValue("pushup.version", ""));
+const squats = ref(initValue("squats.reps", ""));
+const squatsVersion = ref(initValue("squats.version", ""));
+const vups = ref(initValue("vups.reps", ""));
+const vupsVersion = ref(initValue("vups.version", ""));
+const burpees = ref(initValue("burpees.reps", ""));
+const burpeesVersion = ref(initValue("burpees.version", ""));
+const laps = ref(initValue("cooper", ""));
 
 watch(
   () => props.test,
