@@ -59,12 +59,17 @@
     }
   },
   "cooper": {
-    "very_low": "Muy bajo",
-    "low": "Bajo",
+    "very_bad": "Muy Malo",
+    "bad": "Malo",
     "normal": "Normal",
     "good": "Bueno",
-    "very_good": "Muy bueno",
-    "na": "N/A"
+    "very_good": "Muy Bueno",
+    "na": "N/A",
+    "vb": "MM",
+    "b": "M",
+    "n": "N",
+    "g": "B",
+    "vg": "MB"
   },
   "dashboard": {
     "table": {

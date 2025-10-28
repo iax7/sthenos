@@ -147,11 +147,12 @@ function formatPrettyDate(dateStr) {
           <ExerciseCell :value="t._cooperKm">
               <CooperLevelIcon
                 :level="t._cooperLevel"
-                :title="$t(`cooper.levels.${t._cooperLevel}`)"
-                class="inline h-4 w-4 ml-1"
+                :showText="true"
+                class="inline size-5 ml-1"
               />
           </ExerciseCell>
-          <td class="exercise__cell text-right">
+          <td class="exercise__cell">
+            <div class="flex justify-center items-center">
             <button
               type="button"
               :data-menu-btn="t._idx"
@@ -202,6 +203,7 @@ function formatPrettyDate(dateStr) {
                 </ul>
               </div>
             </Teleport>
+            </div>
           </td>
         </tr>
         <tr v-if="rows.length === 0">
