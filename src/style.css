@@ -127,8 +127,4 @@
   .exercise__cell {
     @apply px-2 py-1 border-b border-gray-200;
   }
-
-  .exercise__cell--numeric {
-    @apply font-mono text-right w-21;
-  }
 }

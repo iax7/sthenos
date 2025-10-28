@@ -1,12 +1,13 @@
 <script setup>
 import { computed, onMounted, watch } from "vue";
 import { useI18n } from 'vue-i18n'
-import BaseInput from "./ui/BaseInput.vue";
-import BaseSelect from "./ui/BaseSelect.vue";
+import BaseInput from "./BaseInput.vue";
+import BaseSelect from "./BaseSelect.vue";
 
 const props = defineProps({
   label: { type: String, required: true },
   count: { type: [Number, String], default: "" },
+  placeholder: { type: String, default: "" },
   version: { type: String, default: "" },
   versions: { type: Array, default: () => [] },
   min: { type: Number, default: 0 },
@@ -49,7 +50,7 @@ watch(
         v-model="numberValue"
         :min="min"
         type="number"
-        placeholder="Count"
+        :placeholder="placeholder"
         required
       />
       <BaseSelect v-model="versionValue" required>
@@ -64,3 +65,4 @@ watch(
     </div>
   </div>
 </template>
+

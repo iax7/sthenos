@@ -9,6 +9,7 @@ import es from "./locales/es.json";
 const browserLang = navigator.language.split("-")[0]; // 'es' or 'en'
 
 const i18n = createI18n({
+  legacy: false,
   locale: ["en", "es"].includes(browserLang) ? browserLang : "en",
   fallbackLocale: "en",
   messages: { en, es },

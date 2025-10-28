@@ -8,7 +8,8 @@ import IconTrash from "./icons/IconTrash.vue";
 import CooperLevelIcon from "./icons/CooperLevelIcon.vue";
 import { toKilometers, toMeters, evaluateCooper } from "../services/cooper";
 import { loadProfile } from "../services/profileStore.js";
-import { PlusIcon } from "@heroicons/vue/24/solid";
+import { PlusIcon, NoSymbolIcon } from "@heroicons/vue/24/solid";
+import ExerciseCell from "./ui/ExerciseCell.vue";
 
 const props = defineProps({
   tests: { type: Array, default: () => [] },
@@ -138,27 +139,18 @@ function formatPrettyDate(dateStr) {
               >{{ formatPrettyDate(t.date).year }}&nbsp;</span
             >{{ formatPrettyDate(t.date).month }}
           </td>
-          <td class="exercise__cell exercise__cell--numeric">
-            {{ t.pullup?.reps }}
-          </td>
-          <td class="exercise__cell exercise__cell--numeric">
-            {{ t.pushup?.reps }}
-          </td>
-          <td class="exercise__cell exercise__cell--numeric">
-            {{ t.squats?.reps }}
-          </td>
-          <td class="exercise__cell exercise__cell--numeric">
-            {{ t.vups?.reps }}
-          </td>
-          <td class="exercise__cell exercise__cell--numeric">
-            {{ t.burpees?.reps }}
-          </td>
-          <td class="exercise__cell exercise__cell--numeric">
-            <div class="flex items-center gap-1">
-              <span>{{ t._cooperKm }}</span>
-              <CooperLevelIcon :level="t._cooperLevel" :size="16" />
-            </div>
-          </td>
+          <ExerciseCell :value="t.pullup?.reps" />
+          <ExerciseCell :value="t.pushup?.reps" />
+          <ExerciseCell :value="t.squats?.reps" />
+          <ExerciseCell :value="t.vups?.reps" />
+          <ExerciseCell :value="t.burpees?.reps" />
+          <ExerciseCell :value="t._cooperKm">
+              <CooperLevelIcon
+                :level="t._cooperLevel"
+                :title="$t(`cooper.levels.${t._cooperLevel}`)"
+                class="inline h-4 w-4 ml-1"
+              />
+          </ExerciseCell>
           <td class="exercise__cell text-right">
             <button
               type="button"

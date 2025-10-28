@@ -1,5 +1,8 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   stats: { type: Object, default: null }
@@ -11,10 +14,11 @@ const nf = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 })
 const items = computed(() => {
   if (!props.stats) return []
   return [
-    { key: 'first', label: 'First', value: props.stats.first, canChange: false },
-    { key: 'last', label: 'Last', value: props.stats.last, canChange: false },
-    { key: 'min', label: 'Min', value: props.stats.min, canChange: false },
-    { key: 'max', label: 'Max', value: props.stats.max, canChange: false },
+    { key: 'size', label: t('dashboard.stats.size'), value: props.stats.size, canChange: false },
+    { key: 'first', label: t('dashboard.stats.first'), value: props.stats.first, canChange: false },
+    { key: 'last', label: t('dashboard.stats.last'), value: props.stats.last, canChange: false },
+    { key: 'min', label: t('dashboard.stats.min'), value: props.stats.min, canChange: false },
+    { key: 'max', label: t('dashboard.stats.max'), value: props.stats.max, canChange: false },
     { key: 'delta', label: 'Δ', value: props.stats.delta, canChange: true },
     { key: 'pct', label: '%', value: props.stats.pct, canChange: true },
   ]

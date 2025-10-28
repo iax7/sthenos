@@ -31,7 +31,7 @@ function goBack() {
       </h1>
       <BaseButton variant="secondary" type="button" @click="goBack">
         <ArrowLeftCircleIcon class="w-5 h-5 mr-1" />
-        <span>{{ t('exercise.editor.back') }}</span>
+        <span>{{ t('app.back') }}</span>
       </BaseButton>
     </div>
     <ExerciseTestForm

@@ -30,8 +30,10 @@
     "editor": {
       "titleNew": "New Exercise",
       "titleEdit": "Edit Exercise",
-      "back": "Back",
-      "invalidTest": "Invalid test index."
+      "invalidTest": "Invalid test index.",
+      "date": "Date",
+      "count": "Count",
+      "cooperLaps": "Cooper Laps (in 12 minutes)"
     },
     "pullup": {
       "complete": "Complete",
@@ -94,6 +96,13 @@
     "chart": {
       "title": "Performance Trend",
       "notEnoughData": "Not enough data points for a trend (need at least 2)."
+    },
+    "stats": {
+      "size": "Sample",
+      "first": "First",
+      "last": "Last",
+      "max": "Max",
+      "min": "Min"
     }
   }
 }

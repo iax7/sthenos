@@ -30,8 +30,10 @@
     "editor": {
       "titleNew": "Nuevo Ejercicio",
       "titleEdit": "Editar Ejercicio",
-      "back": "Volver",
-      "invalidTest": "Índice de prueba inválido."
+      "invalidTest": "Índice de prueba inválido.",
+      "date": "Fecha",
+      "count": "Cantidad",
+      "cooperLaps": "Vueltas Cooper (en 12 minutos)"
     },
     "pullup": {
       "complete": "Completa",
@@ -94,6 +96,13 @@
     "chart": {
       "title": "Tendencias de Rendimiento",
       "notEnoughData": "No hay suficientes datos para una tendencia (se necesitan al menos 2)."
+    },
+    "stats": {
+      "size": "Muestra",
+      "first": "Primera",
+      "last": "Última",
+      "max": "Máx",
+      "min": "Mín"
     }
   }
 }
