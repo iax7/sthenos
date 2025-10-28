@@ -5,7 +5,7 @@ import Card from "./ui/Card.vue";
 import BaseInput from "./ui/BaseInput.vue";
 import BaseButton from "./ui/BaseButton.vue";
 import ExerciseMetricInput from "./ui/ExerciseMetricInput.vue";
-import { appendTest, updateTest } from "../services/profileStore.js";
+import { appendTest, updateTest, createTestMetric } from "../services/profileStore.js";
 import { useToasts } from "../composables/useToasts.js";
 import {
   PULL_UP_VERSIONS,
@@ -117,17 +117,12 @@ function save() {
   if (!canSave.value) return;
   const payload = {
     date: date.value,
-    pullUps: pullUps.value,
-    pullUpsVersion: pullUpsVersion.value,
-    pushUps: pushUps.value,
-    pushUpsVersion: pushUpsVersion.value,
-    squats: squats.value,
-    squatsVersion: squatsVersion.value,
-    vups: vups.value,
-    vupsVersion: vupsVersion.value,
-    burpees: burpees.value,
-    burpeesVersion: burpeesVersion.value,
-    laps: laps.value,
+    pullup: createTestMetric(pullUps.value, pullUpsVersion.value),
+    pushup: createTestMetric(pushUps.value, pushUpsVersion.value),
+    squats: createTestMetric(squats.value, squatsVersion.value),
+    vups: createTestMetric(vups.value, vupsVersion.value),
+    burpees: createTestMetric(burpees.value, burpeesVersion.value),
+    cooper: Number(laps.value) || 0,
   };
   if (props.mode === "edit") {
     const updated = updateTest(props.index, payload);

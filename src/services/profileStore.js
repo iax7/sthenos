@@ -1,11 +1,11 @@
-// profileStore.js
 // Responsibility: load, save, clear profile data from localStorage.
-// Simplified: UI layer handles locking & hash if needed; store persists raw profile.
 
 /**
- * @typedef {Object} TestMetric
- * @property {number} reps
- * @property {string} version
+ * @typedef {Object} UserProfile
+ * @property {string} name
+ * @property {string} gender - 'M' or 'F'
+ * @property {number} age
+ * @property {TestEntry[]=} tests
  */
 /**
  * @typedef {Object} TestEntry
@@ -18,14 +18,26 @@
  * @property {number} cooper - Distance or value for cooper test
  */
 /**
- * @typedef {Object} UserProfile
- * @property {string} name
- * @property {string} gender - 'M' or 'F'
- * @property {number} age
- * @property {TestEntry[]=} tests
+ * @typedef {Object} TestMetric
+ * @property {number} reps
+ * @property {string} version
  */
 
 const STORAGE_KEY = "user_profile_v1";
+const VALID_GENDERS = ['M', 'F'];
+const DEFAULT_PROFILE = { name: "", gender: "", age: 0, tests: [] };
+
+/**
+ * Create a test metric object.
+ * @param {number} reps
+ * @param {string} version
+ * @returns {{reps: number, version: string}}
+ */
+export function createTestMetric(reps, version) {
+  const repetitions = Number(reps) || 0;
+  const ver = (version || "").trim()
+  return { reps: repetitions, version: ver };
+}
 
 /**
  * Load profile from storage.
@@ -79,33 +91,18 @@ export function clearProfile() {
  * @param {Object} partial - expects shape matching exercise record from ExerciseForm
  */
 export function appendTest(partial) {
-  const profile = loadProfile() || { name: "", gender: "", age: 0, tests: [] };
+  const profile = loadProfile() || DEFAULT_PROFILE;
   const entry = {
     date:
       typeof partial.date === "string"
         ? partial.date
         : new Date().toISOString().slice(0, 10),
-    pullup: {
-      reps: Number(partial.pullUps) || 0,
-      version: (partial.pullUpsVersion || "").trim(),
-    },
-    pushup: {
-      reps: Number(partial.pushUps) || 0,
-      version: (partial.pushUpsVersion || "").trim(),
-    },
-    squats: {
-      reps: Number(partial.squats) || 0,
-      version: (partial.squatsVersion || "").trim(),
-    },
-    vups: {
-      reps: Number(partial.vups) || 0,
-      version: (partial.vupsVersion || "").trim(),
-    },
-    burpees: {
-      reps: Number(partial.burpees) || 0,
-      version: (partial.burpeesVersion || "").trim(),
-    },
-    cooper: Number(partial.laps) || 0,
+    pullup: partial.pullup,
+    pushup: partial.pushup,
+    squats: partial.squats,
+    vups: partial.vups,
+    burpees: partial.burpees,
+    cooper: partial.cooper,
   };
   profile.tests.push(entry);
   // Keep tests sorted by date ascending
@@ -131,27 +128,12 @@ export function updateTest(index, partial) {
   const current = profile.tests[index];
   const updated = {
     date: typeof partial.date === "string" ? partial.date : current.date,
-    pullup: {
-      reps: Number(partial.pullUps ?? current.pullup.reps) || 0,
-      version: (partial.pullUpsVersion ?? current.pullup.version ?? "").trim(),
-    },
-    pushup: {
-      reps: Number(partial.pushUps ?? current.pushup.reps) || 0,
-      version: (partial.pushUpsVersion ?? current.pushup.version ?? "").trim(),
-    },
-    squats: {
-      reps: Number(partial.squats ?? current.squats.reps) || 0,
-      version: (partial.squatsVersion ?? current.squats.version ?? "").trim(),
-    },
-    vups: {
-      reps: Number(partial.vups ?? current.vups.reps) || 0,
-      version: (partial.vupsVersion ?? current.vups.version ?? "").trim(),
-    },
-    burpees: {
-      reps: Number(partial.burpees ?? current.burpees.reps) || 0,
-      version: (partial.burpeesVersion ?? current.burpees.version ?? "").trim(),
-    },
-    cooper: Number(partial.laps ?? current.cooper) || 0,
+    pullup: partial.pullup,
+    pushup: partial.pushup,
+    squats: partial.squats,
+    vups: partial.vups,
+    burpees: partial.burpees,
+    cooper: partial.cooper,
   };
   profile.tests.splice(index, 1, updated);
   // Re-sort after update
@@ -186,7 +168,7 @@ export function deleteTest(index) {
 export function getProfileData() {
   const profile = loadProfile();
   return JSON.stringify(
-    profile || { name: "", gender: "", age: 0, tests: [] },
+    profile || DEFAULT_PROFILE,
     null,
     2,
   );
@@ -200,7 +182,7 @@ export function getProfileData() {
 function isValidProfileShape(data) {
   if (!data || typeof data !== "object") return false;
   if (typeof data.name !== "string") return false;
-  if (!["M", "F"].includes(String(data.gender).toUpperCase())) return false;
+  if (!VALID_GENDERS.includes(String(data.gender).toUpperCase())) return false;
   if (typeof data.age !== "number" && isNaN(Number(data.age))) return false;
   if (data.tests && !Array.isArray(data.tests)) return false;
   return true;
@@ -222,27 +204,12 @@ export function importProfile(data) {
         typeof t.date === "string"
           ? t.date
           : new Date().toISOString().slice(0, 10),
-      pullup: t.pullup || {
-        reps: Number(t.pullUps || t.pullup?.reps) || 0,
-        version: (t.pullUpsVersion || t.pullup?.version || "").trim(),
-      },
-      pushup: t.pushup || {
-        reps: Number(t.pushUps || t.pushup?.reps) || 0,
-        version: (t.pushUpsVersion || t.pushup?.version || "").trim(),
-      },
-      squats: t.squats || {
-        reps: Number(t.squats?.reps || t.squats) || 0,
-        version: (t.squatsVersion || t.squats?.version || "").trim(),
-      },
-      vups: t.vups || {
-        reps: Number(t.vups?.reps || t.vups) || 0,
-        version: (t.vupsVersion || t.vups?.version || "").trim(),
-      },
-      burpees: t.burpees || {
-        reps: Number(t.burpees?.reps || t.burpees) || 0,
-        version: (t.burpeesVersion || t.burpees?.version || "").trim(),
-      },
-      cooper: Number(t.cooper ?? t.laps) || 0,
+      pullup: t.pullup,
+      pushup: t.pushup,
+      squats: t.squats,
+      vups: t.vups,
+      burpees: t.burpees,
+      cooper: Number(t.cooper) || 0,
     }));
   }
   const stored = saveProfile({

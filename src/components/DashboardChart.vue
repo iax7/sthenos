@@ -55,6 +55,13 @@ const METRICS = [
   { key: "cooper", label: "Cooper Laps", get: (t) => t.cooper ?? null, versions: [] },
 ];
 
+// [ Base, 60% opacity, 25% opacity, Darker ]
+const GRADIENT_COLORS = {
+  blue: ["#2563eb", "#2563eb99", "#2563eb40", "#1d4ed8"],
+  red: ["#ef4444", "#ef444499", "#ef444440", "#b91c1c"],
+  green: ["#34d399", "#34d39999", "#34d39940", "#10b981"],
+};
+
 const selectedMetric = ref(METRICS[0].key);
 
 const selectedData = computed(() => {
@@ -71,8 +78,20 @@ function formatDateLabel(dateStr) {
   return y.slice(-2) + "-" + m;
 }
 
+/**
+ * Returns gradient colors based on delta value
+ * @param {number} delta
+ * @returns {[string, string, string, string]} Array of colors: [baseColor, startColor, endColor, pointColor]
+ */
+function getGradientColors(delta) {
+  return delta < 0 ? GRADIENT_COLORS["red"] : GRADIENT_COLORS["blue"];
+}
+
 const chartData = computed(() => {
   const data = selectedData.value;
+  const [baseColor, startColor, endColor, pointColor] = getGradientColors(
+    stats.value.delta,
+  );
   // backgroundColor as function for gradient
   const gradientFill = (ctx) => {
     const chart = ctx.chart;
@@ -84,8 +103,8 @@ const chartData = computed(() => {
       0,
       chartArea.bottom,
     );
-    grad.addColorStop(0, "rgba(37,99,235,0.6)");
-    grad.addColorStop(1, "rgba(37,99,235,0.25)");
+    grad.addColorStop(0, startColor);
+    grad.addColorStop(1, endColor);
     return grad;
   };
   return {
@@ -94,13 +113,13 @@ const chartData = computed(() => {
       {
         label: METRICS.find((m) => m.key === selectedMetric.value)?.label || "",
         data: data.map((d) => d.value),
-        borderColor: "#2563eb",
+        borderColor: baseColor,
         backgroundColor: gradientFill,
         fill: true,
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
-        pointBackgroundColor: "#1d4ed8",
+        pointBackgroundColor: pointColor,
         pointBorderColor: "#fff",
         pointBorderWidth: 2,
       },
@@ -108,67 +127,72 @@ const chartData = computed(() => {
   };
 });
 
-const chartOptions = computed(() => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false,
-    },
-    tooltip: {
-      callbacks: {
-        label: (context) => {
-          const dataPoint = selectedData.value[context.dataIndex];
-          const metric = METRICS.find((m) => m.key === selectedMetric.value);
-          let versionLabel = "";
-          if (dataPoint?.version && metric?.versions) {
-            const versionObj = metric.versions.find(
-              (v) => v.value === dataPoint.version,
-            );
-            versionLabel = versionObj
-              ? ` (${t(versionObj.labelKey)})`
-              : ` (${dataPoint.version})`;
-          }
-          return `${context.parsed.y}${versionLabel}`;
+const chartOptions = computed(() => {
+  const [baseColor, startColor, endColor, pointColor] = getGradientColors(
+    stats.value.delta,
+  );
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const dataPoint = selectedData.value[context.dataIndex];
+            const metric = METRICS.find((m) => m.key === selectedMetric.value);
+            let versionLabel = "";
+            if (dataPoint?.version && metric?.versions) {
+              const versionObj = metric.versions.find(
+                (v) => v.value === dataPoint.version,
+              );
+              versionLabel = versionObj
+                ? ` (${t(versionObj.labelKey)})`
+                : ` (${dataPoint.version})`;
+            }
+            return `${context.parsed.y}${versionLabel}`;
+          },
         },
       },
-    },
-    datalabels: {
-      anchor: "end",
-      align: "end",
-      color: "#1d4ed8",
-      font: {
-        weight: "bold",
-        size: 12,
-      },
-      formatter: (value, context) => {
-        // Show only if value is not null/undefined
-        return value != null ? value : "";
-      },
-      display: true,
-      clip: false,
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: false,
-      grid: {
-        color: "rgba(209, 213, 219, 0.3)",
-      },
-      ticks: {
-        callback: function (value) {
-          return Number.isInteger(value) ? value : "";
+      datalabels: {
+        anchor: "end",
+        align: "end",
+        color: baseColor,
+        font: {
+          weight: "bold",
+          size: 12,
         },
-        stepSize: 1,
-      },
-    },
-    x: {
-      grid: {
+        formatter: (value, context) => {
+          // Show only if value is not null/undefined
+          return value != null ? value : "";
+        },
         display: true,
+        clip: false,
       },
     },
-  },
-}));
+    scales: {
+      y: {
+        beginAtZero: false,
+        grid: {
+          color: "rgba(209, 213, 219, 0.3)",
+        },
+        ticks: {
+          callback: function (value) {
+            return Number.isInteger(value) ? value : "";
+          },
+          stepSize: 1,
+        },
+      },
+      x: {
+        grid: {
+          display: true,
+        },
+      },
+    },
+  };
+});
 </script>
 
 <template>
@@ -181,7 +205,10 @@ const chartOptions = computed(() => ({
         </option>
       </select>
     </div>
-    <div v-if="Array.isArray(selectedData.value) && selectedData.value.length < 2" class="text-sm text-gray-500">
+    <div
+      v-if="Array.isArray(selectedData.value) && selectedData.value.length < 2"
+      class="text-sm text-gray-500"
+    >
       {{ t("dashboard.chart.notEnoughData") }}
     </div>
     <div v-else>
@@ -192,7 +219,3 @@ const chartOptions = computed(() => ({
     </div>
   </Card>
 </template>
-
-<style scoped>
-/* Optional: Add any custom styles if needed */
-</style>
