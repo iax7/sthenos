@@ -14,7 +14,10 @@ export function filterTestsByMetric(tests, selectedMetricKey, metrics) {
     .filter((t) => t.date && metric.get(t) != null)
     .map((t) => {
       const rawMetric = t[metric.key];
-      const version = rawMetric && typeof rawMetric === 'object' ? (rawMetric.version || '') : '';
+      const version =
+        rawMetric && typeof rawMetric === "object"
+          ? rawMetric.version || ""
+          : "";
       return { date: t.date, value: Number(metric.get(t)), version };
     })
     .filter((entry) => entry.value > 0); // Only keep entries with positive value
@@ -22,9 +25,7 @@ export function filterTestsByMetric(tests, selectedMetricKey, metrics) {
 
 export function calculateStats(data) {
   if (!data || data.length === 0) return null;
-  const values = data
-    .map(d => d.value)
-    .filter(d => d > 0); // Only positive values
+  const values = data.map((d) => d.value).filter((d) => d > 0); // Only positive values
   if (values.length === 0) return null;
 
   const size = values.length;

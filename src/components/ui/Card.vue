@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-5 space-y-5 mt-6 mx-auto max-w-5xl">
+  <div
+    class="mx-auto mt-6 space-y-5 rounded-lg border border-gray-200 bg-white p-5 shadow-lg"
+  >
     <slot />
   </div>
 </template>

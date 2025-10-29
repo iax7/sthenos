@@ -30,7 +30,7 @@ function onDeleteTest(i) {
 </script>
 
 <template>
-  <div class="w-full max-w-4xl px-4">
+  <div class="max-w-4xl">
     <DashboardHeader :profile="profile" />
     <DashboardTable
       :tests="tests"

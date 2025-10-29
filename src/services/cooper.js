@@ -61,5 +61,5 @@ export const toMeters = (laps) => {
 };
 
 export const toKilometers = (meters) => {
-  return (meters / 1000);
+  return meters / 1000;
 };

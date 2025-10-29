@@ -60,11 +60,11 @@
   }
 
   .icon-btn {
-    @apply inline-flex items-center justify-center w-8 h-8 rounded-md border border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition;
+    @apply inline-flex items-center justify-center size-8 rounded-md border border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition;
   }
 
   .exercise__cell--title {
-    @apply px-2 py-1 border-b border-gray-400 text-center;
+    @apply px-2 py-1 border-b border-gray-400;
   }
 
   .exercise__cell {

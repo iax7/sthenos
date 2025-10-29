@@ -1,11 +1,13 @@
 <script setup>
 const props = defineProps({
-  modelValue: { type: String, default: '' },
+  modelValue: { type: String, default: "" },
   disabled: { type: Boolean, default: false },
-  required: { type: Boolean, default: false }
-})
-const emit = defineEmits(['update:modelValue'])
-function onChange(e){ emit('update:modelValue', e.target.value) }
+  required: { type: Boolean, default: false },
+});
+const emit = defineEmits(["update:modelValue"]);
+function onChange(e) {
+  emit("update:modelValue", e.target.value);
+}
 </script>
 <template>
   <select

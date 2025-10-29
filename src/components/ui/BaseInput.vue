@@ -1,22 +1,22 @@
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const props = defineProps({
-  modelValue: { type: [String, Number], default: '' },
-  type: { type: String, default: 'text' },
-  placeholder: { type: String, default: '' },
+  modelValue: { type: [String, Number], default: "" },
+  type: { type: String, default: "text" },
+  placeholder: { type: String, default: "" },
   disabled: { type: Boolean, default: false },
   min: { type: [String, Number], default: undefined },
-  required: { type: Boolean, default: false }
-})
+  required: { type: Boolean, default: false },
+});
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
 function onInput(e) {
-  emit('update:modelValue', e.target.value)
+  emit("update:modelValue", e.target.value);
 }
 
-const baseClasses = computed(() => 'form-input')
+const baseClasses = computed(() => "form-input");
 </script>
 <template>
   <input

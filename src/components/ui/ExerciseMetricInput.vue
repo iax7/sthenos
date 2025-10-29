@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, watch } from "vue";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from "vue-i18n";
 import BaseInput from "./BaseInput.vue";
 import BaseSelect from "./BaseSelect.vue";
 
@@ -25,7 +25,7 @@ const versionValue = computed({
   set: (v) => emit("update:version", v),
 });
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 function selectFirstIfEmpty() {
   if (!versionValue.value && props.versions.length) {
@@ -59,10 +59,9 @@ watch(
           :key="typeof v === 'string' ? v : v.value"
           :value="typeof v === 'string' ? v : v.value"
         >
-          {{ typeof v === 'string' ? v : (v.labelKey ? t(v.labelKey) : v.label) }}
+          {{ typeof v === "string" ? v : v.labelKey ? t(v.labelKey) : v.label }}
         </option>
       </BaseSelect>
     </div>
   </div>
 </template>
-

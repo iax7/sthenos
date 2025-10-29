@@ -81,7 +81,7 @@ function formatPrettyDate(dateStr) {
 </script>
 
 <template>
-  <div class="mt-6 w-full overflow-x-auto">
+  <div class="mt-6">
     <div class="mb-3 flex items-center justify-between">
       <h2>{{ t('dashboard.table.title') }}</h2>
       <BaseButton
@@ -91,15 +91,16 @@ function formatPrettyDate(dateStr) {
         @click="$emit('new')"
         aria-label="Create new test entry"
       >
-        <PlusIcon class="h-5 w-5" />
+        <PlusIcon class="size-6" />
         <span>{{ t('dashboard.table.newEntry') }}</span>
       </BaseButton>
     </div>
+    <div class="overflow-x-auto shadow-lg rounded-lg">
     <table
-      class="min-w-full overflow-hidden rounded-md border border-gray-200 bg-white text-sm"
+      class="bg-white text-sm w-full"
     >
       <thead class="bg-gray-50">
-        <tr class="text-left">
+        <tr>
           <th class="exercise__cell--title">{{ t('dashboard.table.headers.date') }}</th>
           <th class="exercise__cell--title">
             <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.pullUpsShort') }}</span>
@@ -155,7 +156,7 @@ function formatPrettyDate(dateStr) {
             <button
               type="button"
               :data-menu-btn="tr._idx"
-              class="icon-btn flex size-9 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none"
+              class="icon-btn"
               @click="openMenu(tr._idx, $event)"
               aria-label="Actions"
             >
@@ -212,5 +213,6 @@ function formatPrettyDate(dateStr) {
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 </template>

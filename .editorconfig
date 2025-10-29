@@ -1,0 +1,27 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# Top-level settings
+root = true
+
+# 2 spaces for JS, Vue, CSS, HTML
+[*.{js,vue,css,scss,html}]
+indent_style = space
+indent_size = 2
+
+# 2 spaces for JSON and YAML
+[*.{json,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# 4 spaces for Markdown (optional)
+[*.md]
+indent_style = space
+indent_size = 4
+
+# End of line and charset
+[*]
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+

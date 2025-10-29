@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import ProfileView from "@/views/ProfileView.vue";
 import HomeView from "@/views/HomeView.vue";
 import ExerciseView from "@/views/ExerciseView.vue";
+import { useProfileStore } from "@/composables/useProfileStore.js";
 
 const routes = [
   { path: "/", name: "dashboard", component: HomeView },
@@ -29,8 +30,8 @@ export const router = createRouter({
 // Simple guard: if no stored profile, redirect protected routes to profile form
 router.beforeEach((to) => {
   try {
-    const raw = localStorage.getItem("user_profile_v1");
-    const hasProfile = !!raw && JSON.parse(raw)?.name;
+    const { profile } = useProfileStore();
+    const hasProfile = !!profile.value && !!profile.value.name;
     // Dashboard now at '/'; protect dashboard and exercise routes when no profile
     const protectedNames = ["dashboard", "exercise-new", "exercise-edit"];
     if (!hasProfile && protectedNames.includes(to.name)) {
