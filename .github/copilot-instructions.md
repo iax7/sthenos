@@ -5,11 +5,14 @@
 ## Project Overview
 
 - **Sthenos** is a Vue 3 + Vite SPA for tracking fitness profiles and exercise test entries. All data is stored in browser `localStorage` under the key `user_profile_v1`.
-- The app is structured around a single profile object managed by `src/services/profileStore.js`. All test entries are nested within this profile.
+- The app is structured around a single profile object managed by the `useProfileStore` composable. All test entries are nested within this profile.
 
 ## Architecture & Data Flow
 
-- **Single source of truth:** All profile and test data is accessed and mutated via store helpers in `profileStore.js`. Never mutate arrays directly in components.
+- **Single source of truth:** All profile and test data is accessed via the `useProfileStore` composable. Never mutate state directly.
+- **Composables:**
+  - `useProfileStore.js`: Reactive profile/test state with CRUD operations
+  - `useToasts.js`: Toast notification system
 - **Components:**
   - `Dashboard.vue`: Main view, shows summary, table, chart.
   - `ProfileForm.vue`: Profile creation/edit.
@@ -34,7 +37,8 @@
 
 ## Patterns & Conventions
 
-- **Store helpers** (in `profileStore.js`) for all CRUD operations on profile/tests.
+- **Composables (Recommended):**
+  - Use `useProfileStore` for reactive state access: `const { profile, tests, saveProfile } = useProfileStore()`
 - **Import/Export:**
   - Export triggers JSON download of profile.
   - Import replaces profile/tests after validation.
@@ -43,6 +47,10 @@
 - **Toast notifications:**
   - Use `useToasts.js` composable and `ToastContainer.vue` for ephemeral messages.
   - Example: `pushToast('Profile saved', 'success')`.
+- **i18n:**
+  - Use `useI18n()` composable for translations
+  - In templates: use `$t()` directly
+  - In script: destructure `t` from `useI18n()`
 - **Tailwind CSS:** Inline utility classes; some use of `@apply`.
 
 ## Deprecated Code
@@ -55,12 +63,12 @@
 
 ## Examples
 
-- To add a toast: `import { useToasts } from '../composables/useToasts.js'`
-- To update profile/tests: Use methods from `profileStore.js`, not direct mutation.
+- To add a toast: `import { useToasts } from '@/composables/useToasts.js'`
+- To update profile/tests: Use methods from `useProfileStore`, not direct mutation.
 
 ## Key Files
 
-- `src/services/profileStore.js`: Data model and store helpers
+- `src/composables/useProfileStore.js`: Data model and store helpers
 - `src/components/`: Main UI components
 - `src/composables/useToasts.js`: Toast logic
 - `src/App.vue`: Mounts global containers

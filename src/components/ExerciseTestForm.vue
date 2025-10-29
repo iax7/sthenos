@@ -5,7 +5,7 @@ import Card from "@/components/ui/Card.vue";
 import BaseInput from "@/components/ui/BaseInput.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import ExerciseMetricInput from "@/components/ui/ExerciseMetricInput.vue";
-import { appendTest, updateTest, createTestMetric } from "@/services/profileStore.js";
+import { useProfileStore } from "@/composables/useProfileStore.js";
 import { useToasts } from "@/composables/useToasts.js";
 import {
   PULL_UP_VERSIONS,
@@ -24,6 +24,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["done", "cancel"]);
 const { pushToast } = useToasts();
+const { appendTest, updateTest, createTestMetric } = useProfileStore();
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
@@ -118,8 +119,6 @@ function save() {
       pushToast("Failed to create test", "error");
     }
   }
-  // Notify other parts of the app to refresh
-  window.dispatchEvent(new CustomEvent("profile-updated"));
   emit("done");
 }
 </script>

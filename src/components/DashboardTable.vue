@@ -1,25 +1,24 @@
 <script setup>
 import { computed, reactive, onMounted, onUnmounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import BaseButton from "./ui/BaseButton.vue";
-import IconDotsVertical from "./icons/IconDotsVertical.vue";
-import IconEdit from "./icons/IconEdit.vue";
-import IconTrash from "./icons/IconTrash.vue";
-import CooperLevelIcon from "./icons/CooperLevelIcon.vue";
-import { toKilometers, toMeters, evaluateCooper } from "../services/cooper";
-import { loadProfile } from "../services/profileStore.js";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import IconDotsVertical from "@/components/icons/IconDotsVertical.vue";
+import IconEdit from "@/components/icons/IconEdit.vue";
+import IconTrash from "@/components/icons/IconTrash.vue";
+import CooperLevelIcon from "@/components/icons/CooperLevelIcon.vue";
+import { toKilometers, toMeters, evaluateCooper } from "@/services/cooper";
+import { useProfileStore } from "@/composables/useProfileStore.js";
 import { PlusIcon } from "@heroicons/vue/24/solid";
-import ExerciseCell from "./ui/ExerciseCell.vue";
+import ExerciseCell from "@/components/ui/ExerciseCell.vue";
 
 const props = defineProps({
   tests: { type: Array, default: () => [] },
 });
 
 const { t } = useI18n();
-
-const profile = loadProfile();
-const genderKey = profile?.gender?.toLowerCase() || "m";
-const age = profile?.age || 0;
+const { profile } = useProfileStore();
+const genderKey = profile.value?.gender?.toLowerCase() || "m";
+const age = profile.value?.age || 0;
 
 const menuState = reactive({ openIndex: null, position: { top: 0, right: 0 } });
 

@@ -23,7 +23,7 @@ Sthenos is a lightweight single-page app for tracking a fitness profile (name, g
 
 ## Data Model
 
-`profileStore.js` manages a single profile object:
+Profile data is accessed via the `useProfileStore` composable:
 
 ```js
 {
@@ -33,12 +33,12 @@ Sthenos is a lightweight single-page app for tracking a fitness profile (name, g
   tests: [
     {
       date: 'YYYY-MM-DD',
-      pullUps, pullUpsVersion,
-      pushUps, pushUpsVersion,
-      squats, squatsVersion,
-      vups, vupsVersion,
-      burpees, burpeesVersion,
-      laps
+      pullup: { reps: Number, version: String },
+      pushup: { reps: Number, version: String },
+      squats: { reps: Number, version: String },
+      vups: { reps: Number, version: String },
+      burpees: { reps: Number, version: String },
+      cooper: Number
     }
   ]
 }
@@ -54,7 +54,6 @@ Store helpers cover: load, save (merging existing tests), append, update, delete
 | `/profile` | `profile` | `ProfileForm.vue` | Create / edit profile |
 | `/exercise/new` | `exercise-new` | `ExerciseEditor.vue` | New test entry |
 | `/exercise/edit/:index` | `exercise-edit` | `ExerciseEditor.vue` | Edit existing test |
-| `/dashboard` | (redirect) | – | Alias redirect to `/` |
 
 Navigation Guard: Accessing dashboard or exercise routes without a stored profile redirects to `/profile`.
 
@@ -113,8 +112,8 @@ npm run preview
 
 ## Architectural Notes
 
-* Single source of truth: `profileStore.js`
-* Tests are always manipulated via store helpers (never mutate raw array directly in components)
+* Single source of truth: `useProfileStore` composable
+* Tests are always manipulated via composable helpers (never mutate raw array directly in components)
 * Save logic merges existing tests when updating profile metadata to prevent accidental loss
 * Chart recalculates derived paths from `tests` each render – small dataset approach (optimization not currently necessary)
 
@@ -128,7 +127,7 @@ Global, ephemeral notifications are provided by a lightweight composable + conta
 Usage inside any component:
 
 ```js
-import { useToasts } from '../composables/useToasts.js'
+import { useToasts } from '@/composables/useToasts.js'
 const { pushToast } = useToasts()
 pushToast('Profile saved', 'success')
 pushToast('Something went wrong', 'error', 5000)

@@ -2,13 +2,9 @@
 import { ref, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { useToasts } from "../composables/useToasts.js";
-import {
-  getProfileData,
-  importProfile,
-  clearProfile,
-} from "../services/profileStore.js";
-import IconMenu from "./icons/IconMenu.vue";
+import { useToasts } from "@/composables/useToasts.js";
+import { useProfileStore } from "@/composables/useProfileStore.js";
+import IconMenu from "@/components/icons/IconMenu.vue";
 import {
   ArrowUpTrayIcon,
   ArrowDownTrayIcon,
@@ -22,6 +18,7 @@ const menuOpen = ref(false);
 const fileInput = ref(null);
 const router = useRouter();
 const { pushToast } = useToasts();
+const { getProfileData, importProfile, clearProfile } = useProfileStore();
 
 function toggleMenu() {
   menuOpen.value = !menuOpen.value;

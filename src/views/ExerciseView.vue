@@ -2,16 +2,14 @@
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import ExerciseTestForm from "@/components/ExerciseTestForm.vue";
-import { loadProfile } from "@/services/profileStore.js";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import { ArrowLeftCircleIcon } from '@heroicons/vue/24/outline'
-import { ref } from "vue";
+import { useProfileStore } from '@/composables/useProfileStore.js';
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
-const profile = ref(loadProfile());
-const tests = ref(profile.value?.tests || []);
+const { tests } = useProfileStore();
 
 const isEdit = route.name === "exercise-edit";
 const index = isEdit ? Number(route.params.index) : null;

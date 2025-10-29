@@ -14,19 +14,19 @@ import {
   Filler,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import Card from "./ui/Card.vue";
-import ChartStats from "./ChartStats.vue";
+import Card from "@/components/ui/Card.vue";
+import ChartStats from "@/components/ChartStats.vue";
 import {
   PULL_UP_VERSIONS,
   PUSH_UP_VERSIONS,
   SQUAT_VERSIONS,
   VUP_VERSIONS,
   BURPEE_VERSIONS,
-} from "../services/exerciseVersions.js";
+} from "@/services/exerciseVersions.js";
 import {
   filterTestsByMetric,
   calculateStats,
-} from "../services/exerciseCollectionService.js";
+} from "@/services/exerciseCollectionService.js";
 
 ChartJS.register(
   CategoryScale,

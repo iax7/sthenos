@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToasts } from '@/composables/useToasts.js'
-import { loadProfile, saveProfile } from '@/services/profileStore.js'
+import { useProfileStore } from '@/composables/useProfileStore.js'
 import { useRouter } from 'vue-router'
 import Card from '@/components/ui/Card.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
@@ -10,21 +10,21 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseNumberStepper from '@/components/ui/BaseNumberStepper.vue'
 
 const { t } = useI18n()
+const { pushToast } = useToasts()
+const router = useRouter()
+const { profile, saveProfile } = useProfileStore()
 
 // Reactive state
 const name = ref('')
 const gender = ref('')
 const age = ref('')
 const isEditing = ref(false)
-const { pushToast } = useToasts()
-const router = useRouter()
 
 // Initialize from store
-const existing = loadProfile()
-if (existing) {
-  name.value = existing.name
-  gender.value = existing.gender
-  age.value = existing.age
+if (profile.value) {
+  name.value = profile.value.name
+  gender.value = profile.value.gender
+  age.value = profile.value.age
   isEditing.value = true
 }
 
