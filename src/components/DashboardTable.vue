@@ -8,7 +8,7 @@ import IconTrash from "./icons/IconTrash.vue";
 import CooperLevelIcon from "./icons/CooperLevelIcon.vue";
 import { toKilometers, toMeters, evaluateCooper } from "../services/cooper";
 import { loadProfile } from "../services/profileStore.js";
-import { PlusIcon, NoSymbolIcon } from "@heroicons/vue/24/solid";
+import { PlusIcon } from "@heroicons/vue/24/solid";
 import ExerciseCell from "./ui/ExerciseCell.vue";
 
 const props = defineProps({
@@ -133,20 +133,20 @@ function formatPrettyDate(dateStr) {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(t, i) in rows" :key="i">
+        <tr v-for="(tr, i) in rows" :key="i">
           <td class="exercise__cell font-semibold">
             <span class="hidden sm:inline"
-              >{{ formatPrettyDate(t.date).year }}&nbsp;</span
-            >{{ formatPrettyDate(t.date).month }}
+              >{{ formatPrettyDate(tr.date).year }}&nbsp;</span
+            >{{ formatPrettyDate(tr.date).month }}
           </td>
-          <ExerciseCell :value="t.pullup?.reps" />
-          <ExerciseCell :value="t.pushup?.reps" />
-          <ExerciseCell :value="t.squats?.reps" />
-          <ExerciseCell :value="t.vups?.reps" />
-          <ExerciseCell :value="t.burpees?.reps" />
-          <ExerciseCell :value="t._cooperKm">
+          <ExerciseCell :value="tr.pullup?.reps" />
+          <ExerciseCell :value="tr.pushup?.reps" />
+          <ExerciseCell :value="tr.squats?.reps" />
+          <ExerciseCell :value="tr.vups?.reps" />
+          <ExerciseCell :value="tr.burpees?.reps" />
+          <ExerciseCell :value="tr._cooperKm">
               <CooperLevelIcon
-                :level="t._cooperLevel"
+                :level="tr._cooperLevel"
                 :showText="true"
                 class="inline size-5 ml-1"
               />
@@ -155,17 +155,17 @@ function formatPrettyDate(dateStr) {
             <div class="flex justify-center items-center">
             <button
               type="button"
-              :data-menu-btn="t._idx"
-              class="icon-btn flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none"
-              @click="openMenu(t._idx, $event)"
+              :data-menu-btn="tr._idx"
+              class="icon-btn flex size-9 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none"
+              @click="openMenu(tr._idx, $event)"
               aria-label="Actions"
             >
               <IconDotsVertical />
             </button>
             <Teleport to="body">
               <div
-                v-if="menuState.openIndex === t._idx"
-                :data-menu-idx="t._idx"
+                v-if="menuState.openIndex === tr._idx"
+                :data-menu-idx="tr._idx"
                 class="fixed z-50 w-44 rounded-md border border-gray-200 bg-white shadow-lg"
                 :style="{
                   top: menuState.position.top + 'px',
@@ -183,7 +183,7 @@ function formatPrettyDate(dateStr) {
                       "
                     >
                       <IconEdit />
-                      <span>{{ $t('dashboard.table.actions.edit') }}</span>
+                      <span>{{ t('dashboard.table.actions.edit') }}</span>
                     </button>
                   </li>
                   <hr class="my-1 border-gray-200" />
@@ -197,7 +197,7 @@ function formatPrettyDate(dateStr) {
                       "
                     >
                       <IconTrash />
-                      <span>{{ $t('dashboard.table.actions.delete') }}</span>
+                      <span>{{ t('dashboard.table.actions.delete') }}</span>
                     </button>
                   </li>
                 </ul>

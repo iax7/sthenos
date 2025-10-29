@@ -12,7 +12,9 @@
     "male": "Masculino",
     "female": "Femenino",
     "age": "Edad",
-    "edit": "Editar Perfil"
+    "edit": "Editar Perfil",
+    "saveSuccess": "Perfil creado",
+    "updateSuccess": "Perfil actualizado"
   },
   "nav": {
     "title": "Pruebas de Rendimiento",
@@ -72,6 +74,9 @@
     "vg": "MB"
   },
   "dashboard": {
+    "deleteConfirm": "¿Eliminar esta prueba de ejercicio?",
+    "deleteSuccess": "Prueba eliminada.",
+    "deleteFailure": "Error al eliminar la prueba.",
     "table": {
       "title": "Pruebas de Ejercicio",
       "newEntry": "Nuevo",

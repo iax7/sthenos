@@ -65,7 +65,7 @@ const GRADIENT_COLORS = {
 const selectedMetric = ref(METRICS[0].key);
 
 const selectedData = computed(() => {
-  return filterTestsByMetric(props.tests, selectedMetric.value, METRICS);
+  return filterTestsByMetric(props.tests, selectedMetric.value, METRICS) || [];
 });
 
 const stats = computed(() => calculateStats(selectedData.value));
@@ -89,6 +89,13 @@ function getGradientColors(delta) {
 
 const chartData = computed(() => {
   const data = selectedData.value;
+  if (!data || !data.length) {
+    return {
+      labels: [],
+      datasets: []
+    };
+  }
+
   const [baseColor, startColor, endColor, pointColor] = getGradientColors(
     stats.value.delta,
   );
@@ -128,9 +135,8 @@ const chartData = computed(() => {
 });
 
 const chartOptions = computed(() => {
-  const [baseColor, startColor, endColor, pointColor] = getGradientColors(
-    stats.value.delta,
-  );
+  if (!stats.value) return {};
+  const [baseColor, ,] = getGradientColors(stats.value.delta);
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -206,7 +212,7 @@ const chartOptions = computed(() => {
       </select>
     </div>
     <div
-      v-if="Array.isArray(selectedData.value) && selectedData.value.length < 2"
+      v-if="!selectedData || selectedData.length < 2"
       class="text-sm text-gray-500"
     >
       {{ t("dashboard.chart.notEnoughData") }}

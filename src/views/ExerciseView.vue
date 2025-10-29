@@ -1,11 +1,10 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import ExerciseTestForm from "./ExerciseTestForm.vue";
-import { loadProfile } from "../services/profileStore.js";
-import BaseButton from "./ui/BaseButton.vue";
+import ExerciseTestForm from "@/components/ExerciseTestForm.vue";
+import { loadProfile } from "@/services/profileStore.js";
+import BaseButton from "@/components/ui/BaseButton.vue";
 import { ArrowLeftCircleIcon } from '@heroicons/vue/24/outline'
-import Card from "./ui/Card.vue";
 import { ref } from "vue";
 
 const route = useRoute();
@@ -19,7 +18,7 @@ const index = isEdit ? Number(route.params.index) : null;
 const test = isEdit && tests.value[index] ? { ...tests.value[index] } : null;
 
 function goBack() {
-  router.push("/dashboard");
+  router.push("/");
 }
 </script>
 

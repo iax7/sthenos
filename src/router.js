@@ -1,22 +1,21 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import ProfileForm from "./components/ProfileForm.vue";
-import Dashboard from "./components/Dashboard.vue";
-import ExerciseEditor from "./components/ExerciseEditor.vue";
+import ProfileView from "@/views/ProfileView.vue";
+import HomeView from "@/views/HomeView.vue";
+import ExerciseView from "@/views/ExerciseView.vue";
 
 const routes = [
-  { path: "/", name: "dashboard", component: Dashboard },
-  { path: "/profile", name: "profile", component: ProfileForm },
-  { path: "/dashboard", redirect: "/" },
+  { path: "/", name: "dashboard", component: HomeView },
+  { path: "/profile", name: "profile", component: ProfileView },
   {
     path: "/exercise/new",
     name: "exercise-new",
-    component: ExerciseEditor,
+    component: ExerciseView,
     meta: { standalone: true },
   },
   {
     path: "/exercise/edit/:index",
     name: "exercise-edit",
-    component: ExerciseEditor,
+    component: ExerciseView,
     props: true,
     meta: { standalone: true },
   },

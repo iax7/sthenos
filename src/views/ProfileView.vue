@@ -1,13 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useToasts } from '../composables/useToasts.js'
-import { loadProfile, saveProfile } from '../services/profileStore.js'
+import { useToasts } from '@/composables/useToasts.js'
+import { loadProfile, saveProfile } from '@/services/profileStore.js'
 import { useRouter } from 'vue-router'
-import Card from './ui/Card.vue'
-import BaseInput from './ui/BaseInput.vue'
-import BaseButton from './ui/BaseButton.vue'
-import BaseNumberStepper from './ui/BaseNumberStepper.vue'
+import Card from '@/components/ui/Card.vue'
+import BaseInput from '@/components/ui/BaseInput.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseNumberStepper from '@/components/ui/BaseNumberStepper.vue'
 
 const { t } = useI18n()
 
@@ -15,13 +15,9 @@ const { t } = useI18n()
 const name = ref('')
 const gender = ref('')
 const age = ref('')
-// Determine if editing existing profile
 const isEditing = ref(false)
-// Removed tests/edit state for root edit-only screen
-// menu removed (handled globally)
 const { pushToast } = useToasts()
 const router = useRouter()
-// UI lock removed (managed externally if needed)
 
 // Initialize from store
 const existing = loadProfile()
@@ -37,6 +33,7 @@ const canSave = computed(() => name.value.trim() && (gender.value === 'M' || gen
 function save() {
   if (!canSave.value) return
   saveProfile({ name: name.value, gender: gender.value, age: age.value })
+  pushToast(t(isEditing.value ? 'profile.updateSuccess' : 'profile.saveSuccess'), 'success')
   // navigate to dashboard root after profile exists
   router.push('/')
 }

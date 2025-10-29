@@ -12,7 +12,9 @@
     "male": "Male",
     "female": "Female",
     "age": "Age",
-    "edit": "Edit Profile"
+    "edit": "Edit Profile",
+    "saveSuccess": "Profile created",
+    "updateSuccess": "Profile updated"
   },
   "nav": {
     "title": "Performance Tests",
@@ -72,6 +74,9 @@
     "vg": "VG"
   },
   "dashboard": {
+    "deleteConfirm": "Delete this exercise test?",
+    "deleteSuccess": "Test deleted.",
+    "deleteFailure": "Failed to delete test.",
     "table": {
       "title": "Exercise Tests",
       "newEntry": "New",
