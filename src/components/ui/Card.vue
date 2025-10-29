@@ -1,6 +1,5 @@
-<script setup>
-// Simple structural wrapper using Tailwind component class .card
-</script>
 <template>
-  <div class="card"><slot /></div>
+  <div class="bg-white shadow-sm border border-gray-200 rounded-lg p-5 space-y-5 mt-6 mx-auto max-w-5xl">
+    <slot />
+  </div>
 </template>
