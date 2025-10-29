@@ -1,11 +1,11 @@
 import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
-import "./style.css";
-import App from "./App.vue";
-import { router } from "./router.js";
+import "@/style.css";
+import App from "@/App.vue";
+import { router } from "@/router.js";
 
-import en from "./locales/en.json";
-import es from "./locales/es.json";
+import en from "@/locales/en.json";
+import es from "@/locales/es.json";
 const browserLang = navigator.language.split("-")[0]; // 'es' or 'en'
 
 const i18n = createI18n({
