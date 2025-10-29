@@ -75,6 +75,19 @@ watch(
   },
 );
 
+function hasPositiveValue() {
+  // Checks if at least one input value is > 0
+  const values = [
+    Number(pullUps.value),
+    Number(pushUps.value),
+    Number(squats.value),
+    Number(vups.value),
+    Number(burpees.value),
+    Number(laps.value),
+  ];
+  return values.some((v) => v > 0);
+}
+
 const canSave = computed(() => {
   const dateOk = date.value && /\d{4}-\d{2}-\d{2}/.test(date.value);
   const fields = [
@@ -90,7 +103,11 @@ const canSave = computed(() => {
     burpeesVersion,
     laps,
   ];
-  return dateOk && fields.every((f) => String(f.value).trim() !== "");
+  return (
+    dateOk &&
+    fields.every((f) => String(f.value).trim() !== "") &&
+    hasPositiveValue()
+  );
 });
 
 function save() {
