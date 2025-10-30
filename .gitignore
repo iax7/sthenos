@@ -188,3 +188,6 @@ test/
 
 # rollup-plugin-visualizer
 stats.html
+
+.idea
+
