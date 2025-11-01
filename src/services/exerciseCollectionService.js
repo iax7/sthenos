@@ -14,11 +14,14 @@ export function filterTestsByMetric(tests, selectedMetricKey, metrics) {
     .filter((t) => t.date && metric.get(t) != null)
     .map((t) => {
       const rawMetric = t[metric.key];
-      const version =
+      const reps = Number(metric.get(t));
+      const versionKey =
         rawMetric && typeof rawMetric === "object"
           ? rawMetric.version || ""
           : "";
-      return { date: t.date, value: Number(metric.get(t)), version };
+      const version = metric.versions.find(v => v.value === versionKey)
+      const score = reps * version?.multiplier;
+      return { date: t.date, value: reps, version: versionKey, score };
     })
     .filter((entry) => entry.value > 0); // Only keep entries with positive value
 }

@@ -5,16 +5,16 @@ function makeVersion(value, multiplier, labelKey) {
 }
 
 export const PULL_UP_VERSIONS = [
-  makeVersion("c", 1, "exercise.pullup.complete"),
-  makeVersion("n", 1, "exercise.pullup.negative"),
-  makeVersion("l", 1, "exercise.pullup.bands"),
-  makeVersion("m", 1, "exercise.pullup.half"),
+  makeVersion("c",   1, "exercise.pullup.complete"),
+  makeVersion("n", 0.7, "exercise.pullup.negative"),
+  makeVersion("l", 0.6, "exercise.pullup.bands"),
+  makeVersion("m", 0.5, "exercise.pullup.half"),
 ];
 
 export const PUSH_UP_VERSIONS = [
-  makeVersion("c", 1, "exercise.pushup.complete"),
-  makeVersion("m", 1, "exercise.pushup.half"),
-  makeVersion("r", 1, "exercise.pushup.reverence"),
+  makeVersion("c",   1, "exercise.pushup.complete"),
+  makeVersion("m", 0.5, "exercise.pushup.half"),
+  makeVersion("r", 0.3, "exercise.pushup.reverence"),
 ];
 
 export const SQUAT_VERSIONS = [
@@ -22,13 +22,13 @@ export const SQUAT_VERSIONS = [
 ];
 
 export const VUP_VERSIONS = [
-  makeVersion("c", 1, "exercise.vup.complete"),
-  makeVersion("m", 1, "exercise.vup.half"),
+  makeVersion("c",   1, "exercise.vup.complete"),
+  makeVersion("m", 0.5, "exercise.vup.half"),
 ];
 
 export const BURPEE_VERSIONS = [
-  makeVersion("c", 1, "exercise.burpee.complete"),
-  makeVersion("sf", 1, "exercise.burpee.no_flex"),
+  makeVersion("c",    1, "exercise.burpee.complete"),
+  makeVersion("sf", 0.7, "exercise.burpee.no_flex"),
 ];
 
 export const EXERCISE_VERSIONS = {
