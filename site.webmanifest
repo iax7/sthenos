@@ -1,20 +1,19 @@
 {
   "name": "Sthenos",
   "short_name": "Sthenos",
-  "start_url": "./sthenos",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0f172a",
   "description": "Evalúa tu rendimiento físico y progreso.",
   "icons": [
     {
-      "src": "pwa-192x192.png",
+      "src": "/sthenos/pwa-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "pwa-512x512.png",
+      "src": "/sthenos/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
