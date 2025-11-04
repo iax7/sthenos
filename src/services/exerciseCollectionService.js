@@ -1,27 +1,23 @@
+import { getExerciseType } from "@/services/excercises.js";
+
 /**
- Filters and maps test entries by the selected metric.
+ Filters and maps test entries by the selected exercise.
 
  @param {Array<object>} tests - Array of test entry objects.
- @param {string} selectedMetricKey - Key of the metric to filter by.
- @param {Array<object>} metrics - Array of exercise definitions.
+ @param {string} exerciseKey - Key of the exercise to filter by.
  @returns {Array<{date: string, value: number, version: string}>} Filtered and mapped test data.
 */
-export function filterTestsByMetric(tests, selectedMetricKey, metrics) {
-  const metric = metrics.find((m) => m.key === selectedMetricKey);
+export function filterTestsByMetric(tests, exerciseKey) {
+  const metric = getExerciseType(exerciseKey);
   if (!metric) return [];
   return tests
     .slice()
-    .filter((t) => t.date && metric.get(t) != null)
+    .filter((t) => t.date && metric.getReps(t) != null)
     .map((t) => {
-      const rawMetric = t[metric.key];
-      const reps = Number(metric.get(t));
-      const versionKey =
-        rawMetric && typeof rawMetric === "object"
-          ? rawMetric.version || ""
-          : "";
-      const version = metric.versions.find(v => v.value === versionKey)
-      const score = reps * version?.multiplier;
-      return { date: t.date, value: reps, version: versionKey, score };
+      const reps = Number(metric.getReps(t));
+      const version = metric.getVersion(t);
+      const score = version ? reps * version.multiplier : reps;
+      return { date: t.date, value: reps, version: version?.value, score };
     })
     .filter((entry) => entry.value > 0); // Only keep entries with positive value
 }

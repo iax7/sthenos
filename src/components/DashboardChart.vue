@@ -17,16 +17,13 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import Card from "@/components/ui/Card.vue";
 import ChartStats from "@/components/ChartStats.vue";
 import {
-  PULL_UP_VERSIONS,
-  PUSH_UP_VERSIONS,
-  SQUAT_VERSIONS,
-  VUP_VERSIONS,
-  BURPEE_VERSIONS,
-} from "@/services/exerciseVersions.js";
-import {
   filterTestsByMetric,
   calculateStats,
 } from "@/services/exerciseCollectionService.js";
+import {
+  EXERCISES,
+  getExerciseType,
+} from "@/services/excercises.js";
 
 ChartJS.register(
   CategoryScale,
@@ -46,15 +43,6 @@ const props = defineProps({
 
 const { t } = useI18n();
 
-const METRICS = [
-  { key: "pullup", label: "Pull Ups", get: (t) => t.pullup?.reps ?? null, versions: PULL_UP_VERSIONS },
-  { key: "pushup", label: "Push Ups", get: (t) => t.pushup?.reps ?? null, versions: PUSH_UP_VERSIONS },
-  { key: "squats", label: "Squats", get: (t) => t.squats?.reps ?? null, versions: SQUAT_VERSIONS },
-  { key: "vups", label: "V-Ups", get: (t) => t.vups?.reps ?? null, versions: VUP_VERSIONS },
-  { key: "burpees", label: "Burpees", get: (t) => t.burpees?.reps ?? null, versions: BURPEE_VERSIONS },
-  { key: "cooper", label: "Cooper Laps", get: (t) => t.cooper ?? null, versions: [] },
-];
-
 // [ Base, 60% opacity, 25% opacity, Darker ]
 const GRADIENT_COLORS = {
   blue: ["#2563eb", "#2563eb99", "#2563eb40", "#1d4ed8"],
@@ -62,10 +50,10 @@ const GRADIENT_COLORS = {
   green: ["#34d399", "#34d39999", "#34d39940", "#10b981"],
 };
 
-const selectedMetric = ref(METRICS[0].key);
+const selectedMetric = ref(EXERCISES[0].key);
 
 const selectedData = computed(() => {
-  return filterTestsByMetric(props.tests, selectedMetric.value, METRICS) || [];
+  return filterTestsByMetric(props.tests, selectedMetric.value) || [];
 });
 
 const stats = computed(() => calculateStats(selectedData.value));
@@ -92,7 +80,7 @@ const chartData = computed(() => {
   if (!data || !data.length) {
     return {
       labels: [],
-      datasets: []
+      datasets: [],
     };
   }
 
@@ -118,7 +106,7 @@ const chartData = computed(() => {
     labels: data.map((d) => formatDateLabel(d.date)),
     datasets: [
       {
-        label: METRICS.find((m) => m.key === selectedMetric.value)?.label || "",
+        label: getExerciseType(selectedMetric.value)?.label || "",
         data: data.map((d) => d.value),
         borderColor: baseColor,
         backgroundColor: gradientFill,
@@ -148,7 +136,7 @@ const chartOptions = computed(() => {
         callbacks: {
           label: (context) => {
             const dataPoint = selectedData.value[context.dataIndex];
-            const metric = METRICS.find((m) => m.key === selectedMetric.value);
+            const metric = getExerciseType(selectedMetric.value);
             let versionLabel = "";
             if (dataPoint?.version && metric?.versions) {
               const versionObj = metric.versions.find(
@@ -206,7 +194,7 @@ const chartOptions = computed(() => {
     <div class="mb-4 flex items-center justify-between">
       <h2>{{ t("dashboard.chart.title") }}</h2>
       <select v-model="selectedMetric" class="form-input">
-        <option v-for="m in METRICS" :key="m.key" :value="m.key">
+        <option v-for="m in EXERCISES" :key="m.key" :value="m.key">
           {{ m.label }}
         </option>
       </select>
