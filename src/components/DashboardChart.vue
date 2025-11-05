@@ -14,7 +14,7 @@ import {
   Filler,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import Card from "@/components/ui/Card.vue";
+import AppCard from "@/components/ui/AppCard.vue";
 import ChartStats from "@/components/ChartStats.vue";
 import {
   filterTestsByMetric,
@@ -181,7 +181,7 @@ const chartOptions = computed(() => {
 </script>
 
 <template>
-  <Card>
+  <AppCard>
     <div class="mb-4 flex items-center justify-between">
       <h2>{{ t("dashboard.chart.title") }}</h2>
       <select v-model="selectedMetric" class="form-input">
@@ -202,5 +202,5 @@ const chartOptions = computed(() => {
       </div>
       <ChartStats :stats="stats" />
     </div>
-  </Card>
+  </AppCard>
 </template>

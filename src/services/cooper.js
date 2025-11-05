@@ -1,4 +1,4 @@
-const COOPER_TRIP_SIZE_METERS = 320;
+const COOPER_TRIP_SIZE_METERS = 320
 // https://es.wikipedia.org/wiki/Test_de_Cooper
 const COOPER_RANGES = {
   // Women (F)
@@ -23,43 +23,43 @@ const COOPER_RANGES = {
     6: [1400, 1700, 2100, 2501], // 40-49
     7: [1300, 1600, 2000, 2401], // 50+
   },
-};
+}
 
 const getAgeIndex = (age) => {
-  if (age >= 11 && age <= 12) return 0;
-  if (age >= 13 && age <= 14) return 1;
-  if (age >= 15 && age <= 16) return 2;
-  if (age >= 17 && age <= 19) return 3;
-  if (age >= 20 && age <= 29) return 4;
-  if (age >= 30 && age <= 39) return 5;
-  if (age >= 40 && age <= 49) return 6;
-  if (age >= 50) return 7;
-  return null;
-};
+  if (age >= 11 && age <= 12) return 0
+  if (age >= 13 && age <= 14) return 1
+  if (age >= 15 && age <= 16) return 2
+  if (age >= 17 && age <= 19) return 3
+  if (age >= 20 && age <= 29) return 4
+  if (age >= 30 && age <= 39) return 5
+  if (age >= 40 && age <= 49) return 6
+  if (age >= 50) return 7
+  return null
+}
 
 const cooperResults = (value, [veryBad, bad, normal, good]) => {
-  if (value < veryBad) return 1;
-  if (value < bad) return 2;
-  if (value < normal) return 3;
-  if (value < good) return 4;
-  return 5; // veryGood
-};
+  if (value < veryBad) return 1
+  if (value < bad) return 2
+  if (value < normal) return 3
+  if (value < good) return 4
+  return 5 // veryGood
+}
 
 // console.log(evaluateCooper(2200, 25, 'm')); // 3
 // console.log(evaluateCooper(1800, 35, 'f')); // 3
 export const evaluateCooper = (distanceMeters, age, genderKey) => {
-  const ageIndex = getAgeIndex(age);
-  if (ageIndex === null) return null;
+  const ageIndex = getAgeIndex(age)
+  if (ageIndex === null) return null
 
-  const ranges = COOPER_RANGES[genderKey][ageIndex];
+  const ranges = COOPER_RANGES[genderKey][ageIndex]
 
-  return cooperResults(distanceMeters, ranges);
-};
+  return cooperResults(distanceMeters, ranges)
+}
 
 export const toMeters = (laps) => {
-  return laps * COOPER_TRIP_SIZE_METERS;
-};
+  return laps * COOPER_TRIP_SIZE_METERS
+}
 
 export const toKilometers = (meters) => {
-  return meters / 1000;
-};
+  return meters / 1000
+}

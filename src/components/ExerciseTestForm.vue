@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import Card from "@/components/ui/Card.vue";
+import AppCard from "@/components/ui/AppCard.vue";
 import BaseInput from "@/components/ui/BaseInput.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import ExerciseMetricInput from "@/components/ui/ExerciseMetricInput.vue";
@@ -141,7 +141,7 @@ function save() {
 </script>
 
 <template>
-  <Card>
+  <AppCard>
     <form @submit.prevent="save" class="space-y-4">
       <div class="flex flex-col">
         <label class="form-label">{{ t('exercise.editor.date') }}</label>
@@ -206,5 +206,5 @@ function save() {
         }}</BaseButton>
       </div>
     </form>
-  </Card>
+  </AppCard>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, onMounted, onUnmounted, ref } from "vue";
+import { computed, reactive, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import IconDotsVertical from "@/components/icons/IconDotsVertical.vue";

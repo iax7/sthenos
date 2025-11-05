@@ -1,22 +1,22 @@
 <script setup>
-import { useRoute, useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import ExerciseTestForm from "@/components/ExerciseTestForm.vue";
-import BaseButton from "@/components/ui/BaseButton.vue";
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import ExerciseTestForm from '@/components/ExerciseTestForm.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
 import { ArrowLeftCircleIcon } from '@heroicons/vue/24/outline'
-import { useProfileStore } from '@/composables/useProfileStore.js';
+import { useProfileStore } from '@/composables/useProfileStore.js'
 
-const route = useRoute();
-const router = useRouter();
-const { t } = useI18n();
-const { tests } = useProfileStore();
+const route = useRoute()
+const router = useRouter()
+const { t } = useI18n()
+const { tests } = useProfileStore()
 
-const isEdit = route.name === "exercise-edit";
-const index = isEdit ? Number(route.params.index) : null;
-const test = isEdit && tests.value[index] ? { ...tests.value[index] } : null;
+const isEdit = route.name === 'exercise-edit'
+const index = isEdit ? Number(route.params.index) : null
+const test = isEdit && tests.value[index] ? { ...tests.value[index] } : null
 
 function goBack() {
-  router.push("/");
+  router.push('/')
 }
 </script>
 
