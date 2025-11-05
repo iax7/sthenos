@@ -24,6 +24,9 @@ import {
   EXERCISES,
   getExerciseType,
 } from "@/services/excercises.js";
+import { useProfileStore } from "@/composables/useProfileStore.js";
+
+const { tests } = useProfileStore();
 
 ChartJS.register(
   CategoryScale,
@@ -37,10 +40,6 @@ ChartJS.register(
   ChartDataLabels,
 );
 
-const props = defineProps({
-  tests: { type: Array, default: () => [] },
-});
-
 const { t } = useI18n();
 
 // [ Base, 60% opacity, 25% opacity, Darker ]
@@ -53,7 +52,7 @@ const GRADIENT_COLORS = {
 const selectedMetric = ref(EXERCISES[0].key);
 
 const selectedData = computed(() => {
-  return filterTestsByMetric(props.tests, selectedMetric.value) || [];
+  return filterTestsByMetric(tests.value, selectedMetric.value) || [];
 });
 
 const stats = computed(() => calculateStats(selectedData.value));
@@ -87,7 +86,7 @@ const chartData = computed(() => {
   const [baseColor, startColor, endColor, pointColor] = getGradientColors(
     stats.value.delta,
   );
-  // backgroundColor as function for gradient
+
   const gradientFill = (ctx) => {
     const chart = ctx.chart;
     const { ctx: canvasCtx, chartArea } = chart;
@@ -102,6 +101,7 @@ const chartData = computed(() => {
     grad.addColorStop(1, endColor);
     return grad;
   };
+
   return {
     labels: data.map((d) => formatDateLabel(d.date)),
     datasets: [
@@ -124,14 +124,17 @@ const chartData = computed(() => {
 
 const chartOptions = computed(() => {
   if (!stats.value) return {};
-  const [baseColor, ,] = getGradientColors(stats.value.delta);
+  const [baseColor] = getGradientColors(stats.value.delta);
   return {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
+    layout: {
+      padding: {
+        top: 25, // Add some top padding for better label visibility
       },
+    },
+    plugins: {
+      legend: { display: false },
       tooltip: {
         callbacks: {
           label: (context) => {
@@ -154,14 +157,8 @@ const chartOptions = computed(() => {
         anchor: "end",
         align: "end",
         color: baseColor,
-        font: {
-          weight: "bold",
-          size: 12,
-        },
-        formatter: (value, context) => {
-          // Show only if value is not null/undefined
-          return value != null ? value : "";
-        },
+        font: { weight: "bold", size: 12 },
+        formatter: (value) => (value != null ? value : ""),
         display: true,
         clip: false,
       },
@@ -169,20 +166,14 @@ const chartOptions = computed(() => {
     scales: {
       y: {
         beginAtZero: false,
-        grid: {
-          color: "rgba(209, 213, 219, 0.3)",
-        },
+        grid: { color: "rgba(209, 213, 219, 0.3)" },
         ticks: {
-          callback: function (value) {
-            return Number.isInteger(value) ? value : "";
-          },
+          callback: (value) => (Number.isInteger(value) ? value : ""),
           stepSize: 1,
         },
       },
       x: {
-        grid: {
-          display: true,
-        },
+        grid: { display: true },
       },
     },
   };

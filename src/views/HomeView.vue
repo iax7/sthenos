@@ -38,6 +38,6 @@ function onDeleteTest(i) {
       @delete="onDeleteTest"
       @new="newEntry"
     />
-    <DashboardChart v-if="tests.length > 0" :tests="tests" />
+    <DashboardChart v-if="tests.length > 0" />
   </div>
 </template>
