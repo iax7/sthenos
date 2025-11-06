@@ -1,45 +1,45 @@
 <script setup>
-import { computed, onMounted, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import BaseInput from "./BaseInput.vue";
-import BaseSelect from "./BaseSelect.vue";
+import { computed, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import BaseInput from './BaseInput.vue'
+import BaseSelect from './BaseSelect.vue'
 
 const props = defineProps({
   label: { type: String, required: true },
-  count: { type: [Number, String], default: "" },
-  placeholder: { type: String, default: "" },
-  version: { type: String, default: "" },
+  count: { type: [Number, String], default: '' },
+  placeholder: { type: String, default: '' },
+  version: { type: String, default: '' },
   versions: { type: Array, default: () => [] },
   min: { type: Number, default: 0 },
-});
+})
 
-const emit = defineEmits(["update:count", "update:version"]);
+const emit = defineEmits(['update:count', 'update:version'])
 
 const numberValue = computed({
   get: () => props.count,
-  set: (v) => emit("update:count", v),
-});
+  set: (v) => emit('update:count', v),
+})
 
 const versionValue = computed({
   get: () => props.version,
-  set: (v) => emit("update:version", v),
-});
+  set: (v) => emit('update:version', v),
+})
 
-const { t } = useI18n();
+const { t } = useI18n()
 
 function selectFirstIfEmpty() {
   if (!versionValue.value && props.versions.length) {
-    const first = props.versions[0];
-    const val = typeof first === "string" ? first : first.value;
-    emit("update:version", val);
+    const first = props.versions[0]
+    const val = typeof first === 'string' ? first : first.value
+    emit('update:version', val)
   }
 }
 
-onMounted(selectFirstIfEmpty);
+onMounted(selectFirstIfEmpty)
 watch(
   () => props.versions,
   () => selectFirstIfEmpty(),
-);
+)
 </script>
 
 <template>
@@ -59,7 +59,7 @@ watch(
           :key="typeof v === 'string' ? v : v.value"
           :value="typeof v === 'string' ? v : v.value"
         >
-          {{ typeof v === "string" ? v : v.labelKey ? t(v.labelKey) : v.label }}
+          {{ typeof v === 'string' ? v : v.labelKey ? t(v.labelKey) : v.label }}
         </option>
       </BaseSelect>
     </div>

@@ -1,19 +1,19 @@
 <script setup>
-import { NoSymbolIcon } from "@heroicons/vue/24/solid";
+import { NoSymbolIcon } from '@heroicons/vue/24/solid'
 
 const props = defineProps({
   value: { type: Number, default: null },
-});
+})
 
 function formatValue(val) {
-  const num = Number(val);
-  if (isNaN(num)) return "";
+  const num = Number(val)
+  if (isNaN(num)) return ''
   return Number.isInteger(num)
     ? num.toLocaleString()
     : num.toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-      });
+      })
 }
 </script>
 
