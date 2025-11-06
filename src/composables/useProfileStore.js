@@ -1,6 +1,6 @@
 // Composable for reactive profile management with localStorage persistence.
 
-import { ref, computed, readonly } from 'vue';
+import { ref, computed, readonly } from 'vue'
 
 /**
  * @typedef {Object} UserProfile
@@ -25,12 +25,13 @@ import { ref, computed, readonly } from 'vue';
  * @property {string} version
  */
 
-const STORAGE_KEY = "user_profile_v1";
-const VALID_GENDERS = ['M', 'F'];
-const DEFAULT_PROFILE = { name: "", gender: "", age: 0, tests: [] };
+const STORAGE_KEY = 'user_profile_v1'
+const URL_STORAGE_KEY = 'profile_import_url'
+const VALID_GENDERS = ['M', 'F']
+const DEFAULT_PROFILE = { name: '', gender: '', age: 0, tests: [] }
 
 // Shared reactive state
-const profile = ref(null);
+const profile = ref(null)
 
 /**
  * Create a test metric object.
@@ -41,9 +42,9 @@ const profile = ref(null);
  * createTestMetric(10, 'standard') // { reps: 10, version: 'standard' }
  */
 export function createTestMetric(reps, version) {
-  const repetitions = Number(reps) || 0;
-  const ver = (version || "").trim();
-  return { reps: repetitions, version: ver };
+  const repetitions = Number(reps) || 0
+  const ver = (version || '').trim()
+  return { reps: repetitions, version: ver }
 }
 
 /**
@@ -52,18 +53,18 @@ export function createTestMetric(reps, version) {
  */
 function loadFromStorage() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw);
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    const data = JSON.parse(raw)
     return {
-      name: typeof data.name === "string" ? data.name : "",
-      gender: typeof data.gender === "string" ? data.gender.toUpperCase() : "",
-      age: typeof data.age === "number" ? data.age : Number(data.age) || 0,
+      name: typeof data.name === 'string' ? data.name : '',
+      gender: typeof data.gender === 'string' ? data.gender.toUpperCase() : '',
+      age: typeof data.age === 'number' ? data.age : Number(data.age) || 0,
       tests: Array.isArray(data.tests) ? data.tests : [],
-    };
+    }
   } catch (e) {
-    console.warn("[useProfileStore] Failed to load:", e);
-    return null;
+    console.warn('[useProfileStore] Failed to load:', e)
+    return null
   }
 }
 
@@ -74,24 +75,24 @@ function loadFromStorage() {
  */
 function saveToStorage(data) {
   // Load existing to preserve tests when not provided explicitly
-  let existing = null;
+  let existing = null
   try {
-    existing = loadFromStorage();
+    existing = loadFromStorage()
   } catch (_) {}
-  const incomingHasTests = Array.isArray(data.tests);
+  const incomingHasTests = Array.isArray(data.tests)
   const normalized = {
-    name: (data.name || "").trim(),
-    gender: String(data.gender || "").toUpperCase(),
+    name: (data.name || '').trim(),
+    gender: String(data.gender || '').toUpperCase(),
     age: Number(data.age) || 0,
     tests: incomingHasTests ? data.tests : existing?.tests || [],
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
-  profile.value = normalized;
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized))
+  profile.value = normalized
   // Dispatch event for backward compatibility
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('profile-updated'));
+    window.dispatchEvent(new CustomEvent('profile-updated'))
   }
-  return normalized;
+  return normalized
 }
 
 /**
@@ -100,12 +101,12 @@ function saveToStorage(data) {
  * @returns {boolean}
  */
 function isValidProfileShape(data) {
-  if (!data || typeof data !== "object") return false;
-  if (typeof data.name !== "string") return false;
-  if (!VALID_GENDERS.includes(String(data.gender).toUpperCase())) return false;
-  if (typeof data.age !== "number" && isNaN(Number(data.age))) return false;
-  if (data.tests && !Array.isArray(data.tests)) return false;
-  return true;
+  if (!data || typeof data !== 'object') return false
+  if (typeof data.name !== 'string') return false
+  if (!VALID_GENDERS.includes(String(data.gender).toUpperCase())) return false
+  if (typeof data.age !== 'number' && isNaN(Number(data.age))) return false
+  if (data.tests && !Array.isArray(data.tests)) return false
+  return true
 }
 
 /**
@@ -115,19 +116,19 @@ function isValidProfileShape(data) {
 export function useProfileStore() {
   // Initialize on first use
   if (profile.value === null) {
-    profile.value = loadFromStorage();
+    profile.value = loadFromStorage()
   }
 
-  const tests = computed(() => profile.value?.tests || []);
-  const hasProfile = computed(() => profile.value !== null);
+  const tests = computed(() => profile.value?.tests || [])
+  const hasProfile = computed(() => profile.value !== null)
 
   /**
    * Load profile from storage and update reactive state.
    * @returns {UserProfile|null}
    */
   function loadProfile() {
-    profile.value = loadFromStorage();
-    return profile.value;
+    profile.value = loadFromStorage()
+    return profile.value
   }
 
   /**
@@ -136,17 +137,17 @@ export function useProfileStore() {
    * @returns {UserProfile}
    */
   function saveProfile(data) {
-    return saveToStorage(data);
+    return saveToStorage(data)
   }
 
   /**
    * Clear profile from storage and reset reactive state.
    */
   function clearProfile() {
-    localStorage.removeItem(STORAGE_KEY);
-    profile.value = null;
+    localStorage.removeItem(STORAGE_KEY)
+    profile.value = null
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('profile-updated'));
+      window.dispatchEvent(new CustomEvent('profile-updated'))
     }
   }
 
@@ -156,24 +157,21 @@ export function useProfileStore() {
    * @returns {TestEntry} the created entry
    */
   function appendTest(partial) {
-    const currentProfile = profile.value || DEFAULT_PROFILE;
+    const currentProfile = profile.value || DEFAULT_PROFILE
     const entry = {
-      date:
-        typeof partial.date === "string"
-          ? partial.date
-          : new Date().toISOString().slice(0, 10),
+      date: typeof partial.date === 'string' ? partial.date : new Date().toISOString().slice(0, 10),
       pullup: partial.pullup,
       pushup: partial.pushup,
       squats: partial.squats,
       vups: partial.vups,
       burpees: partial.burpees,
       cooper: partial.cooper,
-    };
-    currentProfile.tests.push(entry);
+    }
+    currentProfile.tests.push(entry)
     // Keep tests sorted by date ascending
-    currentProfile.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)));
-    saveToStorage(currentProfile);
-    return entry;
+    currentProfile.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)))
+    saveToStorage(currentProfile)
+    return entry
   }
 
   /**
@@ -189,22 +187,22 @@ export function useProfileStore() {
       index < 0 ||
       index >= profile.value.tests.length
     )
-      return null;
-    const current = profile.value.tests[index];
+      return null
+    const current = profile.value.tests[index]
     const updated = {
-      date: typeof partial.date === "string" ? partial.date : current.date,
+      date: typeof partial.date === 'string' ? partial.date : current.date,
       pullup: partial.pullup,
       pushup: partial.pushup,
       squats: partial.squats,
       vups: partial.vups,
       burpees: partial.burpees,
       cooper: partial.cooper,
-    };
-    profile.value.tests.splice(index, 1, updated);
+    }
+    profile.value.tests.splice(index, 1, updated)
     // Re-sort after update
-    profile.value.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)));
-    saveToStorage(profile.value);
-    return updated;
+    profile.value.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)))
+    saveToStorage(profile.value)
+    return updated
   }
 
   /**
@@ -219,10 +217,10 @@ export function useProfileStore() {
       index < 0 ||
       index >= profile.value.tests.length
     )
-      return false;
-    profile.value.tests.splice(index, 1);
-    saveToStorage(profile.value);
-    return true;
+      return false
+    profile.value.tests.splice(index, 1)
+    saveToStorage(profile.value)
+    return true
   }
 
   /**
@@ -230,11 +228,7 @@ export function useProfileStore() {
    * @returns {string}
    */
   function getProfileData() {
-    return JSON.stringify(
-      profile.value || DEFAULT_PROFILE,
-      null,
-      2,
-    );
+    return JSON.stringify(profile.value || DEFAULT_PROFILE, null, 2)
   }
 
   /**
@@ -244,30 +238,80 @@ export function useProfileStore() {
    */
   function importProfile(data) {
     if (!isValidProfileShape(data)) {
-      return { ok: false, error: "Invalid profile structure" };
+      return { ok: false, error: 'Invalid profile structure' }
     }
     // normalize tests metrics to expected shape
     if (Array.isArray(data.tests)) {
       data.tests = data.tests.map((t) => ({
-        date:
-          typeof t.date === "string"
-            ? t.date
-            : new Date().toISOString().slice(0, 10),
+        date: typeof t.date === 'string' ? t.date : new Date().toISOString().slice(0, 10),
         pullup: t.pullup,
         pushup: t.pushup,
         squats: t.squats,
         vups: t.vups,
         burpees: t.burpees,
         cooper: Number(t.cooper) || 0,
-      }));
+      }))
     }
     const stored = saveToStorage({
       name: data.name,
       gender: data.gender,
       age: Number(data.age) || 0,
       tests: Array.isArray(data.tests) ? data.tests : [],
-    });
-    return { ok: true, profile: stored };
+    })
+    return { ok: true, profile: stored }
+  }
+
+  /**
+   * Import profile from a URL.
+   * @param {string} url - The URL to fetch the profile JSON from
+   * @returns {Promise<{ok:boolean,error?:string,profile?:Object}>}
+   */
+  async function importProfileFromUrl(url) {
+    try {
+      const response = await fetch(url)
+      if (!response.ok) {
+        return { ok: false, error: `HTTP ${response.status}: ${response.statusText}` }
+      }
+      const data = await response.json()
+      const result = importProfile(data)
+
+      // Save URL to localStorage if import was successful
+      if (result.ok) {
+        saveLastImportUrl(url)
+      }
+
+      return result
+    } catch (err) {
+      return { ok: false, error: err.message || 'Failed to fetch profile' }
+    }
+  }
+
+  /**
+   * Save the last used import URL to localStorage.
+   * @param {string} url
+   */
+  function saveLastImportUrl(url) {
+    if (typeof window !== 'undefined' && url && url.trim()) {
+      localStorage.setItem(URL_STORAGE_KEY, url.trim())
+    }
+  }
+
+  /**
+   * Get the last used import URL from localStorage.
+   * @returns {string|null}
+   */
+  function getLastImportUrl() {
+    if (typeof window === 'undefined') return null
+    return localStorage.getItem(URL_STORAGE_KEY)
+  }
+
+  /**
+   * Clear the saved import URL from localStorage.
+   */
+  function clearLastImportUrl() {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(URL_STORAGE_KEY)
+    }
   }
 
   return {
@@ -284,123 +328,117 @@ export function useProfileStore() {
     deleteTest,
     getProfileData,
     importProfile,
+    importProfileFromUrl,
+    saveLastImportUrl,
+    getLastImportUrl,
+    clearLastImportUrl,
     createTestMetric,
-  };
+  }
 }
 
 // Legacy exports for backward compatibility
 // These can be removed once all components migrate to the composable
 export function loadProfile() {
-  return loadFromStorage();
+  return loadFromStorage()
 }
 
 export function saveProfile(data) {
-  const result = saveToStorage(data);
+  const result = saveToStorage(data)
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('profile-updated'));
+    window.dispatchEvent(new CustomEvent('profile-updated'))
   }
-  return result;
+  return result
 }
 
 export function clearProfile() {
-  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(STORAGE_KEY)
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('profile-updated'));
+    window.dispatchEvent(new CustomEvent('profile-updated'))
   }
 }
 
 export function appendTest(partial) {
-  const currentProfile = loadFromStorage() || DEFAULT_PROFILE;
+  const currentProfile = loadFromStorage() || DEFAULT_PROFILE
   const entry = {
-    date:
-      typeof partial.date === "string"
-        ? partial.date
-        : new Date().toISOString().slice(0, 10),
+    date: typeof partial.date === 'string' ? partial.date : new Date().toISOString().slice(0, 10),
     pullup: partial.pullup,
     pushup: partial.pushup,
     squats: partial.squats,
     vups: partial.vups,
     burpees: partial.burpees,
     cooper: partial.cooper,
-  };
-  currentProfile.tests.push(entry);
-  currentProfile.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  saveProfile(currentProfile);
-  return entry;
+  }
+  currentProfile.tests.push(entry)
+  currentProfile.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)))
+  saveProfile(currentProfile)
+  return entry
 }
 
 export function updateTest(index, partial) {
-  const currentProfile = loadFromStorage();
+  const currentProfile = loadFromStorage()
   if (
     !currentProfile ||
     !Array.isArray(currentProfile.tests) ||
     index < 0 ||
     index >= currentProfile.tests.length
   )
-    return null;
-  const current = currentProfile.tests[index];
+    return null
+  const current = currentProfile.tests[index]
   const updated = {
-    date: typeof partial.date === "string" ? partial.date : current.date,
+    date: typeof partial.date === 'string' ? partial.date : current.date,
     pullup: partial.pullup,
     pushup: partial.pushup,
     squats: partial.squats,
     vups: partial.vups,
     burpees: partial.burpees,
     cooper: partial.cooper,
-  };
-  currentProfile.tests.splice(index, 1, updated);
-  currentProfile.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  saveProfile(currentProfile);
-  return updated;
+  }
+  currentProfile.tests.splice(index, 1, updated)
+  currentProfile.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)))
+  saveProfile(currentProfile)
+  return updated
 }
 
 export function deleteTest(index) {
-  const currentProfile = loadFromStorage();
+  const currentProfile = loadFromStorage()
   if (
     !currentProfile ||
     !Array.isArray(currentProfile.tests) ||
     index < 0 ||
     index >= currentProfile.tests.length
   )
-    return false;
-  currentProfile.tests.splice(index, 1);
-  saveProfile(currentProfile);
-  return true;
+    return false
+  currentProfile.tests.splice(index, 1)
+  saveProfile(currentProfile)
+  return true
 }
 
 export function getProfileData() {
-  const currentProfile = loadFromStorage();
-  return JSON.stringify(
-    currentProfile || DEFAULT_PROFILE,
-    null,
-    2,
-  );
+  const currentProfile = loadFromStorage()
+  return JSON.stringify(currentProfile || DEFAULT_PROFILE, null, 2)
 }
 
 export function importProfile(data) {
   if (!isValidProfileShape(data)) {
-    return { ok: false, error: "Invalid profile structure" };
+    return { ok: false, error: 'Invalid profile structure' }
   }
   if (Array.isArray(data.tests)) {
     data.tests = data.tests.map((t) => ({
-      date:
-        typeof t.date === "string"
-          ? t.date
-          : new Date().toISOString().slice(0, 10),
+      date: typeof t.date === 'string' ? t.date : new Date().toISOString().slice(0, 10),
       pullup: t.pullup,
       pushup: t.pushup,
       squats: t.squats,
       vups: t.vups,
       burpees: t.burpees,
       cooper: Number(t.cooper) || 0,
-    }));
+    }))
   }
   const stored = saveProfile({
     name: data.name,
     gender: data.gender,
     age: Number(data.age) || 0,
     tests: Array.isArray(data.tests) ? data.tests : [],
-  });
-  return { ok: true, profile: stored };
+  })
+  return { ok: true, profile: stored }
 }
 

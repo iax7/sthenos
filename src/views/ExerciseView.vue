@@ -28,7 +28,7 @@ function goBack() {
       </h2>
       <BaseButton variant="secondary" type="button" @click="goBack">
         <ArrowLeftCircleIcon class="size-5 mr-1" />
-        <span>{{ t('app.back') }}</span>
+        {{ t('app.back') }}
       </BaseButton>
     </div>
     <ExerciseTestForm

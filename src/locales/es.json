@@ -26,7 +26,8 @@
     "importFailed": "Error al importar",
     "invalidJson": "Archivo JSON inválido",
     "clearConfirm": "¿Borrar todos los datos de perfil locales?",
-    "localDataCleared": "Datos locales borrados"
+    "localDataCleared": "Datos locales borrados",
+    "fetchUrl": "Obtener datos desde enlace"
   },
   "exercise": {
     "editor": {

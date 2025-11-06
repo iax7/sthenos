@@ -198,11 +198,11 @@ function save() {
         </div>
       </div>
       <div class="flex justify-end gap-2">
+        <BaseButton variant="secondary" type="button" @click="emit('cancel')">{{
+            t("app.cancel")
+          }}</BaseButton>
         <BaseButton type="submit" :disabled="!canSave">{{
           props.mode === "edit" ? t("app.update") : t("app.save")
-        }}</BaseButton>
-        <BaseButton variant="secondary" type="button" @click="emit('cancel')">{{
-          t("app.cancel")
         }}</BaseButton>
       </div>
     </form>

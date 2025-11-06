@@ -26,7 +26,8 @@
     "importFailed": "Error importing file",
     "invalidJson": "Invalid JSON file",
     "clearConfirm": "Clear all local profile data?",
-    "localDataCleared": "Local data cleared"
+    "localDataCleared": "Local data cleared",
+    "fetchUrl": "Fetch data"
   },
   "exercise": {
     "editor": {

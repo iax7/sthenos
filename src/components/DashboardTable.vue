@@ -3,12 +3,10 @@ import { computed, reactive, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import IconDotsVertical from "@/components/icons/IconDotsVertical.vue";
-import IconEdit from "@/components/icons/IconEdit.vue";
-import IconTrash from "@/components/icons/IconTrash.vue";
 import CooperLevelIcon from "@/components/icons/CooperLevelIcon.vue";
 import { toKilometers, toMeters, evaluateCooper } from "@/services/cooper";
 import { useProfileStore } from "@/composables/useProfileStore.js";
-import { PlusIcon } from "@heroicons/vue/24/solid";
+import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/vue/24/outline";
 import ExerciseCell from "@/components/ui/ExerciseCell.vue";
 
 const props = defineProps({
@@ -182,7 +180,7 @@ function formatPrettyDate(dateStr) {
                         menuState.openIndex = null;
                       "
                     >
-                      <IconEdit />
+                      <PencilIcon class="size-5" />
                       <span>{{ t('dashboard.table.actions.edit') }}</span>
                     </button>
                   </li>
@@ -196,7 +194,7 @@ function formatPrettyDate(dateStr) {
                         menuState.openIndex = null;
                       "
                     >
-                      <IconTrash />
+                      <TrashIcon class="size-5" />
                       <span>{{ t('dashboard.table.actions.delete') }}</span>
                     </button>
                   </li>

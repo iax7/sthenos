@@ -89,11 +89,11 @@ function cancel() {
         <BaseNumberStepper v-model="age" :min="11" :max="120" :step="1" :label="t('profile.age')" />
       </div>
       <div class="flex justify-end gap-2">
-        <BaseButton type="submit" :disabled="!canSave">{{
-          isEditing ? t('app.update') : t('app.save')
-        }}</BaseButton>
         <BaseButton v-if="isEditing" type="button" variant="secondary" @click="cancel">{{
           t('app.cancel')
+        }}</BaseButton>
+        <BaseButton type="submit" :disabled="!canSave">{{
+          isEditing ? t('app.update') : t('app.save')
         }}</BaseButton>
       </div>
     </form>

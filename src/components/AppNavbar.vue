@@ -1,111 +1,129 @@
 <script setup>
-import { ref, onUnmounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
-import { useToasts } from "@/composables/useToasts.js";
-import { useProfileStore } from "@/composables/useProfileStore.js";
-import IconMenu from "@/components/icons/IconMenu.vue";
-import {
-  ArrowUpTrayIcon,
-  ArrowDownTrayIcon,
-  TrashIcon,
-} from "@heroicons/vue/24/outline";
+import { ref, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { useToasts } from '@/composables/useToasts.js'
+import { useProfileStore } from '@/composables/useProfileStore.js'
+import { ArrowUpTrayIcon, ArrowDownTrayIcon, TrashIcon, LinkIcon, Bars3Icon } from '@heroicons/vue/24/outline'
 
-const emit = defineEmits(["clear", "imported"]);
-const { t } = useI18n();
+const emit = defineEmits(['clear', 'imported'])
+const { t } = useI18n()
 
-const menuOpen = ref(false);
-const fileInput = ref(null);
-const router = useRouter();
-const { pushToast } = useToasts();
-const { getProfileData, importProfile, clearProfile } = useProfileStore();
+const menuOpen = ref(false)
+const fileInput = ref(null)
+const router = useRouter()
+const { pushToast } = useToasts()
+const { getProfileData, importProfile, importProfileFromUrl, getLastImportUrl, clearProfile } = useProfileStore()
 
 function toggleMenu() {
-  menuOpen.value = !menuOpen.value;
+  menuOpen.value = !menuOpen.value
+}
+
+async function fetchUrl() {
+  const lastUrl = getLastImportUrl()
+  const url = window.prompt(t('nav.fetchUrl'), lastUrl || '')
+  if (!url || !url.trim()) {
+    menuOpen.value = false
+    return
+  }
+
+  menuOpen.value = false
+
+  try {
+    const result = await importProfileFromUrl(url.trim())
+    if (result.ok) {
+      emit('imported', result.profile)
+      pushToast(t('nav.profileImported'), 'success')
+      if (router.currentRoute.value.path === '/') {
+        window.dispatchEvent(new CustomEvent('profile-updated'))
+      } else {
+        router.push('/')
+      }
+    } else {
+      emit('imported', { error: result.error })
+      pushToast(result.error || t('nav.importFailed'), 'error')
+    }
+  } catch (err) {
+    emit('imported', { error: err.message })
+    pushToast(err.message || t('nav.importFailed'), 'error')
+  }
 }
 
 function downloadProfile() {
-  const json = getProfileData();
-  const blob = new Blob([json], { type: "application/json" });
-  const a = document.createElement("a");
-  const date = new Date().toISOString().slice(0, 10);
-  a.href = URL.createObjectURL(blob);
-  a.download = `profile-${date}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(a.href);
-  menuOpen.value = false;
-  pushToast(t("nav.jsonDownloaded"), "success");
+  const json = getProfileData()
+  const blob = new Blob([json], { type: 'application/json' })
+  const a = document.createElement('a')
+  const date = new Date().toISOString().slice(0, 10)
+  a.href = URL.createObjectURL(blob)
+  a.download = `profile-${date}.json`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(a.href)
+  menuOpen.value = false
+  pushToast(t('nav.jsonDownloaded'), 'success')
 }
 
 function triggerUpload() {
-  fileInput.value?.click();
+  fileInput.value?.click()
 }
 
 function handleFileChange(e) {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
+  const file = e.target.files && e.target.files[0]
+  if (!file) return
+  const reader = new FileReader()
   reader.onload = () => {
     try {
-      const parsed = JSON.parse(reader.result);
-      const result = importProfile(parsed);
+      const parsed = JSON.parse(reader.result)
+      const result = importProfile(parsed)
       if (result.ok) {
-        emit("imported", result.profile);
-        pushToast(t("nav.profileImported"), "success");
-        if (router.currentRoute.value.path === "/") {
-          window.dispatchEvent(new CustomEvent("profile-updated"));
+        emit('imported', result.profile)
+        pushToast(t('nav.profileImported'), 'success')
+        if (router.currentRoute.value.path === '/') {
+          window.dispatchEvent(new CustomEvent('profile-updated'))
         } else {
-          router.push("/");
+          router.push('/')
         }
       } else {
-        emit("imported", { error: result.error });
-        pushToast(result.error || t("nav.importFailed"), "error");
+        emit('imported', { error: result.error })
+        pushToast(result.error || t('nav.importFailed'), 'error')
       }
     } catch (err) {
-      emit("imported", { error: t("nav.invalidJson") });
-      pushToast(t("nav.invalidJson"), "error");
+      emit('imported', { error: t('nav.invalidJson') })
+      pushToast(t('nav.invalidJson'), 'error')
     }
-    e.target.value = "";
-    menuOpen.value = false;
-  };
-  reader.readAsText(file);
+    e.target.value = ''
+    menuOpen.value = false
+  }
+  reader.readAsText(file)
 }
 
 function confirmClear() {
-  if (window.confirm(t("nav.clearConfirm"))) {
-    clearProfile();
-    emit("clear");
-    menuOpen.value = false;
-    pushToast(t("nav.localDataCleared"), "success");
-    router.push("/profile");
+  if (window.confirm(t('nav.clearConfirm'))) {
+    clearProfile()
+    emit('clear')
+    menuOpen.value = false
+    pushToast(t('nav.localDataCleared'), 'success')
+    router.push('/profile')
   }
 }
 
 function closeOnOutside(e) {
-  if (!menuOpen.value) return;
-  const menuEl = document.getElementById("global-menu-dropdown");
-  const btnEl = document.getElementById("global-menu-button");
-  if (
-    menuEl &&
-    !menuEl.contains(e.target) &&
-    btnEl &&
-    !btnEl.contains(e.target)
-  ) {
-    menuOpen.value = false;
+  if (!menuOpen.value) return
+  const menuEl = document.getElementById('global-menu-dropdown')
+  const btnEl = document.getElementById('global-menu-button')
+  if (menuEl && !menuEl.contains(e.target) && btnEl && !btnEl.contains(e.target)) {
+    menuOpen.value = false
   }
 }
-document.addEventListener("click", closeOnOutside);
-onUnmounted(() => document.removeEventListener("click", closeOnOutside));
+document.addEventListener('click', closeOnOutside)
+onUnmounted(() => document.removeEventListener('click', closeOnOutside))
 </script>
 
 <template>
-  <nav
-    class="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/90 backdrop-blur"
-  >
+  <nav class="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/90 backdrop-blur">
     <div class="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-      <h1 class="text-2xl font-bold tracking-wide">{{ t("nav.title") }}</h1>
+      <h1 class="text-2xl font-bold tracking-wide">{{ t('nav.title') }}</h1>
       <div class="relative">
         <button
           id="global-menu-button"
@@ -117,7 +135,7 @@ onUnmounted(() => document.removeEventListener("click", closeOnOutside));
           title="Menu"
         >
           <span class="sr-only">Open menu</span>
-          <IconMenu />
+          <Bars3Icon class="size-7"></Bars3Icon>
         </button>
         <div
           v-if="menuOpen"
@@ -132,7 +150,7 @@ onUnmounted(() => document.removeEventListener("click", closeOnOutside));
                 @click="downloadProfile"
               >
                 <ArrowDownTrayIcon class="h-5 w-5" />
-                <span>{{ t("nav.download") }}</span>
+                <span>{{ t('nav.download') }}</span>
               </button>
             </li>
             <li>
@@ -142,7 +160,17 @@ onUnmounted(() => document.removeEventListener("click", closeOnOutside));
                 @click="triggerUpload"
               >
                 <ArrowUpTrayIcon class="h-5 w-5" />
-                <span>{{ t("nav.upload") }}</span>
+                <span>{{ t('nav.upload') }}</span>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                @click="fetchUrl"
+              >
+                <LinkIcon class="h-5 w-5" />
+                <span>{{ t('nav.fetchUrl') }}</span>
               </button>
             </li>
             <hr class="my-1 border-gray-200" />
@@ -153,7 +181,7 @@ onUnmounted(() => document.removeEventListener("click", closeOnOutside));
                 @click="confirmClear"
               >
                 <TrashIcon class="h-5 w-5" />
-                <span>{{ t("nav.clear") }}</span>
+                <span>{{ t('nav.clear') }}</span>
               </button>
             </li>
           </ul>
