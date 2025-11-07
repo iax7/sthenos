@@ -15,11 +15,15 @@ const VERSION_MAP = {
   cooper: [],
 }
 
-function getReps(t, key) {
+export function getExcerciseKeys() {
+  return Object.keys(VERSION_MAP)
+}
+
+export function getReps(t, key) {
   return t[key]?.reps ?? t[key] ?? null
 }
 
-function getVersion(t, key) {
+export function getVersion(t, key) {
   const versions = VERSION_MAP[key]
   if (!versions?.length) return null
   return versions.find((v) => t[key]?.version === v.value) || null
@@ -41,4 +45,18 @@ export const EXERCISES = [
 
 export function getExerciseType(key) {
   return EXERCISES.find((ex) => ex.key === key)
+}
+
+/**
+ * Calculate points for an exercise entry using reps and optional version multiplier.
+ * @param {number|string} reps - Number of repetitions (may be string)
+ * @param {{multiplier:number}|null} version - Version object containing multiplier
+ * @returns {number} Calculated points (reps * multiplier)
+ */
+export function calculatePoints(reps, version) {
+  if (version === null) return reps
+
+  const r = Number(reps) || 0
+  const m = version && typeof version.multiplier === 'number' ? version.multiplier : 1
+  return r * m
 }

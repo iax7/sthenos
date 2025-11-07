@@ -18,6 +18,7 @@
   },
   "nav": {
     "title": "Pruebas de Rendimiento",
+    "home": "Inicio",
     "download": "Descargar datos",
     "upload": "Subir datos",
     "clear": "Borrar todo",
@@ -54,8 +55,10 @@
       "titleEdit": "Editar Ejercicio",
       "invalidTest": "Índice de prueba inválido.",
       "date": "Fecha",
+      "testDate": "Fecha de prueba",
       "count": "Cantidad",
-      "cooperLaps": "Vueltas Cooper (en 12 minutos)"
+      "cooperLaps": "Vueltas Cooper (en 12 minutos)",
+      "cooperTest": "Prueba Cooper"
     },
     "pullup": {
       "complete": "Completa",
@@ -119,6 +122,7 @@
         "actionsShort": "Ac"
       },
       "actions": {
+        "view": "Ver",
         "edit": "Editar",
         "delete": "Eliminar"
       }

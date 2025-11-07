@@ -8,6 +8,7 @@ import AppCard from '@/components/ui/AppCard.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseNumberStepper from '@/components/ui/BaseNumberStepper.vue'
+import ViewContainer from '@/components/ViewContainer.vue'
 
 const { t } = useI18n()
 const { pushToast } = useToasts()
@@ -45,8 +46,9 @@ function cancel() {
 </script>
 
 <template>
-  <AppCard>
-    <form @submit.prevent="save" class="space-y-4">
+  <ViewContainer class="max-w-sm">
+    <AppCard>
+      <form @submit.prevent="save" class="space-y-4">
       <div class="flex flex-col">
         <label class="form-label">{{ t('profile.name') }}</label>
         <BaseInput v-model="name" :placeholder="t('profile.namePlaceholder')" required />
@@ -98,4 +100,5 @@ function cancel() {
       </div>
     </form>
   </AppCard>
+  </ViewContainer>
 </template>

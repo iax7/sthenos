@@ -1,4 +1,4 @@
-import { getExerciseType } from '@/services/excercises.js'
+import { getExerciseType, calculatePoints } from '@/services/excercises.js'
 
 /**
  Filters and maps test entries by the selected exercise.
@@ -16,7 +16,7 @@ export function filterTestsByMetric(tests, exerciseKey) {
     .map((t) => {
       const reps = Number(metric.getReps(t))
       const version = metric.getVersion(t)
-      const score = version ? reps * version.multiplier : reps
+      const score = calculatePoints(reps, version)
       return { date: t.date, value: reps, version: version?.value, score }
     })
     .filter((entry) => entry.value > 0) // Only keep entries with positive value

@@ -5,8 +5,9 @@ import BaseButton from "@/components/ui/BaseButton.vue";
 import CooperLevelIcon from "@/components/icons/CooperLevelIcon.vue";
 import { toKilometers, toMeters, evaluateCooper } from "@/services/cooper";
 import { useProfileStore } from "@/composables/useProfileStore.js";
-import { PlusIcon, PencilIcon, TrashIcon, EllipsisVerticalIcon } from "@heroicons/vue/24/outline";
+import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, EllipsisVerticalIcon } from "@heroicons/vue/24/outline";
 import ExerciseCell from "@/components/ui/ExerciseCell.vue";
+import { calculatePoints, getExcerciseKeys, getVersion, getReps } from "../services/excercises";
 
 const props = defineProps({
   tests: { type: Array, default: () => [] },
@@ -55,8 +56,18 @@ const rows = computed(() =>
   props.tests.slice().map((r, idx) => {
     const meters = toMeters(r.cooper || 0);
     const level = evaluateCooper(meters, age, genderKey);
+
+    // helper to read reps/version from possible shapes (either nested object or direct number)
+    let points_ex = {}
+    getExcerciseKeys().forEach((key) => {
+      const version = getVersion(r, key)
+      const reps = getReps(r, key)
+      const points = calculatePoints(reps, version)
+      points_ex[key] = Math.round(points);
+    })
     return {
       ...r,
+      _points: points_ex,
       _cooperMeters: meters,
       _cooperKm: toKilometers(meters),
       _cooperLevel: level,
@@ -136,11 +147,11 @@ function formatPrettyDate(dateStr) {
               >{{ formatPrettyDate(tr.date).year }}&nbsp;</span
             >{{ formatPrettyDate(tr.date).month }}
           </td>
-          <ExerciseCell :value="tr.pullup?.reps" />
-          <ExerciseCell :value="tr.pushup?.reps" />
-          <ExerciseCell :value="tr.squats?.reps" />
-          <ExerciseCell :value="tr.vups?.reps" />
-          <ExerciseCell :value="tr.burpees?.reps" />
+          <ExerciseCell :value="tr._points.pullup" />
+          <ExerciseCell :value="tr._points.pushup" />
+          <ExerciseCell :value="tr._points.squats" />
+          <ExerciseCell :value="tr._points.vups" />
+          <ExerciseCell :value="tr._points.burpees" />
           <ExerciseCell :value="tr._cooperKm">
               <CooperLevelIcon
                 :level="tr._cooperLevel"
@@ -170,6 +181,19 @@ function formatPrettyDate(dateStr) {
                 }"
               >
                 <ul class="py-1 text-sm">
+                  <li>
+                    <button
+                      type="button"
+                      class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                      @click="
+                        $emit('view', i);
+                        menuState.openIndex = null;
+                      "
+                    >
+                      <EyeIcon class="size-5" />
+                      <span>{{ t('dashboard.table.actions.view') }}</span>
+                    </button>
+                  </li>
                   <li>
                     <button
                       type="button"

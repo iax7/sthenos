@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToasts } from '@/composables/useToasts.js'
 import { useProfileStore } from '@/composables/useProfileStore.js'
-import { TrashIcon, Bars3Icon, CogIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, Bars3Icon, CogIcon, HomeIcon } from '@heroicons/vue/24/outline'
 
 const emit = defineEmits(['clear', 'imported'])
 const { t } = useI18n()
@@ -13,6 +13,11 @@ const { t } = useI18n()
 const router = useRouter()
 const { pushToast } = useToasts()
 const { clearProfile } = useProfileStore()
+
+function goHome() {
+  menuOpen.value = false
+  router.push({ name: 'dashboard' })
+}
 
 function goToSettings() {
   menuOpen.value = false
@@ -71,6 +76,16 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
         >
           <ul class="py-1 text-sm">
 
+            <li>
+              <button
+                type="button"
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                @click="goHome"
+              >
+                <HomeIcon class="h-5 w-5" />
+                <span>{{ t('nav.home') }}</span>
+              </button>
+            </li>
             <li>
               <button
                 type="button"

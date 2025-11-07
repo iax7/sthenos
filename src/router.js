@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import ProfileView from '@/views/ProfileView.vue'
 import HomeView from '@/views/HomeView.vue'
 import ExerciseView from '@/views/ExerciseView.vue'
+import ExerciseDetailView from '@/views/ExerciseDetailView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import { useProfileStore } from '@/composables/useProfileStore.js'
 
@@ -10,7 +11,8 @@ const routes = [
   { path: '/profile', name: 'profile', component: ProfileView },
   { path: '/settings', name: 'settings', component: SettingsView, meta: { noProfile: true } },
   { path: '/exercise/new', name: 'exercise-new', component: ExerciseView },
-  { path: '/exercise/edit/:index', name: 'exercise-edit', component: ExerciseView, props: true },
+  { path: '/exercise/:index/edit', name: 'exercise-edit', component: ExerciseView, props: true },
+  { path: '/exercise/:index', name: 'exercise-view', component: ExerciseDetailView, props: true },
 ]
 
 export const router = createRouter({

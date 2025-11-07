@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import DashboardTable from '@/components/DashboardTable.vue'
 import DashboardChart from '@/components/DashboardChart.vue'
 import DashboardHeader from '@/components/DashboardHeader.vue'
+import ViewContainer from '@/components/ViewContainer.vue'
 import { useToasts } from '@/composables/useToasts.js'
 
 const { profile, tests, deleteTest } = useProfileStore()
@@ -15,8 +16,11 @@ const { t } = useI18n()
 function newEntry() {
   router.push('/exercise/new')
 }
+function onViewTest(i) {
+  router.push(`/exercise/${i}`)
+}
 function onEditTest(i) {
-  router.push(`/exercise/edit/${i}`)
+  router.push(`/exercise/${i}/edit`)
 }
 function onDeleteTest(i) {
   if (!confirm(t('dashboard.deleteConfirm'))) return
@@ -30,9 +34,9 @@ function onDeleteTest(i) {
 </script>
 
 <template>
-  <div class="max-w-4xl">
+  <ViewContainer>
     <DashboardHeader :profile="profile" />
-    <DashboardTable :tests="tests" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
+    <DashboardTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
     <DashboardChart v-if="tests.length > 0" />
-  </div>
+  </ViewContainer>
 </template>

@@ -18,6 +18,7 @@
   },
   "nav": {
     "title": "Performance Tests",
+    "home": "Home",
     "download": "Download data",
     "upload": "Upload data",
     "clear": "Clear all data",
@@ -54,8 +55,10 @@
       "titleEdit": "Edit Exercise",
       "invalidTest": "Invalid test index.",
       "date": "Date",
+      "testDate": "Test date",
       "count": "Count",
-      "cooperLaps": "Cooper Laps (in 12 minutes)"
+      "cooperLaps": "Cooper Laps (in 12 minutes)",
+      "cooperTest": "Cooper Test"
     },
     "pullup": {
       "complete": "Complete",
@@ -119,6 +122,7 @@
         "actionsShort": "Ac"
       },
       "actions": {
+        "view": "View",
         "edit": "Edit",
         "delete": "Delete"
       }
