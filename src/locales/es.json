@@ -84,6 +84,7 @@
     }
   },
   "cooper": {
+    "laps": "vueltas",
     "very_bad": "Muy Malo",
     "bad": "Malo",
     "normal": "Normal",

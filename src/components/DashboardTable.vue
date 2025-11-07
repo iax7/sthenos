@@ -59,15 +59,22 @@ const rows = computed(() =>
 
     // helper to read reps/version from possible shapes (either nested object or direct number)
     let points_ex = {}
+    let reps_ex = {}
+    let versions_ex = {}
     getExcerciseKeys().forEach((key) => {
       const version = getVersion(r, key)
       const reps = getReps(r, key)
       const points = calculatePoints(reps, version)
-      points_ex[key] = Math.round(points);
+      // Only round points if there's a version (multiplier applied)
+      points_ex[key] = version ? Math.round(points) : points;
+      reps_ex[key] = reps;
+      versions_ex[key] = version;
     })
     return {
       ...r,
       _points: points_ex,
+      _reps: reps_ex,
+      _versions: versions_ex,
       _cooperMeters: meters,
       _cooperKm: toKilometers(meters),
       _cooperLevel: level,
@@ -147,11 +154,11 @@ function formatPrettyDate(dateStr) {
               >{{ formatPrettyDate(tr.date).year }}&nbsp;</span
             >{{ formatPrettyDate(tr.date).month }}
           </td>
-          <ExerciseCell :value="tr._points.pullup" />
-          <ExerciseCell :value="tr._points.pushup" />
-          <ExerciseCell :value="tr._points.squats" />
-          <ExerciseCell :value="tr._points.vups" />
-          <ExerciseCell :value="tr._points.burpees" />
+          <ExerciseCell :value="tr._reps.pullup" :version="tr._versions.pullup" />
+          <ExerciseCell :value="tr._reps.pushup" :version="tr._versions.pushup" />
+          <ExerciseCell :value="tr._reps.squats" :version="tr._versions.squats" />
+          <ExerciseCell :value="tr._reps.vups" :version="tr._versions.vups" />
+          <ExerciseCell :value="tr._reps.burpees" :version="tr._versions.burpees" />
           <ExerciseCell :value="tr._cooperKm">
               <CooperLevelIcon
                 :level="tr._cooperLevel"

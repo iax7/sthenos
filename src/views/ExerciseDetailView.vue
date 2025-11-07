@@ -7,7 +7,6 @@ import { toKilometers, toMeters, evaluateCooper } from '@/services/cooper'
 import { calculatePoints, getExcerciseKeys, getVersion, getReps } from '@/services/excercises'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppCard from '@/components/ui/AppCard.vue'
-import CooperLevelIcon from '@/components/icons/CooperLevelIcon.vue'
 import ViewContainer from '@/components/ViewContainer.vue'
 import { PencilIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline'
 
@@ -42,7 +41,8 @@ const exerciseData = computed(() => {
     exercises[key] = {
       reps,
       versionLabel: version?.labelKey || null,
-      points: Math.round(points)
+      // Only round points if there's a version (multiplier applied)
+      points: version ? Math.round(points) : points
     }
   })
 
@@ -84,6 +84,24 @@ const exerciseLabels = {
   vups: 'dashboard.table.headers.vUps',
   burpees: 'dashboard.table.headers.burpees'
 }
+
+const cooperLevelConfig = {
+  1: { bg: '#dc2626', text: '#fff', labelKey: 'cooper.very_bad' },
+  2: { bg: '#f97316', text: '#fff', labelKey: 'cooper.bad' },
+  3: { bg: '#facc15', text: '#000', labelKey: 'cooper.normal' },
+  4: { bg: '#22c55e', text: '#fff', labelKey: 'cooper.good' },
+  5: { bg: '#0ea5e9', text: '#fff', labelKey: 'cooper.very_good' },
+}
+
+const cooperLevelStyle = computed(() => {
+  const level = exerciseData.value?.cooper?.level
+  const config = cooperLevelConfig[level] || { bg: '#6b7280', text: '#fff', labelKey: 'cooper.na' }
+  return {
+    backgroundColor: config.bg,
+    color: config.text,
+    labelKey: config.labelKey
+  }
+})
 </script>
 
 <template>
@@ -134,14 +152,18 @@ const exerciseLabels = {
           <div class="flex-1">
             <p class="text-sm text-gray-600">{{ t('exercise.editor.cooperLaps') }}</p>
             <p class="text-3xl font-bold text-blue-600">{{ exerciseData.cooper.km }} km</p>
-            <p class="text-sm text-gray-500">({{ exerciseData.cooper.meters }} {{ t('dashboard.table.headers.km') === 'Km.' ? 'meters' : 'metros' }}) · {{ exerciseData.cooper.laps }}</p>
+            <p class="text-sm text-gray-500">({{ exerciseData.cooper.meters }} {{ t('dashboard.table.headers.km') === 'Km.' ? 'meters' : 'metros' }}) · {{ exerciseData.cooper.laps }} {{ t('cooper.laps') }}</p>
           </div>
           <div class="flex items-center gap-2">
-            <CooperLevelIcon
-              :level="exerciseData.cooper.level"
-              :showText="true"
-              class="size-16"
-            />
+            <span
+              class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide"
+              :style="{
+                backgroundColor: cooperLevelStyle.backgroundColor,
+                color: cooperLevelStyle.color
+              }"
+            >
+              {{ t(cooperLevelStyle.labelKey) }}
+            </span>
           </div>
         </div>
       </AppCard>

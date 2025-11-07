@@ -17,7 +17,8 @@ export function filterTestsByMetric(tests, exerciseKey) {
       const reps = Number(metric.getReps(t))
       const version = metric.getVersion(t)
       const score = calculatePoints(reps, version)
-      return { date: t.date, value: reps, version: version?.value, score }
+      // Only round score if there's a version (multiplier applied)
+      return { date: t.date, value: version ? Math.round(score) : score, reps, version: version?.value }
     })
     .filter((entry) => entry.value > 0) // Only keep entries with positive value
 }

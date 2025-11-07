@@ -84,6 +84,7 @@
     }
   },
   "cooper": {
+    "laps": "laps",
     "very_bad": "Very Bad",
     "bad": "Bad",
     "normal": "Normal",

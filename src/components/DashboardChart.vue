@@ -149,7 +149,7 @@ const chartOptions = computed(() => {
                 ? ` (${t(versionObj.labelKey)})`
                 : ` (${dataPoint.version})`;
             }
-            return `${context.parsed.y}${versionLabel}`;
+            return `${dataPoint.reps} reps${versionLabel} = ${context.parsed.y} pts`;
           },
         },
       },
