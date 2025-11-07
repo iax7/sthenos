@@ -78,7 +78,9 @@ function saveToStorage(data) {
   let existing = null
   try {
     existing = loadFromStorage()
-  } catch (_) {}
+  } catch (e) {
+    void e
+  }
   const incomingHasTests = Array.isArray(data.tests)
   const normalized = {
     name: (data.name || '').trim(),
@@ -120,7 +122,11 @@ export function useProfileStore() {
   }
 
   const tests = computed(() => profile.value?.tests || [])
-  const hasProfile = computed(() => profile.value !== null)
+  // A profile is considered present when a stored profile exists (non-null).
+  // This keeps UI actions enabled for any saved profile in localStorage.
+  const hasProfile = computed(() => {
+    return profile.value !== null
+  })
 
   /**
    * Load profile from storage and update reactive state.
@@ -441,4 +447,3 @@ export function importProfile(data) {
   })
   return { ok: true, profile: stored }
 }
-

@@ -1,0 +1,295 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { useToasts } from '@/composables/useToasts.js'
+import { useProfileStore } from '@/composables/useProfileStore.js'
+import BaseButton from '@/components/ui/BaseButton.vue'
+import { ArrowLeftCircleIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentIcon, LinkIcon, CloudArrowUpIcon } from '@heroicons/vue/24/outline'
+
+const router = useRouter()
+const { t } = useI18n()
+const { getProfileData, saveLastImportUrl, getLastImportUrl, clearLastImportUrl, importProfile, hasProfile, loadProfile } = useProfileStore()
+const { pushToast } = useToasts()
+const fileInput = ref(null)
+
+const url = ref(getLastImportUrl() || '')
+const uploading = ref(false)
+
+function goBack() {
+  router.push('/')
+}
+
+async function backupToPasteRs() {
+  try {
+    uploading.value = true
+    const json = getProfileData()
+    // base64-encode UTF-8 safely in browser
+    function toBase64Utf8(str) {
+      try {
+        return btoa(unescape(encodeURIComponent(str)))
+      } catch {
+        // Fallback: use simple btoa (may fail for non-latin1)
+        return btoa(str)
+      }
+    }
+
+    const b64 = toBase64Utf8(json)
+
+    // Use public CORS proxy to reach paste.rs from the browser
+    const proxyUrl = 'https://corsproxy.io/?https://paste.rs'
+    const resp = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: b64,
+    })
+
+    if (!resp.ok) {
+      const text = await resp.text().catch(() => '')
+      pushToast(t('settings.uploadFailed') + ` ${resp.status} ${resp.statusText} ${text}`, 'error')
+      return
+    }
+
+    let pasteUrl = (await resp.text()).trim()
+    if (!pasteUrl) {
+      pushToast(t('settings.uploadFailed'), 'error')
+      return
+    }
+
+    // Normalize id/path to full URL
+    if (!/^https?:\/\//i.test(pasteUrl)) {
+      if (/^[a-zA-Z0-9_-]+$/.test(pasteUrl)) {
+        pasteUrl = `https://paste.rs/${pasteUrl}`
+      } else if (pasteUrl.startsWith('/')) {
+        pasteUrl = `https://paste.rs${pasteUrl}`
+      }
+    }
+
+    url.value = pasteUrl
+    try {
+      saveLastImportUrl(pasteUrl)
+    } catch {
+      // ignore
+    }
+    pushToast(t('settings.uploadSuccess'), 'success')
+  } catch (err) {
+    pushToast(err.message || t('settings.uploadFailed'), 'error')
+  } finally {
+    uploading.value = false
+  }
+}
+
+function saveUrl() {
+  if (!url.value || !url.value.trim()) {
+    pushToast(t('settings.noUrl'), 'error')
+    return
+  }
+  saveLastImportUrl(url.value.trim())
+  pushToast(t('settings.urlSaved'), 'success')
+}
+
+async function fetchFromUrl() {
+  const rawUrl = (url.value || '').trim()
+  if (!rawUrl) {
+    pushToast(t('settings.noUrl'), 'error')
+    return
+  }
+
+  try {
+    // If the url targets paste.rs, fetch it through the public CORS proxy
+    let fetchUrl = rawUrl
+    try {
+      const u = new URL(rawUrl)
+      if (/paste\.rs$/i.test(u.hostname) || /(^|\.)paste\.rs$/i.test(u.hostname)) {
+        fetchUrl = `https://corsproxy.io/?${rawUrl}`
+      }
+    } catch {
+      // not a valid absolute URL — leave as-is, fetch may fail
+    }
+
+    const response = await fetch(fetchUrl)
+    if (!response.ok) {
+      pushToast(`${t('nav.importFailed')} (HTTP ${response.status})`, 'error')
+      return
+    }
+
+    const text = await response.text()
+
+    // Try parse JSON directly
+    try {
+      const parsed = JSON.parse(text)
+      const result = importProfile(parsed)
+      if (result.ok) {
+        saveLastImportUrl(rawUrl)
+        // reload composable state and notify app so UI updates
+        try { loadProfile() } catch (e) { void e }
+        pushToast(t('nav.profileImported'), 'success')
+        if (router.currentRoute.value.path === '/') {
+          window.dispatchEvent(new CustomEvent('profile-updated'))
+        } else {
+          router.push('/')
+        }
+      } else {
+        pushToast(result.error || t('nav.importFailed'), 'error')
+      }
+      return
+    } catch {
+      // not direct JSON, continue
+    }
+
+    // Try base64 decode -> JSON
+    try {
+      // remove whitespace/newlines
+      const candidate = text.trim()
+      let decoded = ''
+      try {
+        decoded = decodeURIComponent(escape(atob(candidate)))
+      } catch {
+        // fallback to atob only
+        decoded = atob(candidate)
+      }
+      const parsed = JSON.parse(decoded)
+      const result = importProfile(parsed)
+      if (result.ok) {
+        saveLastImportUrl(rawUrl)
+        try { loadProfile() } catch (e) { void e }
+        pushToast(t('nav.profileImported'), 'success')
+        if (router.currentRoute.value.path === '/') {
+          window.dispatchEvent(new CustomEvent('profile-updated'))
+        } else {
+          router.push('/')
+        }
+      } else {
+        pushToast(result.error || t('nav.importFailed'), 'error')
+      }
+      return
+    } catch {
+      pushToast(t('nav.importFailed'), 'error')
+      return
+    }
+    } catch {
+      pushToast(t('nav.importFailed'), 'error')
+    }
+}
+
+function clearSaved() {
+  clearLastImportUrl()
+  url.value = ''
+  pushToast(t('settings.urlCleared'), 'success')
+}
+
+function downloadProfile() {
+  const json = getProfileData()
+  const blob = new Blob([json], { type: 'application/json' })
+  const a = document.createElement('a')
+  const date = new Date().toISOString().slice(0, 10)
+  a.href = URL.createObjectURL(blob)
+  a.download = `profile-${date}.json`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(a.href)
+  pushToast(t('nav.jsonDownloaded'), 'success')
+}
+
+function triggerUpload() {
+  fileInput.value?.click()
+}
+
+function handleFileChange(e) {
+  const file = e.target.files && e.target.files[0]
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result)
+      const result = importProfile(parsed)
+      if (result.ok) {
+        pushToast(t('nav.profileImported'), 'success')
+        if (router.currentRoute.value.path === '/') {
+          window.dispatchEvent(new CustomEvent('profile-updated'))
+        } else {
+          router.push('/')
+        }
+      } else {
+        pushToast(result.error || t('nav.importFailed'), 'error')
+      }
+    } catch {
+      pushToast(t('nav.invalidJson'), 'error')
+    }
+    e.target.value = ''
+  }
+  reader.readAsText(file)
+}
+</script>
+
+<template>
+  <div class="max-w-4xl">
+    <div class="mb-4 flex items-center justify-between px-4 py-6">
+      <h2>
+        {{ t('settings.title') }}
+      </h2>
+      <BaseButton variant="secondary" type="button" @click="goBack">
+        <ArrowLeftCircleIcon class="size-5 mr-1" />
+        {{ t('app.back') }}
+      </BaseButton>
+    </div>
+
+    <div class="mx-auto max-w-3xl px-4">
+      <div class="mb-4 space-y-2 rounded border border-gray-200 bg-white p-4">
+        <h3 class="mb-2 text-xl font-semibold flex items-center gap-2">
+          <CloudArrowUpIcon class="size-6 text-gray-600" />
+          {{ t('settings.backupTitle') }}
+        </h3>
+        <p class="text-sm text-gray-600">{{ t('settings.description') }}</p>
+
+        <div class="mt-3 flex items-center gap-2">
+          <BaseButton :disabled="!hasProfile" @click.prevent="backupToPasteRs">
+            <ArrowUpTrayIcon class="size-5 mr-1" />
+            {{ uploading ? t('settings.uploading') : t('settings.backupButton') }}
+          </BaseButton>
+        </div>
+      </div>
+
+      <div class="rounded border border-gray-200 bg-white p-4">
+        <h3 class="mb-2 text-xl font-semibold flex items-center gap-2">
+          <LinkIcon class="h-5 w-5 text-gray-600" />
+          {{ t('settings.pasteUrl') }}
+        </h3>
+        <input
+          type="text"
+          class="w-full rounded border px-3 py-2 text-sm"
+          v-model="url"
+          placeholder="https://paste.rs/xxxx"
+        />
+        <div class="mt-3 flex gap-2">
+          <BaseButton variant="secondary" @click.prevent="clearSaved">{{ t('settings.clearSaved') }}</BaseButton>
+          <BaseButton @click.prevent="saveUrl">{{ t('settings.saveUrl') }}</BaseButton>
+          <BaseButton @click.prevent="fetchFromUrl">
+            <ArrowDownTrayIcon class="size-5 mr-1" />
+            {{ t('settings.fetchUrl') }}
+          </BaseButton>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded border border-gray-200 bg-white p-4">
+          <h3 class="mb-2 text-xl font-semibold flex items-center gap-2">
+            <DocumentIcon class="size-5 text-gray-600" />
+            {{ t('settings.fileActionsTitle') }}
+          </h3>
+        <p class="text-sm text-gray-600">{{ t('settings.fileActionsDescription') }}</p>
+        <div class="mt-3 flex items-center gap-2">
+          <BaseButton :disabled="!hasProfile" @click.prevent="downloadProfile">
+            <ArrowDownTrayIcon class="size-5 mr-1" />
+            {{ t('nav.download') }}
+          </BaseButton>
+          <BaseButton variant="secondary" @click.prevent="triggerUpload">
+            <ArrowUpTrayIcon class="size-5 mr-1" />
+            {{ t('nav.upload') }}
+          </BaseButton>
+        </div>
+        <input ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />
+      </div>
+    </div>
+  </div>
+</template>

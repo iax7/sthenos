@@ -27,7 +27,26 @@
     "invalidJson": "Archivo JSON inválido",
     "clearConfirm": "¿Borrar todos los datos de perfil locales?",
     "localDataCleared": "Datos locales borrados",
-    "fetchUrl": "Obtener datos desde enlace"
+    "fetchUrl": "Obtener datos desde enlace",
+    "settings": "Ajustes"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "description": "Haz un respaldo de tu perfil en paste.rs y guarda la URL devuelta abajo para importarla después.",
+    "backupButton": "Subir a paste.rs",
+    "backupTitle": "Respaldo",
+    "uploading": "Subiendo...",
+    "uploadSuccess": "Respaldo subido",
+    "uploadFailed": "Fallo al subir",
+    "pasteUrl": "URL del paste",
+    "saveUrl": "Guardar",
+    "noUrl": "No proporcionaste una URL",
+    "urlSaved": "URL guardada",
+    "urlCleared": "URL guardada eliminada",
+    "clearSaved": "Eliminar guardada",
+    "fetchUrl": "Descargar",
+    "fileActionsTitle": "Acciones de archivo",
+    "fileActionsDescription": "Descarga o sube tu perfil como un archivo JSON desde tu dispositivo."
   },
   "exercise": {
     "editor": {

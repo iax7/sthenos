@@ -4,99 +4,26 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToasts } from '@/composables/useToasts.js'
 import { useProfileStore } from '@/composables/useProfileStore.js'
-import { ArrowUpTrayIcon, ArrowDownTrayIcon, TrashIcon, LinkIcon, Bars3Icon } from '@heroicons/vue/24/outline'
+import { TrashIcon, Bars3Icon, CogIcon } from '@heroicons/vue/24/outline'
 
 const emit = defineEmits(['clear', 'imported'])
 const { t } = useI18n()
 
-const menuOpen = ref(false)
-const fileInput = ref(null)
+  const menuOpen = ref(false)
 const router = useRouter()
 const { pushToast } = useToasts()
-const { getProfileData, importProfile, importProfileFromUrl, getLastImportUrl, clearProfile } = useProfileStore()
+const { clearProfile } = useProfileStore()
+
+function goToSettings() {
+  menuOpen.value = false
+  router.push({ name: 'settings' })
+}
 
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
 }
 
-async function fetchUrl() {
-  const lastUrl = getLastImportUrl()
-  const url = window.prompt(t('nav.fetchUrl'), lastUrl || '')
-  if (!url || !url.trim()) {
-    menuOpen.value = false
-    return
-  }
-
-  menuOpen.value = false
-
-  try {
-    const result = await importProfileFromUrl(url.trim())
-    if (result.ok) {
-      emit('imported', result.profile)
-      pushToast(t('nav.profileImported'), 'success')
-      if (router.currentRoute.value.path === '/') {
-        window.dispatchEvent(new CustomEvent('profile-updated'))
-      } else {
-        router.push('/')
-      }
-    } else {
-      emit('imported', { error: result.error })
-      pushToast(result.error || t('nav.importFailed'), 'error')
-    }
-  } catch (err) {
-    emit('imported', { error: err.message })
-    pushToast(err.message || t('nav.importFailed'), 'error')
-  }
-}
-
-function downloadProfile() {
-  const json = getProfileData()
-  const blob = new Blob([json], { type: 'application/json' })
-  const a = document.createElement('a')
-  const date = new Date().toISOString().slice(0, 10)
-  a.href = URL.createObjectURL(blob)
-  a.download = `profile-${date}.json`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(a.href)
-  menuOpen.value = false
-  pushToast(t('nav.jsonDownloaded'), 'success')
-}
-
-function triggerUpload() {
-  fileInput.value?.click()
-}
-
-function handleFileChange(e) {
-  const file = e.target.files && e.target.files[0]
-  if (!file) return
-  const reader = new FileReader()
-  reader.onload = () => {
-    try {
-      const parsed = JSON.parse(reader.result)
-      const result = importProfile(parsed)
-      if (result.ok) {
-        emit('imported', result.profile)
-        pushToast(t('nav.profileImported'), 'success')
-        if (router.currentRoute.value.path === '/') {
-          window.dispatchEvent(new CustomEvent('profile-updated'))
-        } else {
-          router.push('/')
-        }
-      } else {
-        emit('imported', { error: result.error })
-        pushToast(result.error || t('nav.importFailed'), 'error')
-      }
-    } catch (err) {
-      emit('imported', { error: t('nav.invalidJson') })
-      pushToast(t('nav.invalidJson'), 'error')
-    }
-    e.target.value = ''
-    menuOpen.value = false
-  }
-  reader.readAsText(file)
-}
+  // fetchUrl removed: moved to Settings view
 
 function confirmClear() {
   if (window.confirm(t('nav.clearConfirm'))) {
@@ -143,34 +70,15 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
           class="absolute right-0 z-50 w-44 rounded-md border border-gray-200 bg-white shadow-sm"
         >
           <ul class="py-1 text-sm">
+
             <li>
               <button
                 type="button"
                 class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="downloadProfile"
+                @click="goToSettings"
               >
-                <ArrowDownTrayIcon class="h-5 w-5" />
-                <span>{{ t('nav.download') }}</span>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="triggerUpload"
-              >
-                <ArrowUpTrayIcon class="h-5 w-5" />
-                <span>{{ t('nav.upload') }}</span>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="fetchUrl"
-              >
-                <LinkIcon class="h-5 w-5" />
-                <span>{{ t('nav.fetchUrl') }}</span>
+                <CogIcon class="h-5 w-5" />
+                <span>{{ t('nav.settings') }}</span>
               </button>
             </li>
             <hr class="my-1 border-gray-200" />

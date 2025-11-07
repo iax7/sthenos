@@ -27,7 +27,26 @@
     "invalidJson": "Invalid JSON file",
     "clearConfirm": "Clear all local profile data?",
     "localDataCleared": "Local data cleared",
-    "fetchUrl": "Fetch data"
+    "fetchUrl": "Fetch data",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Backup your profile to paste.rs and save the returned URL below for easy import later.",
+    "backupButton": "Upload to paste.rs",
+    "backupTitle": "Backup",
+    "uploading": "Uploading...",
+    "uploadSuccess": "Backup uploaded",
+    "uploadFailed": "Upload failed",
+    "pasteUrl": "Paste URL",
+    "saveUrl": "Save",
+    "noUrl": "No URL provided",
+    "urlSaved": "URL saved",
+    "urlCleared": "Saved URL cleared",
+    "clearSaved": "Clear saved",
+    "fetchUrl": "Fetch",
+    "fileActionsTitle": "File actions",
+    "fileActionsDescription": "Download or upload your profile as a JSON file from your device."
   },
   "exercise": {
     "editor": {
