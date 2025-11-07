@@ -7,7 +7,14 @@ import { useProfileStore } from '@/composables/useProfileStore.js'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ViewContainer.vue'
-import { ArrowLeftCircleIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentIcon, LinkIcon, CloudArrowUpIcon } from '@heroicons/vue/24/outline'
+import { ArrowLeftIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentIcon, LinkIcon, CloudArrowUpIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
+import {
+  PULL_UP_VERSIONS,
+  PUSH_UP_VERSIONS,
+  SQUAT_VERSIONS,
+  VUP_VERSIONS,
+  BURPEE_VERSIONS,
+} from '@/services/exerciseVersions.js'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -17,6 +24,14 @@ const fileInput = ref(null)
 
 const url = ref(getLastImportUrl() || '')
 const uploading = ref(false)
+
+const exerciseVersions = [
+  { title: 'dashboard.table.headers.pullUps', versions: PULL_UP_VERSIONS },
+  { title: 'dashboard.table.headers.pushUps', versions: PUSH_UP_VERSIONS },
+  { title: 'dashboard.table.headers.squats', versions: SQUAT_VERSIONS },
+  { title: 'dashboard.table.headers.vUps', versions: VUP_VERSIONS },
+  { title: 'dashboard.table.headers.burpees', versions: BURPEE_VERSIONS },
+]
 
 function goBack() {
   router.push('/')
@@ -232,7 +247,7 @@ function handleFileChange(e) {
         {{ t('settings.title') }}
       </h2>
       <BaseButton variant="secondary" type="button" @click="goBack">
-        <ArrowLeftCircleIcon class="size-5 mr-1" />
+        <ArrowLeftIcon class="size-5 mr-1" />
         {{ t('app.back') }}
       </BaseButton>
     </div>
@@ -290,6 +305,26 @@ function handleFileChange(e) {
         </BaseButton>
       </div>
       <input ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />
+    </AppCard>
+
+    <AppCard>
+      <h3 class="mb-4 text-xl font-semibold flex items-center gap-2">
+        <InformationCircleIcon class="size-6 text-gray-600" />
+        {{ t('settings.exerciseVersions') }}
+      </h3>
+      <p class="mb-4 text-sm text-gray-600">{{ t('settings.exerciseVersionsDescription') }}</p>
+
+      <div class="space-y-4">
+        <div v-for="exercise in exerciseVersions" :key="exercise.title" class="border-l-4 border-blue-500 pl-4">
+          <h4 class="mb-2 font-semibold text-gray-800">{{ t(exercise.title) }}</h4>
+          <ul class="space-y-1">
+            <li v-for="version in exercise.versions" :key="version.value" class="text-sm text-gray-700">
+              <span class="font-mono">{{ t(version.labelKey) }}</span>
+              <span class="ml-2 font-semibold text-blue-600">{{ version.multiplier }}x</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </AppCard>
   </ViewContainer>
 </template>

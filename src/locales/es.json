@@ -47,7 +47,9 @@
     "clearSaved": "Eliminar guardada",
     "fetchUrl": "Descargar",
     "fileActionsTitle": "Acciones de archivo",
-    "fileActionsDescription": "Descarga o sube tu perfil como un archivo JSON desde tu dispositivo."
+    "fileActionsDescription": "Descarga o sube tu perfil como un archivo JSON desde tu dispositivo.",
+    "exerciseVersions": "Versiones de Ejercicios",
+    "exerciseVersionsDescription": "Multiplicadores de puntos para cada variación de ejercicio. Tu puntuación se calcula como: repeticiones × multiplicador."
   },
   "exercise": {
     "editor": {
