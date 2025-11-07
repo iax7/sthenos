@@ -2,11 +2,10 @@
 import { computed, reactive, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseButton from "@/components/ui/BaseButton.vue";
-import IconDotsVertical from "@/components/icons/IconDotsVertical.vue";
 import CooperLevelIcon from "@/components/icons/CooperLevelIcon.vue";
 import { toKilometers, toMeters, evaluateCooper } from "@/services/cooper";
 import { useProfileStore } from "@/composables/useProfileStore.js";
-import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/vue/24/outline";
+import { PlusIcon, PencilIcon, TrashIcon, EllipsisVerticalIcon } from "@heroicons/vue/24/outline";
 import ExerciseCell from "@/components/ui/ExerciseCell.vue";
 
 const props = defineProps({
@@ -158,7 +157,7 @@ function formatPrettyDate(dateStr) {
               @click="openMenu(tr._idx, $event)"
               aria-label="Actions"
             >
-              <IconDotsVertical />
+              <EllipsisVerticalIcon class="size-6" />
             </button>
             <Teleport to="body">
               <div
