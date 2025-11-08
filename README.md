@@ -8,6 +8,10 @@ Sthenos is a lightweight single-page app for tracking a fitness profile (name, g
 
 * Create / edit a profile
 * Add, edit, delete exercise test entries
+* View detailed test results with automatic score calculation
+* Total score display with visual golden star watermark
+* Cooper test evaluation with level indicators
+* Points system with exercise version multipliers
 * Persistent storage in `localStorage` (`user_profile_v1`)
 * Import (upload JSON) / export (download JSON)
 * Clear all data with confirmation
@@ -54,6 +58,7 @@ Store helpers cover: load, save (merging existing tests), append, update, delete
 | `/profile` | `profile` | `ProfileForm.vue` | Create / edit profile |
 | `/exercise/new` | `exercise-new` | `ExerciseEditor.vue` | New test entry |
 | `/exercise/edit/:index` | `exercise-edit` | `ExerciseEditor.vue` | Edit existing test |
+| `/exercise/:index` | `exercise-detail` | `ExerciseDetailView.vue` | View detailed test entry with total score |
 
 Navigation Guard: Accessing dashboard or exercise routes without a stored profile redirects to `/profile`.
 
@@ -62,6 +67,7 @@ Navigation Guard: Accessing dashboard or exercise routes without a stored profil
 * `Dashboard.vue` – Main view; links to edit profile and new test entry.
 * `ProfileForm.vue` – Profile creation/edit; preserves existing `tests` when editing.
 * `DashboardTable.vue` – Displays tests with edit/delete actions.
+* `ExerciseDetailView.vue` – Detailed view of a single test entry showing Cooper test results, individual exercise scores, and total score with visual indicators.
 * `ExerciseEditor.vue` – Wrapper deciding between new vs edit form.
 * `ExerciseForm.vue` / `ExerciseEditForm.vue` – Create or modify a test entry.
 * `ExerciseMetricInput.vue` – Reusable metric + version pair input.
@@ -139,17 +145,5 @@ Extending styles: adjust classes in `ToastContainer.vue`. Add more variants by c
 
 ## Roadmap Ideas
 
-* Change detection: disable Save if no edits
-* Toast when redirect occurs due to missing profile
 * Metrics filtering / grouping (e.g. average per week)
 * Dark mode toggle
-
-## Bilingual Summary (EN / ES)
-
-EN: Sthenos tracks a fitness profile and test entries locally. You can add, edit, import, export, visualize trends, and clear all data safely. Unused legacy components were deprecated to simplify maintenance.
-
-ES: Sthenos registra tu perfil y pruebas de ejercicio localmente. Puedes crear/editar el perfil, agregar/modificar pruebas, importar/exportar datos, ver tendencias y limpiar todo. Componentes antiguos fueron marcados como obsoletos para mantener el código simple.
-
----
-
-Feel free to remove the deprecated files physically once the environment permits. For any enhancements, open an issue or extend the roadmap list above.
