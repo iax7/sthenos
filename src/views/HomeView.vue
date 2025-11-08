@@ -2,10 +2,10 @@
 import { useProfileStore } from '@/composables/useProfileStore.js'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import DashboardTable from '@/components/DashboardTable.vue'
-import DashboardChart from '@/components/DashboardChart.vue'
-import DashboardHeader from '@/components/DashboardHeader.vue'
-import ViewContainer from '@/components/ViewContainer.vue'
+import HomeTable from '@/components/HomeTable.vue'
+import HomeChart from '@/components/HomeChart.vue'
+import HomeHeader from '@/components/HomeHeader.vue'
+import ViewContainer from '@/components/ui/ViewContainer.vue'
 import { useToasts } from '@/composables/useToasts.js'
 
 const { profile, tests, deleteTest } = useProfileStore()
@@ -35,8 +35,8 @@ function onDeleteTest(i) {
 
 <template>
   <ViewContainer>
-    <DashboardHeader :profile="profile" />
-    <DashboardTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
-    <DashboardChart v-if="tests.length > 0" />
+  <HomeHeader :profile="profile" />
+  <HomeTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
+  <HomeChart v-if="tests.length > 0" />
   </ViewContainer>
 </template>

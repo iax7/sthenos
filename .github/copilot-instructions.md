@@ -16,9 +16,9 @@
 - **Components:**
   - `Dashboard.vue`: Main view, shows summary, table, chart.
   - `ProfileForm.vue`: Profile creation/edit.
-  - `DashboardTable.vue`: Test entries table with edit/delete.
+  - `HomeTable.vue`: Test entries table with edit/delete.
   - `ExerciseEditor.vue`: Wrapper for new/edit test entry.
-  - `DashboardChart.vue`: SVG chart for metrics.
+  - `HomeChart.vue`: SVG chart for metrics.
   - UI primitives in `components/ui/` (e.g., `BaseButton`, `BaseInput`).
 - **Routing:**
   - Route guard redirects to `/profile` if no profile exists.

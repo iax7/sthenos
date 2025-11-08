@@ -72,6 +72,8 @@ Navigation Guard: Accessing dashboard or exercise routes without a stored profil
 * `ExerciseForm.vue` / `ExerciseEditForm.vue` – Create or modify a test entry.
 * `ExerciseMetricInput.vue` – Reusable metric + version pair input.
 * `DashboardChart.vue` – SVG trend chart (line, area, markers) for selected metric.
+* `HomeTable.vue` – Displays tests with edit/delete actions.
+* `HomeChart.vue` – SVG trend chart (line, area, markers) for selected metric.
 * UI components under `components/ui/` – Low-level building blocks.
 * `Navbar.vue` – Global actions (import/export/clear) and branding.
 

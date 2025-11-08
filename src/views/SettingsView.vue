@@ -7,7 +7,7 @@ import { useProfileStore } from '@/composables/useProfileStore.js'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import AppCard from '@/components/ui/AppCard.vue'
-import ViewContainer from '@/components/ViewContainer.vue'
+import ViewContainer from '@/components/ui/ViewContainer.vue'
 import { ArrowLeftIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentIcon, LinkIcon, CloudArrowUpIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
 import {
   PULL_UP_VERSIONS,

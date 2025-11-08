@@ -8,7 +8,7 @@ import AppCard from '@/components/ui/AppCard.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseNumberStepper from '@/components/ui/BaseNumberStepper.vue'
-import ViewContainer from '@/components/ViewContainer.vue'
+import ViewContainer from '@/components/ui/ViewContainer.vue'
 
 const { t } = useI18n()
 const { pushToast } = useToasts()

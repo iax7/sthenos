@@ -1,7 +1,7 @@
 <script setup>
 import AppNavbar from '@/components/AppNavbar.vue'
 import AppFooter from '@/components/ui/AppFooter.vue'
-import ToastContainer from '@/components/ToastContainer.vue'
+import ToastContainer from '@/components/ui/ToastContainer.vue'
 </script>
 
 <template>

@@ -15,7 +15,7 @@ import {
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import AppCard from "@/components/ui/AppCard.vue";
-import ChartStats from "@/components/ChartStats.vue";
+import ChartStats from "@/components/HomeChartStats.vue";
 import {
   filterTestsByMetric,
   calculateStats,
