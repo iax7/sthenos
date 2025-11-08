@@ -34,6 +34,7 @@
   "settings": {
     "title": "Settings",
     "description": "Backup your profile to paste.rs and save the returned URL below for easy import later.",
+    "expirationWarning": "⚠️ Backups on paste.rs expire after 1 year (365 days)",
     "backupButton": "Upload to paste.rs",
     "backupTitle": "Backup",
     "uploading": "Uploading...",
@@ -60,7 +61,8 @@
       "testDate": "Test date",
       "count": "Count",
       "cooperLaps": "Cooper Laps (in 12 minutes)",
-      "cooperTest": "Cooper Test"
+      "cooperTest": "Cooper Test",
+      "totalPoints": "Total points"
     },
     "pullup": {
       "complete": "Complete",

@@ -112,7 +112,7 @@ const chartData = computed(() => {
         backgroundColor: gradientFill,
         fill: true,
         tension: 0.3,
-        pointRadius: 5,
+        pointRadius: 6,
         pointHoverRadius: 7,
         pointBackgroundColor: pointColor,
         pointBorderColor: "#fff",
@@ -130,7 +130,7 @@ const chartOptions = computed(() => {
     maintainAspectRatio: false,
     layout: {
       padding: {
-        top: 25, // Add some top padding for better label visibility
+        top: 26, // Add some top padding for better label visibility
       },
     },
     plugins: {

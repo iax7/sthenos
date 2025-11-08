@@ -102,6 +102,12 @@ const cooperLevelStyle = computed(() => {
     labelKey: config.labelKey
   }
 })
+
+const totalScore = computed(() => {
+  if (!exerciseData.value) return 0
+  const exercises = exerciseData.value.exercises
+  return Object.values(exercises).reduce((sum, exercise) => sum + exercise.points, 0)
+})
 </script>
 
 <template>
@@ -144,6 +150,38 @@ const cooperLevelStyle = computed(() => {
         </p>
       </AppCard>
 
+      <AppCard class="bg-linear-to-br from-indigo-500 to-purple-600 text-white relative overflow-hidden">
+        <!-- Star watermark -->
+        <svg
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[calc(100%+2rem)] w-auto opacity-20"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+              <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ffa500;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <polygon
+            points="50,15 61,40 88,40 67,57 74,82 50,67 26,82 33,57 12,40 39,40"
+            fill="url(#goldGradient)"
+          />
+        </svg>
+        <div class="text-center relative z-10">
+          <h2 class="mb-2 text-lg font-semibold uppercase tracking-wide opacity-90">
+            Score
+          </h2>
+          <p class="text-6xl font-bold">
+            {{ totalScore }}
+          </p>
+          <p class="mt-2 text-sm opacity-75">
+            {{ t('exercise.editor.totalPoints') }}
+          </p>
+        </div>
+      </AppCard>
+
       <AppCard>
         <h2 class="mb-4 text-xl font-semibold text-gray-700">
           {{ t('exercise.editor.cooperTest') }}
@@ -172,13 +210,13 @@ const cooperLevelStyle = computed(() => {
         <h2 class="mb-4 text-xl font-semibold text-gray-700">
           {{ t('dashboard.table.title') }}
         </h2>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-3 grid-cols-1 min-[350px]:grid-cols-2 sm:grid-cols-4 lg:grid-cols-5">
           <div
             v-for="(key, idx) in Object.keys(exerciseData.exercises)"
             :key="idx"
-            class="rounded-lg border border-gray-200 bg-gray-50 p-4"
+            class="rounded-lg border border-gray-200 bg-linear-to-br from-white via-blue-50 to-indigo-100 p-4 shadow-sm hover:shadow-md transition-shadow"
           >
-            <h3 class="mb-2 text-sm font-semibold uppercase text-gray-600">
+            <h3 class="mb-2 text-sm font-semibold uppercase text-gray-700">
               {{ t(exerciseLabels[key]) }}
             </h3>
             <div class="mb-2">
@@ -194,8 +232,8 @@ const cooperLevelStyle = computed(() => {
                 {{ exerciseData.exercises[key].points }} pts
               </p>
             </div>
-            <div v-if="exerciseData.exercises[key].versionLabel" class="text-xs text-gray-500">
-              <span class="rounded bg-gray-200 px-2 py-1">
+            <div v-if="exerciseData.exercises[key].versionLabel">
+              <span class="inline-block rounded-md bg-linear-to-r from-orange-500 to-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
                 {{ t(exerciseData.exercises[key].versionLabel) }}
               </span>
             </div>

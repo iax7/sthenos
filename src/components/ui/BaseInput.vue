@@ -15,8 +15,6 @@ const emit = defineEmits(['update:modelValue'])
 function onInput(e) {
   emit('update:modelValue', e.target.value)
 }
-
-const baseClasses = computed(() => 'form-input')
 </script>
 <template>
   <input
@@ -27,6 +25,6 @@ const baseClasses = computed(() => 'form-input')
     :min="props.min"
     :required="props.required"
     @input="onInput"
-    :class="baseClasses"
+    class="form-input w-full"
   />
 </template>

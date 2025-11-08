@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useToasts } from '@/composables/useToasts.js'
 import { useProfileStore } from '@/composables/useProfileStore.js'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseInput from '@/components/ui/BaseInput.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ViewContainer.vue'
 import { ArrowLeftIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentIcon, LinkIcon, CloudArrowUpIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
@@ -258,8 +259,9 @@ function handleFileChange(e) {
         {{ t('settings.backupTitle') }}
       </h3>
       <p class="text-sm text-gray-600">{{ t('settings.description') }}</p>
+      <p class="text-sm text-amber-600 mt-2 font-medium">{{ t('settings.expirationWarning') }}</p>
 
-      <div class="mt-3 flex items-center gap-2">
+      <div class="mt-3 flex items-center">
         <BaseButton :disabled="!hasProfile" @click.prevent="backupToPasteRs">
           <ArrowUpTrayIcon class="size-5 mr-1" />
           {{ uploading ? t('settings.uploading') : t('settings.backupButton') }}
@@ -268,18 +270,19 @@ function handleFileChange(e) {
     </AppCard>
 
     <AppCard>
-      <h3 class="mb-2 text-xl font-semibold flex items-center gap-2">
-        <LinkIcon class="h-5 w-5 text-gray-600" />
-        {{ t('settings.pasteUrl') }}
-      </h3>
-      <input
-        type="text"
-        class="w-full rounded border px-3 py-2 text-sm"
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-semibold flex items-center gap-2">
+          <LinkIcon class="size-5 text-gray-600" />
+          {{ t('settings.pasteUrl') }}
+        </h3>
+        <BaseButton variant="secondary" @click.prevent="clearSaved">{{ t('settings.clearSaved') }}</BaseButton>
+      </div>
+      <BaseInput
         v-model="url"
+        type="text"
         placeholder="https://paste.rs/xxxx"
       />
-      <div class="mt-3 flex gap-2">
-        <BaseButton variant="secondary" @click.prevent="clearSaved">{{ t('settings.clearSaved') }}</BaseButton>
+      <div class="flex gap-2">
         <BaseButton @click.prevent="saveUrl">{{ t('settings.saveUrl') }}</BaseButton>
         <BaseButton @click.prevent="fetchFromUrl">
           <ArrowDownTrayIcon class="size-5 mr-1" />
@@ -294,7 +297,7 @@ function handleFileChange(e) {
         {{ t('settings.fileActionsTitle') }}
       </h3>
       <p class="text-sm text-gray-600">{{ t('settings.fileActionsDescription') }}</p>
-      <div class="mt-3 flex items-center gap-2">
+      <div class="flex items-center gap-2">
         <BaseButton :disabled="!hasProfile" @click.prevent="downloadProfile">
           <ArrowDownTrayIcon class="size-5 mr-1" />
           {{ t('nav.download') }}
