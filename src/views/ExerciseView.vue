@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useProfileStore } from '@/composables/useProfileStore.js'
 import { toKilometers, toMeters, evaluateCooper } from '@/services/cooper'
-import { calculatePoints, getExcerciseKeys, getVersion, getReps } from '@/services/excercises'
+import { calculatePoints, calculateCooperPoints, getExcerciseKeys, getVersion, getReps } from '@/services/excercises'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
@@ -120,8 +120,16 @@ const cooperLevelStyle = computed(() => {
 
 const totalScore = computed(() => {
   if (!exerciseData.value) return 0
+
+  // sum all exercise points
   const exercises = exerciseData.value.exercises
-  return Object.values(exercises).reduce((sum, exercise) => sum + exercise.points, 0)
+  const exercisesTotal = Object.values(exercises).reduce((sum, exercise) => sum + exercise.points, 0)
+
+  // Add Cooper points based on level
+  const cooperLevel = exerciseData.value?.cooper?.level
+  const cooperPoints = calculateCooperPoints(cooperLevel)
+
+  return exercisesTotal + cooperPoints
 })
 </script>
 
@@ -231,7 +239,7 @@ const totalScore = computed(() => {
             <p class="text-3xl font-bold text-blue-600">{{ exerciseData.cooper.km }} km</p>
             <p class="text-sm text-gray-500">({{ exerciseData.cooper.meters }} {{ t('dashboard.table.headers.km') === 'Km.' ? 'meters' : 'metros' }}) · {{ exerciseData.cooper.laps }} {{ t('cooper.laps') }}</p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex flex-col items-end gap-2">
             <span
               class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide"
               :style="{
@@ -241,6 +249,11 @@ const totalScore = computed(() => {
             >
               {{ t(cooperLevelStyle.labelKey) }}
             </span>
+            <div class="text-right">
+              <p class="text-lg font-semibold text-blue-600">
+                {{ calculateCooperPoints(exerciseData.cooper.level) }} pts
+              </p>
+            </div>
           </div>
         </div>
       </AppCard>

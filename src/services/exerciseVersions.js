@@ -29,6 +29,16 @@ export const BURPEE_VERSIONS = [
   makeVersion('sf', 0.7, 'exercise.burpee.no_flex'),
 ]
 
+export const COOPER_MAX_SCORE = 50
+
+export const COOPER_MULTIPLIERS = {
+  5: 1,
+  4: 0.8,
+  3: 0.55,
+  2: 0.4,
+  1: 0.1,
+}
+
 export const EXERCISE_VERSIONS = {
   pullup: PULL_UP_VERSIONS,
   pushup: PUSH_UP_VERSIONS,

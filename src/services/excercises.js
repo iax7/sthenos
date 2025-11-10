@@ -4,6 +4,8 @@ import {
   PUSH_UP_VERSIONS,
   SQUAT_VERSIONS,
   VUP_VERSIONS,
+  COOPER_MULTIPLIERS,
+  COOPER_MAX_SCORE
 } from '@/services/exerciseVersions.js'
 
 const VERSION_MAP = {
@@ -59,4 +61,8 @@ export function calculatePoints(reps, version) {
   const r = Number(reps) || 0
   const m = version && typeof version.multiplier === 'number' ? version.multiplier : 1
   return r * m
+}
+
+export function calculateCooperPoints(level) {
+  return Math.round(COOPER_MAX_SCORE * COOPER_MULTIPLIERS[level] || 0)
 }

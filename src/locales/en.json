@@ -50,7 +50,8 @@
     "fileActionsTitle": "File actions",
     "fileActionsDescription": "Download or upload your profile as a JSON file from your device.",
     "exerciseVersions": "Exercise Versions",
-    "exerciseVersionsDescription": "Point multipliers for each exercise variation. Your score is calculated as: reps × multiplier."
+    "exerciseVersionsDescription": "Point multipliers for each exercise variation. Your score is calculated as: reps × multiplier.",
+    "cooperMaxScore": "Max Score"
   },
   "exercise": {
     "editor": {

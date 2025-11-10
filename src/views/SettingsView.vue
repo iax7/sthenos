@@ -15,6 +15,8 @@ import {
   SQUAT_VERSIONS,
   VUP_VERSIONS,
   BURPEE_VERSIONS,
+  COOPER_MULTIPLIERS,
+  COOPER_MAX_SCORE,
 } from '@/services/exerciseVersions.js'
 
 const router = useRouter()
@@ -32,6 +34,14 @@ const exerciseVersions = [
   { title: 'dashboard.table.headers.squats', versions: SQUAT_VERSIONS },
   { title: 'dashboard.table.headers.vUps', versions: VUP_VERSIONS },
   { title: 'dashboard.table.headers.burpees', versions: BURPEE_VERSIONS },
+]
+
+const cooperLevels = [
+  { level: 5, labelKey: 'cooper.very_good', multiplier: COOPER_MULTIPLIERS[5] },
+  { level: 4, labelKey: 'cooper.good', multiplier: COOPER_MULTIPLIERS[4] },
+  { level: 3, labelKey: 'cooper.normal', multiplier: COOPER_MULTIPLIERS[3] },
+  { level: 2, labelKey: 'cooper.bad', multiplier: COOPER_MULTIPLIERS[2] },
+  { level: 1, labelKey: 'cooper.very_bad', multiplier: COOPER_MULTIPLIERS[1] },
 ]
 
 function goBack() {
@@ -324,6 +334,18 @@ function handleFileChange(e) {
             <li v-for="version in exercise.versions" :key="version.value" class="text-sm text-gray-700">
               <span class="font-mono">{{ t(version.labelKey) }}</span>
               <span class="ml-2 font-semibold text-blue-600">{{ version.multiplier }}x</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="border-l-4 border-blue-500 pl-4">
+          <h4 class="mb-2 font-semibold text-gray-800">{{ t('exercise.editor.cooperTest') }}</h4>
+          <p class="mb-2 text-xs text-gray-600">{{ t('settings.cooperMaxScore') }}: {{ COOPER_MAX_SCORE }} pts</p>
+          <ul class="space-y-1">
+            <li v-for="level in cooperLevels" :key="level.level" class="text-sm text-gray-700">
+              <span class="font-mono">{{ t(level.labelKey) }}</span>
+              <span class="ml-2 font-semibold text-blue-600">{{ level.multiplier }}x</span>
+              <span class="ml-1 text-gray-500">({{ Math.round(COOPER_MAX_SCORE * level.multiplier) }} pts)</span>
             </li>
           </ul>
         </div>
