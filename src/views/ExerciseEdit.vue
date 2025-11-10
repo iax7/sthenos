@@ -17,7 +17,7 @@ const index = isEdit ? Number(route.params.index) : null
 const test = isEdit && tests.value[index] ? { ...tests.value[index] } : null
 
 function goBack() {
-  router.push('/')
+  router.back()
 }
 
 function viewTest() {

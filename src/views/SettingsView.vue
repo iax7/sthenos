@@ -35,7 +35,7 @@ const exerciseVersions = [
 ]
 
 function goBack() {
-  router.push('/')
+  router.back()
 }
 
 async function backupToPasteRs() {

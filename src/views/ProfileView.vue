@@ -41,7 +41,7 @@ function save() {
 }
 
 function cancel() {
-  router.push('/')
+  router.back()
 }
 </script>
 

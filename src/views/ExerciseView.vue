@@ -70,7 +70,7 @@ function formatPrettyDate(dateStr) {
 }
 
 function goBack() {
-  router.push({ name: 'dashboard' })
+  router.back()
 }
 
 function editTest() {
