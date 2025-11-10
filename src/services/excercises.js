@@ -66,3 +66,33 @@ export function calculatePoints(reps, version) {
 export function calculateCooperPoints(level) {
   return Math.round(COOPER_MAX_SCORE * COOPER_MULTIPLIERS[level] || 0)
 }
+
+/**
+ * Calculate total score for a test including all exercises and Cooper test.
+ * @param {Object} test - Test object containing exercise data
+ * @param {number} cooperLevel - Cooper fitness level (1-5)
+ * @returns {number} Total score
+ */
+export function calculateTotalScore(test, cooperLevel) {
+  if (!test) return 0
+
+  let totalScore = 0
+
+  // Sum points from all exercises (excluding cooper)
+  getExcerciseKeys().forEach((key) => {
+    if (key === 'cooper') return
+
+    const version = getVersion(test, key)
+    const reps = getReps(test, key)
+    const points = calculatePoints(reps, version)
+    // Only round points if there's a version (multiplier applied)
+    const roundedPoints = version ? Math.round(points) : points
+    totalScore += roundedPoints
+  })
+
+  // Add Cooper points
+  const cooperPoints = calculateCooperPoints(cooperLevel)
+  totalScore += cooperPoints
+
+  return totalScore
+}

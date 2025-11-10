@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useProfileStore } from '@/composables/useProfileStore.js'
 import { toKilometers, toMeters, evaluateCooper } from '@/services/cooper'
-import { calculatePoints, calculateCooperPoints, getExcerciseKeys, getVersion, getReps } from '@/services/excercises'
+import { calculatePoints, calculateCooperPoints, calculateTotalScore, getExcerciseKeys, getVersion, getReps } from '@/services/excercises'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
@@ -119,17 +119,8 @@ const cooperLevelStyle = computed(() => {
 })
 
 const totalScore = computed(() => {
-  if (!exerciseData.value) return 0
-
-  // sum all exercise points
-  const exercises = exerciseData.value.exercises
-  const exercisesTotal = Object.values(exercises).reduce((sum, exercise) => sum + exercise.points, 0)
-
-  // Add Cooper points based on level
-  const cooperLevel = exerciseData.value?.cooper?.level
-  const cooperPoints = calculateCooperPoints(cooperLevel)
-
-  return exercisesTotal + cooperPoints
+  if (!test.value || !exerciseData.value) return 0
+  return calculateTotalScore(test.value, exerciseData.value.cooper.level)
 })
 </script>
 
