@@ -91,7 +91,8 @@ function formatPrettyDate(dateStr) {
   if (isNaN(d.getTime())) return dateStr;
   const locale = navigator?.language || navigator?.userLanguage || "en";
   const monthName = d.toLocaleDateString(locale, { month: "long" });
-  return { year: y, month: monthName };
+  const monthShort = d.toLocaleDateString(locale, { month: "short" });
+  return { year: y, month: monthName, monthShort };
 }
 </script>
 
@@ -151,8 +152,10 @@ function formatPrettyDate(dateStr) {
         <tr v-for="(tr, i) in rows" :key="i">
           <td class="exercise__cell font-semibold">
             <span class="hidden sm:inline"
-              >{{ formatPrettyDate(tr.date).year }}&nbsp;</span
-            >{{ formatPrettyDate(tr.date).month }}
+              >{{ formatPrettyDate(tr.date).year }}&nbsp;{{ formatPrettyDate(tr.date).month }}</span
+            ><span class="inline sm:hidden"
+              >{{ formatPrettyDate(tr.date).monthShort }}</span
+            >
           </td>
           <ExerciseCell :value="tr._reps.pullup" :version="tr._versions.pullup" />
           <ExerciseCell :value="tr._reps.pushup" :version="tr._versions.pushup" />
