@@ -7,7 +7,7 @@ import { toKilometers, toMeters, evaluateCooper } from "@/services/cooper";
 import { useProfileStore } from "@/composables/useProfileStore.js";
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, EllipsisVerticalIcon } from "@heroicons/vue/24/outline";
 import ExerciseCell from "@/components/ui/ExerciseCell.vue";
-import { calculatePoints, getExcerciseKeys, getVersion, getReps } from "../services/excercises";
+import { calculatePoints, calculateTotalScore, getExcerciseKeys, getVersion, getReps } from "../services/excercises";
 
 const props = defineProps({
   tests: { type: Array, default: () => [] },
@@ -70,11 +70,16 @@ const rows = computed(() =>
       reps_ex[key] = reps;
       versions_ex[key] = version;
     })
+
+    // Calculate total score using the centralized function
+    const totalScore = calculateTotalScore(r, level);
+
     return {
       ...r,
       _points: points_ex,
       _reps: reps_ex,
       _versions: versions_ex,
+      _score: totalScore,
       _cooperMeters: meters,
       _cooperKm: toKilometers(meters),
       _cooperLevel: level,
@@ -138,9 +143,11 @@ function formatPrettyDate(dateStr) {
             <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.burpeesShort') }}</span>
             <span class="hidden sm:inline" :title="t('dashboard.table.headers.burpees')">{{ t('dashboard.table.headers.burpees') }}</span>
           </th>
+          <th class="exercise__cell--title hidden sm:table-cell">
+            <span :title="t('dashboard.table.headers.km')">{{ t('dashboard.table.headers.km') }}</span>
+          </th>
           <th class="exercise__cell--title">
-            <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.kmShort') }}</span>
-            <span class="hidden sm:inline" :title="t('dashboard.table.headers.km')">{{ t('dashboard.table.headers.km') }}</span>
+            ⭐️
           </th>
           <th class="exercise__cell--title">
             <span class="inline text-xs font-bold uppercase sm:hidden">{{ t('dashboard.table.headers.actionsShort') }}</span>
@@ -162,13 +169,14 @@ function formatPrettyDate(dateStr) {
           <ExerciseCell :value="tr._reps.squats" :version="tr._versions.squats" />
           <ExerciseCell :value="tr._reps.vups" :version="tr._versions.vups" />
           <ExerciseCell :value="tr._reps.burpees" :version="tr._versions.burpees" />
-          <ExerciseCell :value="tr._cooperKm">
+          <ExerciseCell :value="tr._cooperKm" class="hidden sm:table-cell">
               <CooperLevelIcon
                 :level="tr._cooperLevel"
                 :showText="true"
                 class="inline size-5 ml-1"
               />
           </ExerciseCell>
+          <ExerciseCell :value="tr._score" class="font-semibold text-blue-600" />
           <td class="exercise__cell">
             <div class="flex justify-center items-center">
             <button
@@ -238,7 +246,10 @@ function formatPrettyDate(dateStr) {
           </td>
         </tr>
         <tr v-if="rows.length === 0">
-          <td colspan="8" class="px-3 py-4 text-center text-gray-500">
+          <td colspan="7" class="px-3 py-4 text-center text-gray-500 sm:hidden">
+            {{ t('dashboard.table.noTests') }}
+          </td>
+          <td colspan="8" class="px-3 py-4 text-center text-gray-500 hidden sm:table-cell">
             {{ t('dashboard.table.noTests') }}
           </td>
         </tr>
