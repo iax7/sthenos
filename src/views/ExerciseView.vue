@@ -122,6 +122,11 @@ const totalScore = computed(() => {
   if (!test.value || !exerciseData.value) return 0
   return calculateTotalScore(test.value, exerciseData.value.cooper.level)
 })
+
+const exercisesScore = computed(() => {
+  if (!exerciseData.value) return 0
+  return Object.values(exerciseData.value.exercises).reduce((sum, exercise) => sum + exercise.points, 0)
+})
 </script>
 
 <template>
@@ -221,16 +226,23 @@ const totalScore = computed(() => {
       </AppCard>
 
       <AppCard>
-        <h2 class="mb-4 text-xl font-semibold text-gray-700">
-          {{ t('exercise.editor.cooperTest') }}
-        </h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-700">
+            {{ t('exercise.editor.cooperTest') }}
+          </h2>
+          <div class="text-right">
+            <p class="text-lg font-semibold text-blue-600">
+              {{ calculateCooperPoints(exerciseData.cooper.level) }} pts
+            </p>
+          </div>
+        </div>
         <div class="flex items-center gap-4">
           <div class="flex-1">
             <p class="text-sm text-gray-600">{{ t('exercise.editor.cooperLaps') }}</p>
             <p class="text-3xl font-bold text-blue-600">{{ exerciseData.cooper.km }} km</p>
             <p class="text-sm text-gray-500">({{ exerciseData.cooper.meters }} {{ t('dashboard.table.headers.km') === 'Km.' ? 'meters' : 'metros' }}) · {{ exerciseData.cooper.laps }} {{ t('cooper.laps') }}</p>
           </div>
-          <div class="flex flex-col items-end gap-2">
+          <div class="flex items-center">
             <span
               class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide"
               :style="{
@@ -240,19 +252,21 @@ const totalScore = computed(() => {
             >
               {{ t(cooperLevelStyle.labelKey) }}
             </span>
-            <div class="text-right">
-              <p class="text-lg font-semibold text-blue-600">
-                {{ calculateCooperPoints(exerciseData.cooper.level) }} pts
-              </p>
-            </div>
           </div>
         </div>
       </AppCard>
 
       <AppCard>
-        <h2 class="mb-4 text-xl font-semibold text-gray-700">
-          {{ t('dashboard.table.title') }}
-        </h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-700">
+            {{ t('dashboard.table.title') }}
+          </h2>
+          <div class="text-right">
+            <p class="text-lg font-semibold text-blue-600">
+              {{ exercisesScore }} pts
+            </p>
+          </div>
+        </div>
         <div class="grid gap-3 grid-cols-1 min-[350px]:grid-cols-2 sm:grid-cols-4 lg:grid-cols-5">
           <div
             v-for="(key, idx) in Object.keys(exerciseData.exercises)"
