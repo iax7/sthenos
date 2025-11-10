@@ -18,7 +18,7 @@ const genderLabel = computed(() => {
 
 <template>
   <div>
-    <h1 class="text-5xl font-bold tracking-tight text-blue-800">
+    <h1 class="text-5xl font-bold tracking-tight text-blue-800 truncate">
       {{ profile?.name }}
     </h1>
     <p class="text-sm text-gray-600" v-if="profile">
