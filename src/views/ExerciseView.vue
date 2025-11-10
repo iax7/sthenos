@@ -8,7 +8,7 @@ import { calculatePoints, getExcerciseKeys, getVersion, getReps } from '@/servic
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
-import { PencilIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline'
+import { PencilIcon, ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
   index: { type: [String, Number], required: true }
@@ -75,6 +75,21 @@ function goBack() {
 
 function editTest() {
   router.push({ name: 'exercise-edit', params: { index: testIndex.value } })
+}
+
+const isFirstTest = computed(() => testIndex.value === 0)
+const isLastTest = computed(() => testIndex.value === tests.value.length - 1)
+
+function goToPreviousTest() {
+  if (!isFirstTest.value) {
+    router.replace({ name: 'exercise-view', params: { index: testIndex.value - 1 } })
+  }
+}
+
+function goToNextTest() {
+  if (!isLastTest.value) {
+    router.replace({ name: 'exercise-view', params: { index: testIndex.value + 1 } })
+  }
 }
 
 const exerciseLabels = {
@@ -145,9 +160,33 @@ const totalScore = computed(() => {
 
     <div v-else>
       <AppCard>
-        <p class="text-lg font-semibold text-gray-700">
-          {{ formatPrettyDate(exerciseData.date) }}
-        </p>
+        <div class="flex items-center justify-between">
+          <p class="text-lg font-semibold text-gray-700">
+            {{ formatPrettyDate(exerciseData.date) }}
+          </p>
+          <div class="flex items-center gap-2">
+            <BaseButton
+              variant="secondary"
+              type="button"
+              size="sm"
+              :disabled="isFirstTest"
+              @click="goToPreviousTest"
+              aria-label="Previous test"
+            >
+              <ChevronLeftIcon class="size-5" />
+            </BaseButton>
+            <BaseButton
+              variant="secondary"
+              type="button"
+              size="sm"
+              :disabled="isLastTest"
+              @click="goToNextTest"
+              aria-label="Next test"
+            >
+              <ChevronRightIcon class="size-5" />
+            </BaseButton>
+          </div>
+        </div>
       </AppCard>
 
       <AppCard class="bg-linear-to-br from-indigo-500 to-purple-600 text-white relative overflow-hidden">
