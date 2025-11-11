@@ -32,11 +32,11 @@ export const BURPEE_VERSIONS = [
 export const COOPER_MAX_SCORE = 50
 
 export const COOPER_MULTIPLIERS = {
-  5: 1,
+  5: 1.1,
   4: 0.8,
-  3: 0.55,
+  3: 0.6,
   2: 0.4,
-  1: 0.1,
+  1: 0.2,
 }
 
 export const EXERCISE_VERSIONS = {

@@ -55,7 +55,10 @@ async function backupToPasteRs() {
     // base64-encode UTF-8 safely in browser
     function toBase64Utf8(str) {
       try {
-        return btoa(unescape(encodeURIComponent(str)))
+        // Modern approach: convert string to Uint8Array, then to base64
+        const bytes = new TextEncoder().encode(str)
+        const binString = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join('')
+        return btoa(binString)
       } catch {
         // Fallback: use simple btoa (may fail for non-latin1)
         return btoa(str)
@@ -171,7 +174,10 @@ async function fetchFromUrl() {
       const candidate = text.trim()
       let decoded = ''
       try {
-        decoded = decodeURIComponent(escape(atob(candidate)))
+        // Modern approach: decode base64 to Uint8Array, then to string
+        const binString = atob(candidate)
+        const bytes = Uint8Array.from(binString, (char) => char.charCodeAt(0))
+        decoded = new TextDecoder().decode(bytes)
       } catch {
         // fallback to atob only
         decoded = atob(candidate)
