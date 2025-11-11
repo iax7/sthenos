@@ -33,14 +33,14 @@
   },
   "settings": {
     "title": "Settings",
-    "description": "Backup your profile to paste.rs and save the returned URL below for easy import later.",
-    "expirationWarning": "⚠️ Backups on paste.rs expire after 1 year (365 days)",
-    "backupButton": "Upload to paste.rs",
-    "backupTitle": "Backup",
+    "description": "Backup your profile online and save the returned URL below for easy import later.",
+    "expirationWarning": "⚠️ Online backups expire after 1 year (365 days)",
+    "backupButton": "Upload backup",
+    "backupTitle": "Online Backup",
     "uploading": "Uploading...",
     "uploadSuccess": "Backup uploaded",
     "uploadFailed": "Upload failed",
-    "pasteUrl": "Paste URL",
+    "pasteUrl": "Backup URL",
     "saveUrl": "Save",
     "noUrl": "No URL provided",
     "urlSaved": "URL saved",
@@ -51,7 +51,7 @@
     "fileActionsDescription": "Download or upload your profile as a JSON file from your device.",
     "exerciseVersions": "Exercise Versions",
     "exerciseVersionsDescription": "Point multipliers for each exercise variation. Your score is calculated as: reps × multiplier.",
-    "cooperMaxScore": "Max Score"
+    "cooperMaxScore": "Base Score"
   },
   "exercise": {
     "editor": {

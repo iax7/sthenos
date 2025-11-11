@@ -1,4 +1,19 @@
 <script setup>
+/**
+ * Settings View - Profile backup/restore functionality
+ *
+ * DATA ENCODING STRATEGY:
+ * - Online backups: Base64 encoded for light obfuscation
+ *   → Prevents search engine indexing of sensitive data
+ *   → See: encodeToBase64() and decodeFromBase64()
+ *   → Current provider: dpaste.com (easy to migrate if needed)
+ *
+ * - Local file export/import: Plain JSON (human-readable)
+ *   → Users can inspect and edit downloaded files
+ *   → See: downloadProfile() and handleFileChange()
+ *
+ * DO NOT remove base64 encoding from online backups - it's intentional privacy protection.
+ */
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -44,56 +59,83 @@ const cooperLevels = [
   { level: 1, labelKey: 'cooper.very_bad', multiplier: COOPER_MULTIPLIERS[1] },
 ]
 
+/**
+ * Encode string to base64 (UTF-8 safe).
+ * Used for light obfuscation to prevent search engine indexing of sensitive data.
+ * DO NOT REMOVE: This is intentional obfuscation, not security.
+ *
+ * @param {string} str - Plain text string to encode
+ * @returns {string} Base64 encoded string
+ */
+function encodeToBase64(str) {
+  try {
+    // Modern approach: convert string to Uint8Array, then to base64
+    const bytes = new TextEncoder().encode(str)
+    const binString = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join('')
+    return btoa(binString)
+  } catch {
+    // Fallback: use simple btoa (may fail for non-latin1)
+    return btoa(str)
+  }
+}
+
+/**
+ * Decode base64 string to plain text (UTF-8 safe).
+ * Counterpart to encodeToBase64 for retrieving obfuscated data.
+ * DO NOT REMOVE: Required to read base64-encoded backups.
+ *
+ * @param {string} base64Str - Base64 encoded string
+ * @returns {string} Decoded plain text string
+ */
+function decodeFromBase64(base64Str) {
+  try {
+    // Modern approach: decode base64 to Uint8Array, then to string
+    const binString = atob(base64Str)
+    const bytes = Uint8Array.from(binString, (char) => char.charCodeAt(0))
+    return new TextDecoder().decode(bytes)
+  } catch {
+    // Fallback to atob only
+    return atob(base64Str)
+  }
+}
+
 function goBack() {
   router.back()
 }
 
-async function backupToPasteRs() {
+/**
+ * Upload profile backup to online paste service.
+ */
+async function backupOnline() {
   try {
     uploading.value = true
     const json = getProfileData()
-    // base64-encode UTF-8 safely in browser
-    function toBase64Utf8(str) {
-      try {
-        // Modern approach: convert string to Uint8Array, then to base64
-        const bytes = new TextEncoder().encode(str)
-        const binString = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join('')
-        return btoa(binString)
-      } catch {
-        // Fallback: use simple btoa (may fail for non-latin1)
-        return btoa(str)
-      }
-    }
 
-    const b64 = toBase64Utf8(json)
+    const encodedContent = encodeToBase64(json)
 
-    // Use public CORS proxy to reach paste.rs from the browser
-    const proxyUrl = 'https://corsproxy.io/?https://paste.rs'
-    const resp = await fetch(proxyUrl, {
+    // Online paste service API (currently: dpaste.com) - supports CORS natively
+    const resp = await fetch('https://dpaste.com/api/v2/', {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: b64,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'Sthenos-App/1.0'
+      },
+      body: new URLSearchParams({
+        content: encodedContent,
+        syntax: 'text',  // Changed from 'json' since content is base64
+        expiry_days: '365'
+      })
     })
 
     if (!resp.ok) {
-      const text = await resp.text().catch(() => '')
-      pushToast(t('settings.uploadFailed') + ` ${resp.status} ${resp.statusText} ${text}`, 'error')
+      pushToast(t('settings.uploadFailed') + ` ${resp.status} ${resp.statusText}`, 'error')
       return
     }
 
-    let pasteUrl = (await resp.text()).trim()
+    const pasteUrl = (await resp.text()).trim()
     if (!pasteUrl) {
       pushToast(t('settings.uploadFailed'), 'error')
       return
-    }
-
-    // Normalize id/path to full URL
-    if (!/^https?:\/\//i.test(pasteUrl)) {
-      if (/^[a-zA-Z0-9_-]+$/.test(pasteUrl)) {
-        pasteUrl = `https://paste.rs/${pasteUrl}`
-      } else if (pasteUrl.startsWith('/')) {
-        pasteUrl = `https://paste.rs${pasteUrl}`
-      }
     }
 
     url.value = pasteUrl
@@ -127,12 +169,16 @@ async function fetchFromUrl() {
   }
 
   try {
-    // If the url targets paste.rs, fetch it through the public CORS proxy
+    // Convert dpaste.com URL to raw format if needed
     let fetchUrl = rawUrl
     try {
       const u = new URL(rawUrl)
-      if (/paste\.rs$/i.test(u.hostname) || /(^|\.)paste\.rs$/i.test(u.hostname)) {
-        fetchUrl = `https://corsproxy.io/?${rawUrl}`
+      if (/dpaste\.com$/i.test(u.hostname)) {
+        // Ensure we're fetching the raw text version
+        if (!u.pathname.endsWith('.txt')) {
+          const pasteId = u.pathname.split('/').filter(Boolean).pop()
+          fetchUrl = `https://dpaste.com/${pasteId}.txt`
+        }
       }
     } catch {
       // not a valid absolute URL — leave as-is, fetch may fail
@@ -146,9 +192,19 @@ async function fetchFromUrl() {
 
     const text = await response.text()
 
-    // Try parse JSON directly
+    // Try to decode from base64 (obfuscated format), fallback to direct JSON
+    let jsonString = text
     try {
-      const parsed = JSON.parse(text)
+      // First, try decoding from base64 (new format with obfuscation)
+      jsonString = decodeFromBase64(text.trim())
+    } catch {
+      // If decode fails, assume it's plain JSON (legacy format or manual entry)
+      jsonString = text
+    }
+
+    // Parse the JSON and import profile
+    try {
+      const parsed = JSON.parse(jsonString)
       const result = importProfile(parsed)
       if (result.ok) {
         saveLastImportUrl(rawUrl)
@@ -158,52 +214,17 @@ async function fetchFromUrl() {
         if (router.currentRoute.value.path === '/') {
           window.dispatchEvent(new CustomEvent('profile-updated'))
         } else {
-          router.push('/')
+          router.replace('/')
         }
       } else {
         pushToast(result.error || t('nav.importFailed'), 'error')
       }
-      return
-    } catch {
-      // not direct JSON, continue
-    }
-
-    // Try base64 decode -> JSON
-    try {
-      // remove whitespace/newlines
-      const candidate = text.trim()
-      let decoded = ''
-      try {
-        // Modern approach: decode base64 to Uint8Array, then to string
-        const binString = atob(candidate)
-        const bytes = Uint8Array.from(binString, (char) => char.charCodeAt(0))
-        decoded = new TextDecoder().decode(bytes)
-      } catch {
-        // fallback to atob only
-        decoded = atob(candidate)
-      }
-      const parsed = JSON.parse(decoded)
-      const result = importProfile(parsed)
-      if (result.ok) {
-        saveLastImportUrl(rawUrl)
-        try { loadProfile() } catch (e) { void e }
-        pushToast(t('nav.profileImported'), 'success')
-        if (router.currentRoute.value.path === '/') {
-          window.dispatchEvent(new CustomEvent('profile-updated'))
-        } else {
-          router.push('/')
-        }
-      } else {
-        pushToast(result.error || t('nav.importFailed'), 'error')
-      }
-      return
-    } catch {
-      pushToast(t('nav.importFailed'), 'error')
-      return
-    }
     } catch {
       pushToast(t('nav.importFailed'), 'error')
     }
+  } catch {
+    pushToast(t('nav.importFailed'), 'error')
+  }
 }
 
 function clearSaved() {
@@ -212,6 +233,11 @@ function clearSaved() {
   pushToast(t('settings.urlCleared'), 'success')
 }
 
+/**
+ * Download profile as plain JSON file (no encoding).
+ * Local file exports use plain JSON for easy inspection/editing.
+ * DO NOT apply base64 encoding here - users should see readable JSON.
+ */
 function downloadProfile() {
   const json = getProfileData()
   const blob = new Blob([json], { type: 'application/json' })
@@ -230,6 +256,11 @@ function triggerUpload() {
   fileInput.value?.click()
 }
 
+/**
+ * Handle local file upload (plain JSON).
+ * Local file imports expect plain JSON (no base64 decoding).
+ * DO NOT decode base64 here - local files are plain JSON.
+ */
 function handleFileChange(e) {
   const file = e.target.files && e.target.files[0]
   if (!file) return
@@ -278,7 +309,7 @@ function handleFileChange(e) {
       <p class="text-sm text-amber-600 mt-2 font-medium">{{ t('settings.expirationWarning') }}</p>
 
       <div class="mt-3 flex items-center">
-        <BaseButton :disabled="!hasProfile" @click.prevent="backupToPasteRs">
+        <BaseButton :disabled="!hasProfile" @click.prevent="backupOnline">
           <ArrowUpTrayIcon class="size-5 mr-1" />
           {{ uploading ? t('settings.uploading') : t('settings.backupButton') }}
         </BaseButton>
@@ -296,7 +327,7 @@ function handleFileChange(e) {
       <BaseInput
         v-model="url"
         type="text"
-        placeholder="https://paste.rs/xxxx"
+        placeholder="https://dpaste.com/XXXXX"
       />
       <div class="flex gap-2">
         <BaseButton @click.prevent="saveUrl">{{ t('settings.saveUrl') }}</BaseButton>

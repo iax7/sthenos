@@ -33,14 +33,14 @@
   },
   "settings": {
     "title": "Ajustes",
-    "description": "Haz un respaldo de tu perfil en paste.rs y guarda la URL devuelta abajo para importarla después.",
-    "expirationWarning": "⚠️ Los respaldos en paste.rs expiran después de 1 año (365 días)",
-    "backupButton": "Subir a paste.rs",
-    "backupTitle": "Respaldo",
+    "description": "Haz un respaldo de tu perfil en línea y guarda la URL devuelta abajo para importarla después.",
+    "expirationWarning": "⚠️ Los respaldos en línea expiran después de 1 año (365 días)",
+    "backupButton": "Subir respaldo",
+    "backupTitle": "Respaldo en Línea",
     "uploading": "Subiendo...",
     "uploadSuccess": "Respaldo subido",
     "uploadFailed": "Fallo al subir",
-    "pasteUrl": "URL del paste",
+    "pasteUrl": "URL del respaldo",
     "saveUrl": "Guardar",
     "noUrl": "No proporcionaste una URL",
     "urlSaved": "URL guardada",
@@ -51,7 +51,7 @@
     "fileActionsDescription": "Descarga o sube tu perfil como un archivo JSON desde tu dispositivo.",
     "exerciseVersions": "Versiones de Ejercicios",
     "exerciseVersionsDescription": "Multiplicadores de puntos para cada variación de ejercicio. Tu puntuación se calcula como: repeticiones × multiplicador.",
-    "cooperMaxScore": "Puntaje Máximo"
+    "cooperMaxScore": "Puntaje Base"
   },
   "exercise": {
     "editor": {
