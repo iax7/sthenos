@@ -136,22 +136,11 @@ const exercisesScore = computed(() => {
         {{ t('exercise.editor.testDate') }}
       </h2>
       <div class="flex items-center gap-2">
-        <BaseButton
-          variant="secondary"
-          type="button"
-          @click="goBack"
-          aria-label="Back to dashboard"
-        >
+        <BaseButton variant="secondary" type="button" @click="goBack" aria-label="Back to dashboard">
           <ArrowLeftIcon class="size-5 mr-1" />
           {{ t('app.back') }}
         </BaseButton>
-        <BaseButton
-          v-if="exerciseData"
-          variant="primary"
-          type="button"
-          @click="editTest"
-          aria-label="Edit exercise"
-        >
+        <BaseButton v-if="exerciseData" variant="primary" type="button" @click="editTest" aria-label="Edit exercise">
           <PencilIcon class="size-5 mr-1" />
           {{ t('dashboard.table.actions.edit') }}
         </BaseButton>
@@ -169,24 +158,12 @@ const exercisesScore = computed(() => {
             {{ formatPrettyDate(exerciseData.date) }}
           </p>
           <div class="flex items-center gap-2">
-            <BaseButton
-              variant="secondary"
-              type="button"
-              size="sm"
-              :disabled="isFirstTest"
-              @click="goToPreviousTest"
-              aria-label="Previous test"
-            >
+            <BaseButton variant="secondary" type="button" size="sm" :disabled="isFirstTest" @click="goToPreviousTest"
+              aria-label="Previous test">
               <ChevronLeftIcon class="size-5" />
             </BaseButton>
-            <BaseButton
-              variant="secondary"
-              type="button"
-              size="sm"
-              :disabled="isLastTest"
-              @click="goToNextTest"
-              aria-label="Next test"
-            >
+            <BaseButton variant="secondary" type="button" size="sm" :disabled="isLastTest" @click="goToNextTest"
+              aria-label="Next test">
               <ChevronRightIcon class="size-5" />
             </BaseButton>
           </div>
@@ -195,11 +172,8 @@ const exercisesScore = computed(() => {
 
       <AppCard class="bg-linear-to-br from-indigo-500 to-purple-600 text-white relative overflow-hidden">
         <!-- Star watermark -->
-        <svg
-          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[calc(100%+2rem)] w-auto opacity-20"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[calc(100%+2rem)] w-auto opacity-20"
+          viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
@@ -207,10 +181,7 @@ const exercisesScore = computed(() => {
               <stop offset="100%" style="stop-color:#ffa500;stop-opacity:1" />
             </linearGradient>
           </defs>
-          <polygon
-            points="50,15 61,40 88,40 67,57 74,82 50,67 26,82 33,57 12,40 39,40"
-            fill="url(#goldGradient)"
-          />
+          <polygon points="50,15 61,40 88,40 67,57 74,82 50,67 26,82 33,57 12,40 39,40" fill="url(#goldGradient)" />
         </svg>
         <div class="text-center relative z-10">
           <h2 class="mb-2 text-lg font-semibold uppercase tracking-wide opacity-90">
@@ -232,7 +203,7 @@ const exercisesScore = computed(() => {
           </h2>
           <div class="text-right">
             <p class="text-lg font-semibold text-blue-600">
-              {{ calculateCooperPoints(exerciseData.cooper.level) }} pts
+              {{ calculateCooperPoints(exerciseData.cooper.laps, exerciseData.cooper.level) }} pts
             </p>
           </div>
         </div>
@@ -240,16 +211,14 @@ const exercisesScore = computed(() => {
           <div class="flex-1">
             <p class="text-sm text-gray-600">{{ t('exercise.editor.cooperLaps') }}</p>
             <p class="text-3xl font-bold text-blue-600">{{ exerciseData.cooper.km }} km</p>
-            <p class="text-sm text-gray-500">({{ exerciseData.cooper.meters }} {{ t('dashboard.table.headers.km') === 'Km.' ? 'meters' : 'metros' }}) · {{ exerciseData.cooper.laps }} {{ t('cooper.laps') }}</p>
+            <p class="text-sm text-gray-500">({{ exerciseData.cooper.meters }} {{ t('dashboard.table.headers.km') ===
+              'Km.' ? 'meters' : 'metros' }}) · {{ exerciseData.cooper.laps }} {{ t('cooper.laps') }}</p>
           </div>
-          <div class="flex items-center">
-            <span
-              class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide"
-              :style="{
-                backgroundColor: cooperLevelStyle.backgroundColor,
-                color: cooperLevelStyle.color
-              }"
-            >
+          <div class="flex items-center" :hidden="exerciseData.cooper.laps <= 0">
+            <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide" :style="{
+              backgroundColor: cooperLevelStyle.backgroundColor,
+              color: cooperLevelStyle.color
+            }">
               {{ t(cooperLevelStyle.labelKey) }}
             </span>
           </div>
@@ -268,11 +237,8 @@ const exercisesScore = computed(() => {
           </div>
         </div>
         <div class="grid gap-3 grid-cols-1 min-[350px]:grid-cols-2 sm:grid-cols-4 lg:grid-cols-5">
-          <div
-            v-for="(key, idx) in Object.keys(exerciseData.exercises)"
-            :key="idx"
-            class="rounded-lg border border-gray-200 bg-linear-to-br from-white via-blue-50 to-indigo-100 p-4 shadow-sm hover:shadow-md transition-shadow"
-          >
+          <div v-for="(key, idx) in Object.keys(exerciseData.exercises)" :key="idx"
+            class="rounded-lg border border-gray-200 bg-linear-to-br from-white via-blue-50 to-indigo-100 p-4 shadow-sm hover:shadow-md transition-shadow">
             <h3 class="mb-2 text-sm font-semibold uppercase text-gray-700">
               {{ t(exerciseLabels[key]) }}
             </h3>
@@ -290,7 +256,8 @@ const exercisesScore = computed(() => {
               </p>
             </div>
             <div v-if="exerciseData.exercises[key].versionLabel">
-              <span class="inline-block rounded-md bg-linear-to-r from-orange-500 to-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+              <span
+                class="inline-block rounded-md bg-linear-to-r from-orange-500 to-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
                 {{ t(exerciseData.exercises[key].versionLabel) }}
               </span>
             </div>

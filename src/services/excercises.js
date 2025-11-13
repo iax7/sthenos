@@ -63,7 +63,15 @@ export function calculatePoints(reps, version) {
   return r * m
 }
 
-export function calculateCooperPoints(level) {
+/**
+ * Calculate Cooper test points based on laps completed and fitness level.
+ * Returns 0 if no laps were recorded to avoid awarding points for non-participation.
+ * @param {number|string} reps - Number of Cooper laps completed
+ * @param {number} level - Cooper fitness level (1-5: very bad to very good)
+ * @returns {number} Calculated Cooper points (0 if no laps recorded)
+ */
+export function calculateCooperPoints(reps, level) {
+  if (!reps || reps <= 0) return 0
   return Math.round(COOPER_MAX_SCORE * COOPER_MULTIPLIERS[level] || 0)
 }
 
@@ -91,7 +99,8 @@ export function calculateTotalScore(test, cooperLevel) {
   })
 
   // Add Cooper points
-  const cooperPoints = calculateCooperPoints(cooperLevel)
+  const cooperReps = getReps(test, 'cooper')
+  const cooperPoints = calculateCooperPoints(cooperReps, cooperLevel)
   totalScore += cooperPoints
 
   return totalScore
