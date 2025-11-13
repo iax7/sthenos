@@ -23,7 +23,7 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
-import { ArrowLeftIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentIcon, LinkIcon, CloudArrowUpIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
+import { ArrowLeftIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentIcon, LinkIcon, CloudArrowUpIcon, InformationCircleIcon, ClipboardDocumentIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import {
   PULL_UP_VERSIONS,
   PUSH_UP_VERSIONS,
@@ -233,6 +233,20 @@ function clearSaved() {
   pushToast(t('settings.urlCleared'), 'success')
 }
 
+async function copyUrl() {
+  const urlText = (url.value || '').trim()
+  if (!urlText) {
+    pushToast(t('settings.noUrl'), 'error')
+    return
+  }
+  try {
+    await navigator.clipboard.writeText(urlText)
+    pushToast(t('settings.urlCopied'), 'success')
+  } catch {
+    pushToast(t('settings.copyFailed'), 'error')
+  }
+}
+
 /**
  * Download profile as plain JSON file (no encoding).
  * Local file exports use plain JSON for easy inspection/editing.
@@ -322,13 +336,19 @@ function handleFileChange(e) {
           <LinkIcon class="size-5 text-gray-600" />
           {{ t('settings.pasteUrl') }}
         </h3>
-        <BaseButton variant="secondary" @click.prevent="clearSaved">{{ t('settings.clearSaved') }}</BaseButton>
+        <BaseButton variant="secondary" @click.prevent="clearSaved">
+          <TrashIcon class="size-5 mr-1" />
+          {{ t('settings.clearSaved') }}
+        </BaseButton>
       </div>
-      <BaseInput
-        v-model="url"
-        type="text"
-        placeholder="https://dpaste.com/XXXXX"
-      />
+      <div class="relative">
+        <BaseInput v-model="url" type="text" placeholder="https://dpaste.com/XXXXX" class="pr-10" />
+        <button v-if="url" type="button"
+          class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-blue-700 transition-colors"
+          @click="copyUrl" :title="t('settings.copyUrl')">
+          <ClipboardDocumentIcon class="size-5" />
+        </button>
+      </div>
       <div class="flex gap-2">
         <BaseButton @click.prevent="saveUrl">{{ t('settings.saveUrl') }}</BaseButton>
         <BaseButton @click.prevent="fetchFromUrl">
