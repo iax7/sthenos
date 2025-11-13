@@ -90,24 +90,7 @@ function hasPositiveValue() {
 
 const canSave = computed(() => {
   const dateOk = date.value && /\d{4}-\d{2}-\d{2}/.test(date.value);
-  const fields = [
-    pullUps,
-    pullUpsVersion,
-    pushUps,
-    pushUpsVersion,
-    squats,
-    squatsVersion,
-    vups,
-    vupsVersion,
-    burpees,
-    burpeesVersion,
-    laps,
-  ];
-  return (
-    dateOk &&
-    fields.every((f) => String(f.value).trim() !== "") &&
-    hasPositiveValue()
-  );
+  return dateOk && hasPositiveValue();
 });
 
 function save() {
@@ -148,58 +131,26 @@ function save() {
         <BaseInput v-model="date" type="date" required />
       </div>
       <div class="space-y-4">
-        <ExerciseMetricInput
-          label="Pull Ups"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="pullUps"
-          v-model:version="pullUpsVersion"
-          :versions="PULL_UP_VERSIONS"
-        />
-        <ExerciseMetricInput
-          label="Push Ups"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="pushUps"
-          v-model:version="pushUpsVersion"
-          :versions="PUSH_UP_VERSIONS"
-        />
-        <ExerciseMetricInput
-          label="Squats"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="squats"
-          v-model:version="squatsVersion"
-          :versions="SQUAT_VERSIONS"
-        />
-        <ExerciseMetricInput
-          label="V-Ups"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="vups"
-          v-model:version="vupsVersion"
-          :versions="VUP_VERSIONS"
-        />
-        <ExerciseMetricInput
-          label="Burpees"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="burpees"
-          v-model:version="burpeesVersion"
-          :versions="BURPEE_VERSIONS"
-        />
+        <ExerciseMetricInput label="Pull Ups" :placeholder="t('exercise.editor.count')" v-model:count="pullUps"
+          v-model:version="pullUpsVersion" :versions="PULL_UP_VERSIONS" />
+        <ExerciseMetricInput label="Push Ups" :placeholder="t('exercise.editor.count')" v-model:count="pushUps"
+          v-model:version="pushUpsVersion" :versions="PUSH_UP_VERSIONS" />
+        <ExerciseMetricInput label="Squats" :placeholder="t('exercise.editor.count')" v-model:count="squats"
+          v-model:version="squatsVersion" :versions="SQUAT_VERSIONS" />
+        <ExerciseMetricInput label="V-Ups" :placeholder="t('exercise.editor.count')" v-model:count="vups"
+          v-model:version="vupsVersion" :versions="VUP_VERSIONS" />
+        <ExerciseMetricInput label="Burpees" :placeholder="t('exercise.editor.count')" v-model:count="burpees"
+          v-model:version="burpeesVersion" :versions="BURPEE_VERSIONS" />
         <div class="flex flex-col">
           <label class="form-label">{{
             t("exercise.editor.cooperLaps")
           }}</label>
-          <BaseInput
-            v-model="laps"
-            type="number"
-            min="0"
-            step="0.5"
-            :placeholder="t('exercise.editor.count')"
-            required
-          />
+          <BaseInput v-model="laps" type="number" min="0" step="0.5" :placeholder="t('exercise.editor.count')" />
         </div>
       </div>
       <div class="flex justify-end gap-2">
         <BaseButton variant="secondary" type="button" @click="emit('cancel')">{{
-            t("app.cancel")
+          t("app.cancel")
           }}</BaseButton>
         <BaseButton type="submit" :disabled="!canSave">{{
           props.mode === "edit" ? t("app.update") : t("app.save")
