@@ -25,6 +25,7 @@ import {
   getExerciseType,
 } from "@/services/excercises.js";
 import { useProfileStore } from "@/composables/useProfileStore.js";
+import { getGradientColors } from "@/services/chartColors.js";
 
 const { tests } = useProfileStore();
 
@@ -42,13 +43,6 @@ ChartJS.register(
 
 const { t } = useI18n();
 
-// [ Base, 60% opacity, 25% opacity, Darker ]
-const GRADIENT_COLORS = {
-  blue: ["#2563eb", "#2563eb99", "#2563eb40", "#1d4ed8"],
-  red: ["#ef4444", "#ef444499", "#ef444440", "#b91c1c"],
-  green: ["#34d399", "#34d39999", "#34d39940", "#10b981"],
-};
-
 const selectedMetric = ref(EXERCISES[0].key);
 
 const selectedData = computed(() => {
@@ -65,15 +59,6 @@ function formatDateLabel(dateStr) {
   return y.slice(-2) + "-" + m;
 }
 
-/**
- * Returns gradient colors based on delta value
- * @param {number} delta
- * @returns {[string, string, string, string]} Array of colors: [baseColor, startColor, endColor, pointColor]
- */
-function getGradientColors(delta) {
-  return delta < 0 ? GRADIENT_COLORS["red"] : GRADIENT_COLORS["blue"];
-}
-
 const chartData = computed(() => {
   const data = selectedData.value;
   if (!data || !data.length) {
@@ -84,7 +69,7 @@ const chartData = computed(() => {
   }
 
   const [baseColor, startColor, endColor, pointColor] = getGradientColors(
-    stats.value.delta,
+    stats.value.pct,
   );
 
   const gradientFill = (ctx) => {
@@ -124,10 +109,21 @@ const chartData = computed(() => {
 
 const chartOptions = computed(() => {
   if (!stats.value) return {};
-  const [baseColor] = getGradientColors(stats.value.delta);
+  const [baseColor] = getGradientColors(stats.value.pct);
   return {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 750,
+      easing: 'easeInOutQuart',
+    },
+    transitions: {
+      active: {
+        animation: {
+          duration: 300,
+        },
+      },
+    },
     layout: {
       padding: {
         top: 26, // Add some top padding for better label visibility
@@ -136,6 +132,11 @@ const chartOptions = computed(() => {
     plugins: {
       legend: { display: false },
       tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        padding: 12,
+        cornerRadius: 8,
+        titleFont: { size: 13, weight: 'bold' },
+        bodyFont: { size: 12 },
         callbacks: {
           label: (context) => {
             const dataPoint = selectedData.value[context.dataIndex];
@@ -150,6 +151,19 @@ const chartOptions = computed(() => {
                 : ` (${dataPoint.version})`;
             }
             return `${dataPoint.reps} reps${versionLabel} = ${context.parsed.y} pts`;
+          },
+          afterLabel: (context) => {
+            const idx = context.dataIndex;
+            if (idx > 0) {
+              const current = context.parsed.y;
+              const previous = selectedData.value[idx - 1]?.value;
+              if (previous != null) {
+                const change = current - previous;
+                const sign = change >= 0 ? '+' : '';
+                return `${sign}${change} pts vs previous`;
+              }
+            }
+            return '';
           },
         },
       },
@@ -166,14 +180,26 @@ const chartOptions = computed(() => {
     scales: {
       y: {
         beginAtZero: false,
-        grid: { color: "rgba(209, 213, 219, 0.3)" },
+        grid: {
+          color: "rgba(209, 213, 219, 0.2)",
+          lineWidth: 1,
+        },
         ticks: {
           callback: (value) => (Number.isInteger(value) ? value : ""),
           stepSize: 1,
+          color: '#6b7280',
+          font: { size: 11 },
         },
       },
       x: {
-        grid: { display: true },
+        grid: {
+          display: true,
+          color: "rgba(209, 213, 219, 0.15)",
+        },
+        ticks: {
+          color: '#6b7280',
+          font: { size: 11 },
+        },
       },
     },
   };
@@ -182,22 +208,28 @@ const chartOptions = computed(() => {
 
 <template>
   <AppCard>
-    <div class="mb-4 flex items-center justify-between">
+    <div class="mb-4 flex items-center justify-between gap-3">
       <h2>{{ t("dashboard.chart.title") }}</h2>
-      <select v-model="selectedMetric" class="form-input">
+      <label class="sr-only" for="metric-select">{{ t("dashboard.chart.selectMetric") }}</label>
+      <select id="metric-select" v-model="selectedMetric"
+        class="form-input min-w-[140px] cursor-pointer transition-colors hover:border-blue-400 focus:ring-2 focus:ring-blue-500"
+        aria-label="Select exercise metric">
         <option v-for="m in EXERCISES" :key="m.key" :value="m.key">
           {{ m.label }}
         </option>
       </select>
     </div>
-    <div
-      v-if="!selectedData || selectedData.length < 2"
-      class="text-sm text-gray-500"
-    >
-      {{ t("dashboard.chart.notEnoughData") }}
+    <div v-if="!selectedData || selectedData.length < 2" class="py-8 text-center">
+      <p class="text-sm text-gray-500">{{ t("dashboard.chart.notEnoughData") }}</p>
+      <p v-if="selectedData && selectedData.length === 1" class="mt-1 text-xs text-gray-400">
+        {{ t("dashboard.chart.needOneMore") }}
+      </p>
+      <p v-else-if="!selectedData || selectedData.length === 0" class="mt-1 text-xs text-gray-400">
+        {{ t("dashboard.chart.needTwoTests") }}
+      </p>
     </div>
-    <div v-else>
-      <div class="h-60 w-full">
+    <div v-else class="transition-opacity duration-300">
+      <div class="h-64 sm:h-72 md:h-80 w-full">
         <Line :data="chartData" :options="chartOptions" />
       </div>
       <ChartStats :stats="stats" />

@@ -139,14 +139,24 @@
     },
     "chart": {
       "title": "Performance Trend",
-      "notEnoughData": "Not enough data points for a trend (need at least 2)."
+      "selectMetric": "Select exercise metric",
+      "notEnoughData": "Not enough data points for a trend (need at least 2).",
+      "needOneMore": "Add one more test to see the trend.",
+      "needTwoTests": "Add at least 2 tests to see the trend."
     },
     "stats": {
       "size": "Sample",
       "first": "First",
       "last": "Last",
       "max": "Max",
-      "min": "Min"
+      "min": "Min",
+      "sizeTooltip": "Number of tests in this metric",
+      "firstTooltip": "First recorded test score",
+      "lastTooltip": "Most recent test score",
+      "maxTooltip": "Highest score achieved",
+      "minTooltip": "Lowest score recorded",
+      "deltaTooltip": "Change from first to last (pts)",
+      "pctTooltip": "Percentage improvement from first to last"
     }
   }
 }

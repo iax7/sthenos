@@ -138,15 +138,25 @@
       }
     },
     "chart": {
-      "title": "Tendencias de Rendimiento",
-      "notEnoughData": "No hay suficientes datos para una tendencia (se necesitan al menos 2)."
+      "title": "Tendencia de Rendimiento",
+      "selectMetric": "Seleccionar métrica de ejercicio",
+      "notEnoughData": "No hay suficientes datos para mostrar una tendencia (se necesitan al menos 2).",
+      "needOneMore": "Agrega un test más para ver la tendencia.",
+      "needTwoTests": "Agrega al menos 2 tests para ver la tendencia."
     },
     "stats": {
       "size": "Muestra",
       "first": "Primera",
       "last": "Última",
       "max": "Máx",
-      "min": "Mín"
+      "min": "Mín",
+      "sizeTooltip": "Número de tests en esta métrica",
+      "firstTooltip": "Puntuación del primer test",
+      "lastTooltip": "Puntuación del test más reciente",
+      "maxTooltip": "Puntuación más alta lograda",
+      "minTooltip": "Puntuación más baja registrada",
+      "deltaTooltip": "Cambio del primero al último (pts)",
+      "pctTooltip": "Porcentaje de mejora del primero al último"
     }
   }
 }

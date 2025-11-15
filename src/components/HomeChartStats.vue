@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ArrowUpIcon, ArrowDownIcon, MinusIcon } from '@heroicons/vue/24/outline'
+import { getColorClass as getColorClassFromPct } from '@/services/chartColors.js'
 
 const { t } = useI18n()
 
@@ -14,53 +16,121 @@ const nf = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 })
 const items = computed(() => {
   if (!props.stats) return []
   return [
-    { key: 'size', label: t('dashboard.stats.size'), value: props.stats.size, canChange: false },
-    { key: 'first', label: t('dashboard.stats.first'), value: props.stats.first, canChange: false },
-    { key: 'last', label: t('dashboard.stats.last'), value: props.stats.last, canChange: false },
-    { key: 'min', label: t('dashboard.stats.min'), value: props.stats.min, canChange: false },
-    { key: 'max', label: t('dashboard.stats.max'), value: props.stats.max, canChange: false },
-    { key: 'delta', label: 'Δ', value: props.stats.delta, canChange: true },
-    { key: 'pct', label: '%', value: props.stats.pct, canChange: true },
+    {
+      key: 'size',
+      label: t('dashboard.stats.size'),
+      value: props.stats.size,
+      canChange: false,
+      tooltip: t('dashboard.stats.sizeTooltip'),
+      group: 'info'
+    },
+    {
+      key: 'first',
+      label: t('dashboard.stats.first'),
+      value: props.stats.first,
+      canChange: false,
+      tooltip: t('dashboard.stats.firstTooltip'),
+      group: 'range'
+    },
+    {
+      key: 'last',
+      label: t('dashboard.stats.last'),
+      value: props.stats.last,
+      canChange: false,
+      tooltip: t('dashboard.stats.lastTooltip'),
+      group: 'range'
+    },
+    {
+      key: 'min',
+      label: t('dashboard.stats.min'),
+      value: props.stats.min,
+      canChange: false,
+      tooltip: t('dashboard.stats.minTooltip'),
+      group: 'minmax'
+    },
+    {
+      key: 'max',
+      label: t('dashboard.stats.max'),
+      value: props.stats.max,
+      canChange: false,
+      tooltip: t('dashboard.stats.maxTooltip'),
+      group: 'minmax'
+    },
+    {
+      key: 'delta',
+      label: 'Δ',
+      value: props.stats.delta,
+      canChange: true,
+      tooltip: t('dashboard.stats.deltaTooltip'),
+      group: 'trend',
+      featured: true
+    },
+    {
+      key: 'pct',
+      label: '%',
+      value: props.stats.pct,
+      canChange: true,
+      tooltip: t('dashboard.stats.pctTooltip'),
+      group: 'trend',
+      featured: true
+    },
   ]
 })
 
 function getColorClass(item) {
-  if (!item.canChange || typeof item.value !== 'number') return ''
-  if (item.value > 0) return 'positive'
-  if (item.value < 0) return 'negative'
-  return ''
+  if (!item.canChange) return ''
+  return getColorClassFromPct(props.stats?.pct, item.value)
+}
+
+function getTrendIcon(item) {
+  if (!item.canChange || typeof item.value !== 'number') return null
+  if (item.value > 0) return ArrowUpIcon
+  if (item.value < 0) return ArrowDownIcon
+  if (item.value === 0) return MinusIcon
+  return null
 }
 </script>
 
 <template>
-  <div v-if="items.length" class="flex flex-wrap items-stretch gap-2 mt-2">
-    <div
-      v-for="it in items"
-      :key="it.key"
-      class="border rounded-md px-3 py-2 w-22 text-center transition-colors text-gray-600"
-      :class="{
-        'border-gray-300 hover:bg-gray-50': getColorClass(it) === '',
-        'bg-green-50 border-green-300 text-green-700 hover:bg-green-100': getColorClass(it) === 'positive',
-        'bg-red-50 border-red-300 text-red-700 hover:bg-red-100': getColorClass(it) === 'negative'
-      }"
-    >
+  <div v-if="items.length" class="flex flex-wrap items-stretch gap-2 mt-4">
+    <div v-for="it in items" :key="it.key" :title="it.tooltip"
+      class="border rounded-lg px-3 py-2.5 text-center transition-all duration-200 cursor-help group relative" :class="{
+        'flex-1 min-w-[90px] sm:min-w-[100px]': !it.featured,
+        'flex-1 min-w-[110px] sm:min-w-[130px]': it.featured,
+        'border-gray-300 hover:border-gray-400 hover:shadow-md': getColorClass(it) === '',
+        'bg-green-50 border-green-400 text-green-700 hover:bg-green-100 hover:shadow-lg': getColorClass(it) === 'green',
+        'bg-blue-50 border-blue-400 text-blue-700 hover:bg-blue-100 hover:shadow-lg': getColorClass(it) === 'positive',
+        'bg-red-50 border-red-400 text-red-700 hover:bg-red-100 hover:shadow-lg': getColorClass(it) === 'negative',
+        'bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100 hover:shadow-md': getColorClass(it) === 'neutral'
+      }">
+      <!-- Tooltip on hover -->
       <div
-        class="text-xs uppercase tracking-wide font-medium"
-        :class="{
-          'text-gray-400': getColorClass(it) === '',
-          'text-green-700/80': getColorClass(it) === 'positive',
-          'text-red-700/80': getColorClass(it) === 'negative'
-        }"
-      >
-        {{ it.label }}
+        class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 pointer-events-none whitespace-nowrap z-10">
+        {{ it.tooltip }}
+        <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900">
+        </div>
       </div>
-      <div
-        class="text-lg font-bold sm:text-2xl tabular-nums"
-        :class="{
-          'text-green-700': getColorClass(it) === 'positive',
-          'text-red-700': getColorClass(it) === 'negative'
-        }"
-      >
+
+      <div class="text-xs uppercase tracking-wide font-semibold mb-1 flex items-center justify-center gap-1" :class="{
+        'text-gray-500': getColorClass(it) === '',
+        'text-green-700': getColorClass(it) === 'green',
+        'text-blue-700': getColorClass(it) === 'positive',
+        'text-red-700': getColorClass(it) === 'negative',
+        'text-blue-700': getColorClass(it) === 'neutral'
+      }">
+        <component v-if="getTrendIcon(it)" :is="getTrendIcon(it)" class="size-3.5 sm:size-4" />
+        <span>{{ it.label }}</span>
+      </div>
+
+      <div class="font-bold tabular-nums transition-all duration-300" :class="{
+        'text-xl sm:text-2xl': !it.featured,
+        'text-2xl sm:text-3xl': it.featured,
+        'text-green-700': getColorClass(it) === 'green',
+        'text-blue-700': getColorClass(it) === 'positive',
+        'text-red-700': getColorClass(it) === 'negative',
+        'text-blue-700': getColorClass(it) === 'neutral',
+        'text-gray-700': getColorClass(it) === ''
+      }">
         <template v-if="it.key === 'pct'">
           <span v-if="it.value == null">n/a</span>
           <span v-else>{{ (it.value > 0 ? '+' : '') + it.value.toFixed(1) }}</span>
@@ -73,6 +143,15 @@ function getColorClass(item) {
           <span v-if="typeof it.value === 'number'">{{ nf.format(it.value) }}</span>
           <span v-else>{{ it.value }}</span>
         </template>
+      </div>
+
+      <div v-if="typeof it.value === 'number'" class="text-[10px] uppercase tracking-wider mt-0.5" :class="{
+        'text-gray-400': getColorClass(it) === '',
+        'text-green-600/70': getColorClass(it) === 'green',
+        'text-blue-600/70': getColorClass(it) === 'positive',
+        'text-red-600/70': getColorClass(it) === 'negative',
+        'text-blue-600/70': getColorClass(it) === 'neutral'
+      }">
       </div>
     </div>
   </div>
