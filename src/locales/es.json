@@ -6,13 +6,14 @@
     "cancel": "Cancelar"
   },
   "profile": {
+    "title": "Perfil",
     "name": "Nombre",
     "namePlaceholder": "Tu nombre",
     "gender": "Género",
-    "male": "Masculino",
-    "female": "Femenino",
+    "male": "Hombre",
+    "female": "Mujer",
     "age": "Edad",
-    "edit": "Editar Perfil",
+    "edit": "Editar perfil",
     "saveSuccess": "Perfil creado",
     "updateSuccess": "Perfil actualizado"
   },
@@ -62,7 +63,7 @@
       "titleEdit": "Editar Ejercicio",
       "invalidTest": "Índice de prueba inválido.",
       "date": "Fecha",
-      "testDate": "Fecha de prueba",
+      "test": "Prueba",
       "count": "Cantidad",
       "cooperLaps": "Vueltas Cooper (en 12 minutos)",
       "cooperTest": "Prueba Cooper",

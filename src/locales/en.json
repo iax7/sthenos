@@ -6,6 +6,7 @@
     "cancel": "Cancel"
   },
   "profile": {
+    "title": "Profile",
     "name": "Name",
     "namePlaceholder": "Your name",
     "gender": "Gender",
@@ -62,7 +63,7 @@
       "titleEdit": "Edit Exercise",
       "invalidTest": "Invalid test index.",
       "date": "Date",
-      "testDate": "Test date",
+      "test": "Test",
       "count": "Count",
       "cooperLaps": "Cooper Laps (in 12 minutes)",
       "cooperTest": "Cooper Test",

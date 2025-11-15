@@ -20,6 +20,7 @@ const { profile, tests } = useProfileStore()
 
 const testIndex = computed(() => parseInt(props.index, 10))
 const test = computed(() => tests.value[testIndex.value])
+const testCount = computed(() => tests.value.length)
 const genderKey = profile.value?.gender?.toLowerCase() || 'm'
 const age = profile.value?.age || 0
 
@@ -74,7 +75,7 @@ function goBack() {
 }
 
 function editTest() {
-  router.push({ name: 'exercise-edit', params: { index: testIndex.value } })
+  router.replace({ name: 'exercise-edit', params: { index: testIndex.value } })
 }
 
 const isFirstTest = computed(() => testIndex.value === 0)
@@ -132,9 +133,13 @@ const exercisesScore = computed(() => {
 <template>
   <ViewContainer>
     <div class="mb-4 flex items-center justify-between">
-      <h2>
-        {{ t('exercise.editor.testDate') }}
-      </h2>
+      <span class="flex gap-2">
+        <h2>
+          {{ t('exercise.editor.test') }}
+        </h2>
+        <span class="font-semibold text-gray-400 rounded-full bg-gray-200 px-2 py-1">{{ testIndex + 1 }}/{{ testCount
+        }}</span>
+      </span>
       <div class="flex items-center gap-2">
         <BaseButton variant="secondary" type="button" @click="goBack" aria-label="Back to dashboard">
           <ArrowLeftIcon class="size-5 mr-1" />
@@ -215,7 +220,7 @@ const exercisesScore = computed(() => {
               'Km.' ? 'meters' : 'metros' }}) · {{ exerciseData.cooper.laps }} {{ t('cooper.laps') }}</p>
           </div>
           <div class="flex items-center" :hidden="exerciseData.cooper.laps <= 0">
-            <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide" :style="{
+            <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide shadow" :style="{
               backgroundColor: cooperLevelStyle.backgroundColor,
               color: cooperLevelStyle.color
             }">

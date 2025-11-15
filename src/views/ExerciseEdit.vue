@@ -22,7 +22,7 @@ function goBack() {
 
 function viewTest() {
   if (isEdit && index !== null) {
-    router.push({ name: 'exercise-view', params: { index } })
+    router.replace({ name: 'exercise-view', params: { index } })
   }
 }
 </script>
@@ -38,26 +38,13 @@ function viewTest() {
           <ArrowLeftIcon class="size-5 mr-1" />
           {{ t('app.back') }}
         </BaseButton>
-        <BaseButton
-          v-if="isEdit"
-          variant="primary"
-          type="button"
-          @click="viewTest"
-          aria-label="View exercise"
-        >
+        <BaseButton v-if="isEdit" variant="primary" type="button" @click="viewTest" aria-label="View exercise">
           <EyeIcon class="size-5 mr-1" />
           {{ t('dashboard.table.actions.view') }}
         </BaseButton>
       </div>
     </div>
-    <ExerciseForm
-      v-if="isEdit && test"
-      mode="edit"
-      :index="index"
-      :test="test"
-      @done="goBack"
-      @cancel="goBack"
-    />
+    <ExerciseForm v-if="isEdit && test" mode="edit" :index="index" :test="test" @done="goBack" @cancel="goBack" />
     <ExerciseForm v-else mode="create" @done="goBack" @cancel="goBack" />
   </ViewContainer>
 </template>
