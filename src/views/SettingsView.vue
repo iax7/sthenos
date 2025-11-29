@@ -23,7 +23,17 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
-import { ArrowLeftIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, DocumentIcon, LinkIcon, CloudArrowUpIcon, InformationCircleIcon, ClipboardDocumentIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowLeftIcon,
+  ArrowDownTrayIcon,
+  ArrowUpTrayIcon,
+  DocumentIcon,
+  LinkIcon,
+  CloudArrowUpIcon,
+  InformationCircleIcon,
+  ClipboardDocumentIcon,
+  TrashIcon,
+} from '@heroicons/vue/24/outline'
 import {
   PULL_UP_VERSIONS,
   PUSH_UP_VERSIONS,
@@ -34,9 +44,25 @@ import {
   COOPER_MAX_SCORE,
 } from '@/services/exerciseVersions.js'
 
+const buildTime = new Date(__BUILD_TIME__).toLocaleString('sv-SE', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false
+}).replace(',', '')
 const router = useRouter()
 const { t } = useI18n()
-const { getProfileData, saveLastImportUrl, getLastImportUrl, clearLastImportUrl, importProfile, hasProfile, loadProfile } = useProfileStore()
+const {
+  getProfileData,
+  saveLastImportUrl,
+  getLastImportUrl,
+  clearLastImportUrl,
+  importProfile,
+  hasProfile,
+  loadProfile,
+} = useProfileStore()
 const { pushToast } = useToasts()
 const fileInput = ref(null)
 
@@ -118,13 +144,13 @@ async function backupOnline() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': 'Sthenos-App/1.0'
+        'User-Agent': 'Sthenos-App/1.0',
       },
       body: new URLSearchParams({
         content: encodedContent,
-        syntax: 'text',  // Changed from 'json' since content is base64
-        expiry_days: '365'
-      })
+        syntax: 'text', // Changed from 'json' since content is base64
+        expiry_days: '365',
+      }),
     })
 
     if (!resp.ok) {
@@ -209,7 +235,11 @@ async function fetchFromUrl() {
       if (result.ok) {
         saveLastImportUrl(rawUrl)
         // reload composable state and notify app so UI updates
-        try { loadProfile() } catch (e) { void e }
+        try {
+          loadProfile()
+        } catch (e) {
+          void e
+        }
         pushToast(t('nav.profileImported'), 'success')
         if (router.currentRoute.value.path === '/') {
           window.dispatchEvent(new CustomEvent('profile-updated'))
@@ -343,9 +373,13 @@ function handleFileChange(e) {
       </div>
       <div class="relative">
         <BaseInput v-model="url" type="text" placeholder="https://dpaste.com/XXXXX" class="pr-10" />
-        <button v-if="url" type="button"
+        <button
+          v-if="url"
+          type="button"
           class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-blue-700 transition-colors"
-          @click="copyUrl" :title="t('settings.copyUrl')">
+          @click="copyUrl"
+          :title="t('settings.copyUrl')"
+        >
           <ClipboardDocumentIcon class="size-5" />
         </button>
       </div>
@@ -374,7 +408,13 @@ function handleFileChange(e) {
           {{ t('nav.upload') }}
         </BaseButton>
       </div>
-      <input ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />
+      <input
+        ref="fileInput"
+        type="file"
+        accept="application/json"
+        class="hidden"
+        @change="handleFileChange"
+      />
     </AppCard>
 
     <AppCard>
@@ -385,10 +425,18 @@ function handleFileChange(e) {
       <p class="mb-4 text-sm text-gray-600">{{ t('settings.exerciseVersionsDescription') }}</p>
 
       <div class="space-y-4">
-        <div v-for="exercise in exerciseVersions" :key="exercise.title" class="border-l-4 border-blue-500 pl-4">
+        <div
+          v-for="exercise in exerciseVersions"
+          :key="exercise.title"
+          class="border-l-4 border-blue-500 pl-4"
+        >
           <h4 class="mb-2 font-semibold text-gray-800">{{ t(exercise.title) }}</h4>
           <ul class="space-y-1">
-            <li v-for="version in exercise.versions" :key="version.value" class="text-sm text-gray-700">
+            <li
+              v-for="version in exercise.versions"
+              :key="version.value"
+              class="text-sm text-gray-700"
+            >
               <span class="font-mono">{{ t(version.labelKey) }}</span>
               <span class="ml-2 font-semibold text-blue-600">{{ version.multiplier }}x</span>
             </li>
@@ -397,15 +445,25 @@ function handleFileChange(e) {
 
         <div class="border-l-4 border-blue-500 pl-4">
           <h4 class="mb-2 font-semibold text-gray-800">{{ t('exercise.editor.cooperTest') }}</h4>
-          <p class="mb-2 text-xs text-gray-600">{{ t('settings.cooperMaxScore') }}: {{ COOPER_MAX_SCORE }} pts</p>
+          <p class="mb-2 text-xs text-gray-600">
+            {{ t('settings.cooperMaxScore') }}: {{ COOPER_MAX_SCORE }} pts
+          </p>
           <ul class="space-y-1">
             <li v-for="level in cooperLevels" :key="level.level" class="text-sm text-gray-700">
               <span class="font-mono">{{ t(level.labelKey) }}</span>
               <span class="ml-2 font-semibold text-blue-600">{{ level.multiplier }}x</span>
-              <span class="ml-1 text-gray-500">({{ Math.round(COOPER_MAX_SCORE * level.multiplier) }} pts)</span>
+              <span class="ml-1 text-gray-500"
+                >({{ Math.round(COOPER_MAX_SCORE * level.multiplier) }} pts)</span
+              >
             </li>
           </ul>
         </div>
+      </div>
+    </AppCard>
+    <AppCard>
+      <div class="text-sm text-gray-600">
+        <p class="font-semibold mb-1">Version</p>
+        <p class="font-mono text-xs">{{ buildTime }}</p>
       </div>
     </AppCard>
   </ViewContainer>
