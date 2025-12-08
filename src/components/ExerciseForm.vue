@@ -125,36 +125,77 @@ function save() {
 
 <template>
   <AppCard>
-    <form @submit.prevent="save" class="space-y-4">
-      <div class="flex flex-col">
-        <label class="form-label">{{ t('exercise.editor.date') }}</label>
-        <BaseInput v-model="date" type="date" required />
+    <form @submit.prevent="save" class="space-y-6">
+      <!-- Date -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          {{ t('exercise.editor.date') }}
+        </label>
+        <BaseInput v-model="date" type="date" required class="w-full" />
       </div>
-      <div class="space-y-4">
-        <ExerciseMetricInput label="Pull Ups" :placeholder="t('exercise.editor.count')" v-model:count="pullUps"
-          v-model:version="pullUpsVersion" :versions="PULL_UP_VERSIONS" />
-        <ExerciseMetricInput label="Push Ups" :placeholder="t('exercise.editor.count')" v-model:count="pushUps"
-          v-model:version="pushUpsVersion" :versions="PUSH_UP_VERSIONS" />
-        <ExerciseMetricInput label="Squats" :placeholder="t('exercise.editor.count')" v-model:count="squats"
-          v-model:version="squatsVersion" :versions="SQUAT_VERSIONS" />
-        <ExerciseMetricInput label="V-Ups" :placeholder="t('exercise.editor.count')" v-model:count="vups"
-          v-model:version="vupsVersion" :versions="VUP_VERSIONS" />
-        <ExerciseMetricInput label="Burpees" :placeholder="t('exercise.editor.count')" v-model:count="burpees"
-          v-model:version="burpeesVersion" :versions="BURPEE_VERSIONS" />
-        <div class="flex flex-col">
-          <label class="form-label">{{
-            t("exercise.editor.cooperLaps")
-          }}</label>
-          <BaseInput v-model="laps" type="number" min="0" step="0.5" :placeholder="t('exercise.editor.count')" />
-        </div>
+
+      <!-- Cooper Test -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          {{ t("exercise.editor.cooperLaps") }}
+        </label>
+        <BaseInput
+          v-model="laps"
+          type="number"
+          min="0"
+          step="0.5"
+          :placeholder="t('exercise.editor.count')"
+          class="w-full"
+        />
       </div>
-      <div class="flex justify-end gap-2">
-        <BaseButton variant="secondary" type="button" @click="emit('cancel')">{{
-          t("app.cancel")
-          }}</BaseButton>
-        <BaseButton type="submit" :disabled="!canSave">{{
-          props.mode === "edit" ? t("app.update") : t("app.save")
-        }}</BaseButton>
+
+      <!-- Exercises -->
+      <div class="space-y-6">
+        <ExerciseMetricInput
+          label="Pull Ups"
+          :placeholder="t('exercise.editor.count')"
+          v-model:count="pullUps"
+          v-model:version="pullUpsVersion"
+          :versions="PULL_UP_VERSIONS"
+        />
+        <ExerciseMetricInput
+          label="Push Ups"
+          :placeholder="t('exercise.editor.count')"
+          v-model:count="pushUps"
+          v-model:version="pushUpsVersion"
+          :versions="PUSH_UP_VERSIONS"
+        />
+        <ExerciseMetricInput
+          label="Squats"
+          :placeholder="t('exercise.editor.count')"
+          v-model:count="squats"
+          v-model:version="squatsVersion"
+          :versions="SQUAT_VERSIONS"
+        />
+        <ExerciseMetricInput
+          label="V-Ups"
+          :placeholder="t('exercise.editor.count')"
+          v-model:count="vups"
+          v-model:version="vupsVersion"
+          :versions="VUP_VERSIONS"
+        />
+        <ExerciseMetricInput
+          label="Burpees"
+          :placeholder="t('exercise.editor.count')"
+          v-model:count="burpees"
+          v-model:version="burpeesVersion"
+          :versions="BURPEE_VERSIONS"
+        />
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 pt-2">
+        <BaseButton variant="secondary" type="button" @click="emit('cancel')">
+          {{ t("app.cancel") }}
+        </BaseButton>
+        <BaseButton type="submit" :disabled="!canSave">
+          {{ props.mode === "edit" ? t("app.update") : t("app.save") }}
+        </BaseButton>
       </div>
     </form>
   </AppCard>

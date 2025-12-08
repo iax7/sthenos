@@ -43,11 +43,11 @@ watch(
 </script>
 
 <template>
-  <div class="space-y-2">
-    <label class="form-label">{{ label }}</label>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-2">{{ label }}</label>
     <div class="grid grid-cols-2 gap-3">
-      <BaseInput v-model="numberValue" :min="min" type="number" :placeholder="placeholder" />
-      <BaseSelect v-model="versionValue" required :disabled="versions.length <= 1">
+      <BaseInput v-model="numberValue" :min="min" type="number" :placeholder="placeholder" class="w-full" />
+      <BaseSelect v-model="versionValue" required :disabled="versions.length <= 1" class="w-full">
         <option v-for="v in versions" :key="typeof v === 'string' ? v : v.value"
           :value="typeof v === 'string' ? v : v.value">
           {{ typeof v === 'string' ? v : v.labelKey ? t(v.labelKey) : v.label }}
