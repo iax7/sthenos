@@ -26,7 +26,8 @@ function clamp(v) {
 
 function set(v) {
   if (props.disabled) return
-  emit('update:modelValue', clamp(v))
+  const num = normalize(v)
+  emit('update:modelValue', clamp(num))
 }
 
 function inc() {
@@ -57,9 +58,8 @@ function dec() {
       :step="step"
       :disabled="disabled"
       :value="current"
-      @input="set($event.target.value)"
       @blur="set($event.target.value)"
-      @keydown.enter.prevent="set($event.target.value)"
+      @keydown.enter.prevent="$event.target.blur()"
       aria-label="Numeric value"
     />
     <button
