@@ -30,7 +30,8 @@
     "clearConfirm": "¿Borrar todos los datos de perfil locales?",
     "localDataCleared": "Datos locales borrados",
     "fetchUrl": "Obtener datos desde enlace",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "info": "Información"
   },
   "settings": {
     "title": "Ajustes",

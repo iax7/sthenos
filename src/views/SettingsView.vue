@@ -22,6 +22,7 @@ import { useProfileStore } from '@/composables/useProfileStore.js'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import AppCard from '@/components/ui/AppCard.vue'
+import AppVersion from '@/components/AppVersion.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
 import {
   ArrowLeftIcon,
@@ -30,19 +31,9 @@ import {
   DocumentIcon,
   LinkIcon,
   CloudArrowUpIcon,
-  InformationCircleIcon,
   ClipboardDocumentIcon,
   TrashIcon,
 } from '@heroicons/vue/24/outline'
-import {
-  PULL_UP_VERSIONS,
-  PUSH_UP_VERSIONS,
-  SQUAT_VERSIONS,
-  VUP_VERSIONS,
-  BURPEE_VERSIONS,
-  COOPER_MULTIPLIERS,
-  COOPER_MAX_SCORE,
-} from '@/services/exerciseVersions.js'
 
 const buildTime = new Date(__BUILD_TIME__).toLocaleString('sv-SE', {
   year: 'numeric',
@@ -69,21 +60,6 @@ const fileInput = ref(null)
 const url = ref(getLastImportUrl() || '')
 const uploading = ref(false)
 
-const exerciseVersions = [
-  { title: 'dashboard.table.headers.pullUps', versions: PULL_UP_VERSIONS },
-  { title: 'dashboard.table.headers.pushUps', versions: PUSH_UP_VERSIONS },
-  { title: 'dashboard.table.headers.squats', versions: SQUAT_VERSIONS },
-  { title: 'dashboard.table.headers.vUps', versions: VUP_VERSIONS },
-  { title: 'dashboard.table.headers.burpees', versions: BURPEE_VERSIONS },
-]
-
-const cooperLevels = [
-  { level: 5, labelKey: 'cooper.very_good', multiplier: COOPER_MULTIPLIERS[5] },
-  { level: 4, labelKey: 'cooper.good', multiplier: COOPER_MULTIPLIERS[4] },
-  { level: 3, labelKey: 'cooper.normal', multiplier: COOPER_MULTIPLIERS[3] },
-  { level: 2, labelKey: 'cooper.bad', multiplier: COOPER_MULTIPLIERS[2] },
-  { level: 1, labelKey: 'cooper.very_bad', multiplier: COOPER_MULTIPLIERS[1] },
-]
 
 /**
  * Encode string to base64 (UTF-8 safe).
@@ -417,54 +393,7 @@ function handleFileChange(e) {
       />
     </AppCard>
 
-    <AppCard>
-      <h3 class="mb-4 text-xl font-semibold flex items-center gap-2">
-        <InformationCircleIcon class="size-6 text-gray-600" />
-        {{ t('settings.exerciseVersions') }}
-      </h3>
-      <p class="mb-4 text-sm text-gray-600">{{ t('settings.exerciseVersionsDescription') }}</p>
+    <AppVersion />
 
-      <div class="space-y-4">
-        <div
-          v-for="exercise in exerciseVersions"
-          :key="exercise.title"
-          class="border-l-4 border-blue-500 pl-4"
-        >
-          <h4 class="mb-2 font-semibold text-gray-800">{{ t(exercise.title) }}</h4>
-          <ul class="space-y-1">
-            <li
-              v-for="version in exercise.versions"
-              :key="version.value"
-              class="text-sm text-gray-700"
-            >
-              <span class="font-mono">{{ t(version.labelKey) }}</span>
-              <span class="ml-2 font-semibold text-blue-600">{{ version.multiplier }}x</span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="border-l-4 border-blue-500 pl-4">
-          <h4 class="mb-2 font-semibold text-gray-800">{{ t('exercise.editor.cooperTest') }}</h4>
-          <p class="mb-2 text-xs text-gray-600">
-            {{ t('settings.cooperMaxScore') }}: {{ COOPER_MAX_SCORE }} pts
-          </p>
-          <ul class="space-y-1">
-            <li v-for="level in cooperLevels" :key="level.level" class="text-sm text-gray-700">
-              <span class="font-mono">{{ t(level.labelKey) }}</span>
-              <span class="ml-2 font-semibold text-blue-600">{{ level.multiplier }}x</span>
-              <span class="ml-1 text-gray-500"
-                >({{ Math.round(COOPER_MAX_SCORE * level.multiplier) }} pts)</span
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </AppCard>
-    <AppCard>
-      <div class="text-sm text-gray-600">
-        <p class="font-semibold mb-1">Version</p>
-        <p class="font-mono text-xs">{{ buildTime }}</p>
-      </div>
-    </AppCard>
   </ViewContainer>
 </template>

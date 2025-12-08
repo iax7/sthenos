@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToasts } from '@/composables/useToasts.js'
 import { useProfileStore } from '@/composables/useProfileStore.js'
-import { TrashIcon, Bars3Icon, CogIcon, HomeIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, Bars3Icon, CogIcon, HomeIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
 
 const emit = defineEmits(['clear', 'imported'])
 const { t } = useI18n()
@@ -22,6 +22,11 @@ function goHome() {
 function goToSettings() {
   menuOpen.value = false
   router.push({ name: 'settings' })
+}
+
+function goToInfo() {
+  menuOpen.value = false
+  router.push({ name: 'info' })
 }
 
 function toggleMenu() {
@@ -94,6 +99,16 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
               >
                 <CogIcon class="h-5 w-5" />
                 <span>{{ t('nav.settings') }}</span>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                @click="goToInfo"
+              >
+                <InformationCircleIcon class="h-5 w-5" />
+                <span>{{ t('nav.info') }}</span>
               </button>
             </li>
             <hr class="my-1 border-gray-200" />

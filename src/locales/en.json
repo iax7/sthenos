@@ -30,7 +30,8 @@
     "clearConfirm": "Clear all local profile data?",
     "localDataCleared": "Local data cleared",
     "fetchUrl": "Fetch data",
-    "settings": "Settings"
+    "settings": "Settings",
+    "info": "Information"
   },
   "settings": {
     "title": "Settings",

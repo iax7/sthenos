@@ -4,12 +4,14 @@ import HomeView from '@/views/HomeView.vue'
 import ExerciseEdit from '@/views/ExerciseEdit.vue'
 import ExerciseView from '@/views/ExerciseView.vue'
 import SettingsView from '@/views/SettingsView.vue'
+import InfoView from '@/views/InfoView.vue'
 import { useProfileStore } from '@/composables/useProfileStore.js'
 
 const routes = [
   { path: '/', name: 'dashboard', component: HomeView },
   { path: '/profile', name: 'profile', component: ProfileView },
   { path: '/settings', name: 'settings', component: SettingsView, meta: { noProfile: true } },
+  { path: '/info', name: 'info', component: InfoView, meta: { noProfile: true } },
   { path: '/exercise/new', name: 'exercise-new', component: ExerciseEdit },
   { path: '/exercise/:index/edit', name: 'exercise-edit', component: ExerciseEdit, props: true },
   { path: '/exercise/:index', name: 'exercise-view', component: ExerciseView, props: true },
