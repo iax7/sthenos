@@ -54,9 +54,12 @@ const stats = computed(() => calculateStats(selectedData.value));
 function formatDateLabel(dateStr) {
   if (!dateStr) return "";
   const parts = dateStr.split("-");
-  if (parts.length < 2) return dateStr;
-  const [y, m] = parts;
-  return y.slice(-2) + "-" + m;
+  if (parts.length < 3) return dateStr;
+  const [year, month, day] = parts;
+  const date = new Date(year, parseInt(month, 10) - 1, day || 1);
+  const yearShort = date.toLocaleDateString(undefined, { year: '2-digit' });
+  const monthShort = date.toLocaleDateString(undefined, { month: 'short' });
+  return `${yearShort}-${monthShort}`;
 }
 
 const chartData = computed(() => {
