@@ -29,6 +29,29 @@ import { getGradientColors } from "@/services/chartColors.js";
 
 const { tests } = useProfileStore();
 
+const crosshairPlugin = {
+  id: 'crosshair',
+  afterDraw: (chart) => {
+    if (chart.tooltip?._active?.length) {
+      const ctx = chart.ctx;
+      const activePoint = chart.tooltip._active[0];
+      const x = activePoint.element.x;
+      const topY = chart.scales.y.top;
+      const bottomY = chart.scales.y.bottom;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, topY);
+      ctx.lineTo(x, bottomY);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(107, 114, 128, 0.4)';
+      ctx.setLineDash([5, 5]);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+};
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -39,6 +62,7 @@ ChartJS.register(
   Legend,
   Filler,
   ChartDataLabels,
+  crosshairPlugin,
 );
 
 const { t } = useI18n();
