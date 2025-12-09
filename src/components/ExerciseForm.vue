@@ -27,7 +27,10 @@ const { pushToast } = useToasts();
 const { appendTest, updateTest, createTestMetric } = useProfileStore();
 
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  const localDate = new Date(now.getTime() - offset);
+  return localDate.toISOString().slice(0, 10);
 }
 
 function initValue(path, defaultValue = "") {
