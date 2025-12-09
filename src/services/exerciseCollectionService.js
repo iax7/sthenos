@@ -1,4 +1,4 @@
-import { getExerciseType, calculatePoints } from '@/services/excercises.js'
+import { getExerciseType, calculatePoints } from '@/services/exercises.js'
 
 /**
  Filters and maps test entries by the selected exercise.

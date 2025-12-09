@@ -35,8 +35,8 @@ function onDeleteTest(i) {
 
 <template>
   <ViewContainer>
-  <HomeHeader :profile="profile" />
-  <HomeTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
-  <HomeChart v-if="tests.length > 0" />
+    <HomeHeader :profile="profile" />
+    <HomeTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
+    <HomeChart v-if="tests.length > 0" />
   </ViewContainer>
 </template>

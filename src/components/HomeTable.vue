@@ -7,7 +7,7 @@ import { toKilometers, toMeters, evaluateCooper } from "@/services/cooper";
 import { useProfileStore } from "@/composables/useProfileStore.js";
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, EllipsisVerticalIcon } from "@heroicons/vue/24/outline";
 import ExerciseCell from "@/components/ui/ExerciseCell.vue";
-import { calculatePoints, calculateTotalScore, getExcerciseKeys, getVersion, getReps } from "../services/excercises";
+import { calculatePoints, calculateTotalScore, getExerciseKeys, getVersion, getReps } from "../services/exercises";
 
 const props = defineProps({
   tests: { type: Array, default: () => [] },
@@ -72,7 +72,7 @@ const rows = computed(() =>
     let points_ex = {}
     let reps_ex = {}
     let versions_ex = {}
-    getExcerciseKeys().forEach((key) => {
+    getExerciseKeys().forEach((key) => {
       const version = getVersion(r, key)
       const reps = getReps(r, key)
       const points = calculatePoints(reps, version)

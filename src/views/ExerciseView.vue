@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useProfileStore } from '@/composables/useProfileStore.js'
 import { toKilometers, toMeters, evaluateCooper } from '@/services/cooper'
-import { calculatePoints, calculateCooperPoints, calculateTotalScore, getExcerciseKeys, getVersion, getReps } from '@/services/excercises'
+import { calculatePoints, calculateCooperPoints, calculateTotalScore, getExerciseKeys, getVersion, getReps } from '@/services/exercises'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
@@ -31,7 +31,7 @@ const exerciseData = computed(() => {
   const level = evaluateCooper(meters, age, genderKey)
 
   const exercises = {}
-  getExcerciseKeys().forEach((key) => {
+  getExerciseKeys().forEach((key) => {
     // Skip cooper as it's displayed separately
     if (key === 'cooper') return
 

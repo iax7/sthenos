@@ -23,7 +23,7 @@ import {
 import {
   EXERCISES,
   getExerciseType,
-} from "@/services/excercises.js";
+} from "@/services/exercises.js";
 import { useProfileStore } from "@/composables/useProfileStore.js";
 import { getGradientColors } from "@/services/chartColors.js";
 
@@ -153,7 +153,7 @@ const chartOptions = computed(() => {
     },
     layout: {
       padding: {
-        top: 26, // Add some top padding for better label visibility
+        top: 27, // Add some top padding for better label visibility
       },
     },
     plugins: {
@@ -235,16 +235,18 @@ const chartOptions = computed(() => {
 
 <template>
   <AppCard>
-    <div class="mb-4 flex items-center justify-between gap-3">
-      <h2>{{ t("dashboard.chart.title") }}</h2>
-      <label class="sr-only" for="metric-select">{{ t("dashboard.chart.selectMetric") }}</label>
-      <select id="metric-select" v-model="selectedMetric"
-        class="form-input min-w-[140px] cursor-pointer transition-colors hover:border-blue-400 focus:ring-2 focus:ring-blue-500"
-        aria-label="Select exercise metric">
-        <option v-for="m in EXERCISES" :key="m.key" :value="m.key">
+    <div class="mb-4">
+      <h2 class="mb-3">{{ t("dashboard.chart.title") }}</h2>
+      <div class="flex flex-wrap gap-2">
+        <button v-for="m in EXERCISES" :key="m.key" @click="selectedMetric = m.key" :class="[
+          'px-3 py-1.5 text-sm font-medium rounded-lg transition-all',
+          selectedMetric === m.key
+            ? 'bg-blue-600 text-white shadow-sm'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        ]">
           {{ m.label }}
-        </option>
-      </select>
+        </button>
+      </div>
     </div>
     <div v-if="!selectedData || selectedData.length < 2" class="py-8 text-center">
       <p class="text-sm text-gray-500">{{ t("dashboard.chart.notEnoughData") }}</p>

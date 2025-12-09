@@ -17,7 +17,7 @@ const VERSION_MAP = {
   cooper: [],
 }
 
-export function getExcerciseKeys() {
+export function getExerciseKeys() {
   return Object.keys(VERSION_MAP)
 }
 
@@ -87,7 +87,7 @@ export function calculateTotalScore(test, cooperLevel) {
   let totalScore = 0
 
   // Sum points from all exercises (excluding cooper)
-  getExcerciseKeys().forEach((key) => {
+  getExerciseKeys().forEach((key) => {
     if (key === 'cooper') return
 
     const version = getVersion(test, key)
