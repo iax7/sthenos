@@ -105,7 +105,7 @@ function getTrendIcon(item) {
       }">
       <!-- Tooltip on hover -->
       <div
-        class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 pointer-events-none whitespace-nowrap z-10">
+        class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 pointer-events-none z-10 max-w-[200px] text-center sm:whitespace-nowrap sm:max-w-none">
         {{ it.tooltip }}
         <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900">
         </div>
