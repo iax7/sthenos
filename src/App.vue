@@ -1,7 +1,20 @@
 <script setup>
+import { watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppNavbar from '@/components/AppNavbar.vue'
 import AppFooter from '@/components/ui/AppFooter.vue'
 import ToastContainer from '@/components/ui/ToastContainer.vue'
+
+const { locale } = useI18n()
+
+// Sync HTML lang attribute with current locale
+watch(
+  locale,
+  (newLocale) => {
+    document.documentElement.setAttribute('lang', newLocale)
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
