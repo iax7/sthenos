@@ -5,6 +5,8 @@ import ExerciseEdit from '@/views/ExerciseEdit.vue'
 import ExerciseView from '@/views/ExerciseView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import InfoView from '@/views/InfoView.vue'
+import TimerList from '@/views/TimerList.vue'
+import TimerRunner from '@/views/TimerRunner.vue'
 import { useProfileStore } from '@/composables/useProfileStore.js'
 
 const routes = [
@@ -15,6 +17,8 @@ const routes = [
   { path: '/exercise/new', name: 'exercise-new', component: ExerciseEdit },
   { path: '/exercise/:index/edit', name: 'exercise-edit', component: ExerciseEdit, props: true },
   { path: '/exercise/:index', name: 'exercise-view', component: ExerciseView, props: true },
+  { path: '/timer', name: 'timer-list', component: TimerList, meta: { noProfile: true } },
+  { path: '/timer/:id/run', name: 'timer-run', component: TimerRunner, meta: { noProfile: true } },
 ]
 
 export const router = createRouter({
