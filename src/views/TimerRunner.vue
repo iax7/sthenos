@@ -30,7 +30,9 @@
               :current-set="currentSet"
               :total-sets="totalSets"
               :max-dots="12"
-              :is-running="!isPaused && state !== TIMER_STATES.IDLE && state !== TIMER_STATES.COMPLETED"
+              :is-running="
+                !isPaused && state !== TIMER_STATES.IDLE && state !== TIMER_STATES.COMPLETED
+              "
             />
           </div>
         </div>
@@ -55,7 +57,7 @@
           <div class="mt-4 pt-4 border-t border-gray-200">
             <div class="flex justify-between text-sm">
               <span class="text-gray-600">Total time remaining:</span>
-              <span class="font-semibold tabular-nums">{{ formatTime(totalTimeRemaining) }}</span>
+              <span class="text-3xl tabular-nums">{{ formatTime(totalTimeRemaining) }}</span>
             </div>
           </div>
         </div>
@@ -71,19 +73,11 @@
           </BaseButton>
 
           <template v-else>
-            <BaseButton
-              @click="togglePause"
-              variant="primary"
-              class="px-8 py-4 text-lg"
-            >
+            <BaseButton @click="togglePause" variant="primary" class="px-8 py-4 text-lg">
               {{ isPaused ? '▶ Resume' : '⏸ Pause' }}
             </BaseButton>
 
-            <BaseButton
-              @click="handleReset"
-              variant="secondary"
-              class="px-8 py-4 text-lg"
-            >
+            <BaseButton @click="handleReset" variant="secondary" class="px-8 py-4 text-lg">
               Reset
             </BaseButton>
           </template>
@@ -137,7 +131,7 @@ const {
   start,
   togglePause,
   reset,
-  TIMER_STATES
+  TIMER_STATES,
 } = useTimerEngine(protocol)
 
 // State color
@@ -146,7 +140,7 @@ const stateColor = computed(() => {
     prep: '#f59e0b',
     interval: '#10b981',
     rest: '#3b82f6',
-    completed: '#6b7280'
+    completed: '#6b7280',
   }
   return colors[state.value] || '#10b981'
 })

@@ -22,7 +22,7 @@ export function useTimerEngine(protocol) {
 
   let intervalId = null
   let audioContext = null
-  let beepOscillator = null
+  let wakeLock = null
 
   // Computed
   const totalSets = computed(() => protocol.sets)
@@ -102,6 +102,35 @@ export function useTimerEngine(protocol) {
     }
   }
 
+  // Wake Lock to prevent screen from sleeping
+  async function requestWakeLock() {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen')
+        console.log('Wake Lock activated')
+
+        // Re-request wake lock if it's released (e.g., tab becomes inactive)
+        wakeLock.addEventListener('release', () => {
+          console.log('Wake Lock released')
+        })
+      }
+    } catch (error) {
+      console.warn('Wake Lock not supported or failed:', error)
+    }
+  }
+
+  async function releaseWakeLock() {
+    try {
+      if (wakeLock !== null) {
+        await wakeLock.release()
+        wakeLock = null
+        console.log('Wake Lock released manually')
+      }
+    } catch (error) {
+      console.warn('Failed to release Wake Lock:', error)
+    }
+  }
+
   // Timer control
   function tick() {
     if (isPaused.value || !isRunning.value) return
@@ -165,6 +194,9 @@ export function useTimerEngine(protocol) {
     }
 
     intervalId = setInterval(tick, 1000)
+
+    // Request wake lock to keep screen on
+    requestWakeLock()
   }
 
   function pause() {
@@ -201,6 +233,9 @@ export function useTimerEngine(protocol) {
     timeRemaining.value = 0
     isPaused.value = false
     isRunning.value = false
+
+    // Release wake lock when timer is reset
+    releaseWakeLock()
   }
 
   function complete() {
@@ -214,6 +249,9 @@ export function useTimerEngine(protocol) {
       clearInterval(intervalId)
       intervalId = null
     }
+
+    // Release wake lock when timer completes
+    releaseWakeLock()
   }
 
   // Cleanup
@@ -224,6 +262,8 @@ export function useTimerEngine(protocol) {
     if (audioContext) {
       audioContext.close()
     }
+    // Release wake lock on cleanup
+    releaseWakeLock()
   })
 
   return {
@@ -243,8 +283,6 @@ export function useTimerEngine(protocol) {
 
     // Methods
     start,
-    pause,
-    resume,
     togglePause,
     reset,
 
