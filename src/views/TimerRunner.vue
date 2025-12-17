@@ -33,6 +33,7 @@
               :is-running="
                 !isPaused && state !== TIMER_STATES.IDLE && state !== TIMER_STATES.COMPLETED
               "
+              :is-completed="state === TIMER_STATES.COMPLETED"
             />
           </div>
         </div>
@@ -40,24 +41,24 @@
         <!-- State info -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
           <div class="grid grid-cols-2 gap-4 text-center">
-            <div>
-              <div class="text-3xl font-bold" :style="{ color: stateColor }">
+            <div class="flex flex-col items-center gap-2">
+              <div class="text-3xl font-bold text-gray-900">
                 {{ currentSet }}
               </div>
-              <div class="text-sm text-gray-500 mt-1">Current Set</div>
+              <span class="text-sm text-gray-600">Current Set</span>
             </div>
-            <div>
-              <div class="text-3xl font-bold text-gray-700">
+            <div class="flex flex-col items-center gap-2">
+              <div class="text-3xl font-bold text-gray-900">
                 {{ totalSets }}
               </div>
-              <div class="text-sm text-gray-500 mt-1">Total Sets</div>
+              <span class="text-sm text-gray-600">Total Sets</span>
             </div>
           </div>
 
           <div class="mt-4 pt-4 border-t border-gray-200">
-            <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Total time remaining:</span>
-              <span class="text-3xl tabular-nums">{{ formatTime(totalTimeRemaining) }}</span>
+            <div class="flex flex-col items-center gap-2">
+              <span class="text-sm text-gray-600">Total time remaining</span>
+              <span class="text-3xl font-bold tabular-nums text-gray-900">{{ formatTime(totalTimeRemaining) }}</span>
             </div>
           </div>
         </div>

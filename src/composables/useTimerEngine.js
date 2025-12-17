@@ -49,17 +49,34 @@ export function useTimerEngine(protocol) {
     // Time in current phase
     total += timeRemaining.value
 
+    // If currently in interval, add rest after it (unless it's the last interval of the last set)
+    if (state.value === TIMER_STATES.INTERVAL) {
+      const isLastIntervalOfLastSet =
+        currentSet.value === totalSets.value &&
+        currentIntervalIndex.value === protocol.intervals.length - 1
+      if (!isLastIntervalOfLastSet) {
+        total += protocol.restBetweenSets
+      }
+    }
+
     // Remaining intervals in current set
     for (let i = currentIntervalIndex.value + 1; i < protocol.intervals.length; i++) {
       total += protocol.intervals[i].duration
+      // Add rest after each interval except the last one of the last set
+      const isLastInterval = i === protocol.intervals.length - 1
+      const isLastSet = currentSet.value === totalSets.value
+      if (!(isLastInterval && isLastSet)) {
+        total += protocol.restBetweenSets
+      }
     }
 
     // Remaining sets
     const remainingSets = totalSets.value - currentSet.value
     if (remainingSets > 0) {
       const setDuration = protocol.intervals.reduce((sum, interval) => sum + interval.duration, 0)
-      total += remainingSets * setDuration
-      total += remainingSets * protocol.restBetweenSets
+      // Each set has rest after each interval (intervals.length times per set)
+      const restPerSet = protocol.restBetweenSets * protocol.intervals.length
+      total += remainingSets * (setDuration + restPerSet)
     }
 
     return total
@@ -156,25 +173,26 @@ export function useTimerEngine(protocol) {
       currentIntervalIndex.value++
 
       if (currentIntervalIndex.value >= protocol.intervals.length) {
-        // Set complete
+        // All intervals in set complete
         if (currentSet.value >= totalSets.value) {
           // All sets complete
           complete()
         } else {
-          // Rest between sets
+          // Move to next set, apply rest
+          currentSet.value++
+          currentIntervalIndex.value = 0
           state.value = TIMER_STATES.REST
           timeRemaining.value = protocol.restBetweenSets
         }
       } else {
-        // Next interval in same set
-        timeRemaining.value = protocol.intervals[currentIntervalIndex.value].duration
+        // More intervals in current set, apply rest before next interval
+        state.value = TIMER_STATES.REST
+        timeRemaining.value = protocol.restBetweenSets
       }
     } else if (state.value === TIMER_STATES.REST) {
-      // Rest complete, start next set
-      currentSet.value++
-      currentIntervalIndex.value = 0
+      // Rest complete, start next interval
       state.value = TIMER_STATES.INTERVAL
-      timeRemaining.value = protocol.intervals[0].duration
+      timeRemaining.value = protocol.intervals[currentIntervalIndex.value].duration
     }
   }
 
@@ -242,7 +260,6 @@ export function useTimerEngine(protocol) {
     state.value = TIMER_STATES.COMPLETED
     timeRemaining.value = 0
     isRunning.value = false
-    currentSet.value++ // Increment to mark last set as completed
     playBeep(1200, 500)
     vibrate([300, 100, 300, 100, 300])
 

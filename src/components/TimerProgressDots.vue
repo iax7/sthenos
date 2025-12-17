@@ -26,16 +26,21 @@ const props = defineProps({
   currentSet: { type: Number, required: true },
   totalSets: { type: Number, required: true },
   maxDots: { type: Number, default: 12 },
-  isRunning: { type: Boolean, default: false }
+  isRunning: { type: Boolean, default: false },
+  isCompleted: { type: Boolean, default: false }
 })
 
 const dots = computed(() => {
   if (props.totalSets > props.maxDots) return []
   const arr = []
   for (let i = 1; i <= props.totalSets; i++) {
-    if (i < props.currentSet) arr.push('completed')
-    else if (i === props.currentSet) arr.push('current')
-    else arr.push('pending')
+    if (props.isCompleted || i < props.currentSet) {
+      arr.push('completed')
+    } else if (i === props.currentSet) {
+      arr.push('current')
+    } else {
+      arr.push('pending')
+    }
   }
   return arr
 })
