@@ -140,7 +140,7 @@ const stateColor = computed(() => {
     prep: '#f59e0b',
     interval: '#10b981',
     rest: '#3b82f6',
-    completed: '#6b7280',
+    completed: '#10b981',
   }
   return colors[state.value] || '#10b981'
 })

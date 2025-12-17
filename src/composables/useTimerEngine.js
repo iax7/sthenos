@@ -242,6 +242,7 @@ export function useTimerEngine(protocol) {
     state.value = TIMER_STATES.COMPLETED
     timeRemaining.value = 0
     isRunning.value = false
+    currentSet.value++ // Increment to mark last set as completed
     playBeep(1200, 500)
     vibrate([300, 100, 300, 100, 300])
 
