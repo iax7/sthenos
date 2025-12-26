@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useTimerProtocols } from '@/composables/useTimerProtocols'
 import { useTimerEngine } from '@/composables/useTimerEngine'
@@ -107,6 +107,7 @@ import TimerCircle from '@/components/TimerCircle.vue'
 import TimerProgressDots from '@/components/TimerProgressDots.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import confetti from 'canvas-confetti'
 
 const router = useRouter()
 const route = useRoute()
@@ -145,6 +146,41 @@ const stateColor = computed(() => {
   }
   return colors[state.value] || '#10b981'
 })
+
+// Confetti effect when workout completes
+watch(state, (newState, oldState) => {
+  if (newState === TIMER_STATES.COMPLETED && oldState !== TIMER_STATES.COMPLETED) {
+    triggerConfetti()
+  }
+})
+
+function triggerConfetti() {
+  const duration = 3000
+  const end = Date.now() + duration
+
+  const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
+
+  ;(function frame() {
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: colors,
+    })
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: colors,
+    })
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame)
+    }
+  })()
+}
 
 // Format time helper
 function formatTime(seconds) {
