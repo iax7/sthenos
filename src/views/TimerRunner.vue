@@ -147,9 +147,77 @@ const stateColor = computed(() => {
   return colors[state.value] || '#10b981'
 })
 
-// Confetti effect when workout completes
+// Audio context for sound effects
+const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+
+// Play countdown beep (for last 3 seconds)
+function playCountdownBeep() {
+  const oscillator = audioContext.createOscillator()
+  const gainNode = audioContext.createGain()
+
+  oscillator.connect(gainNode)
+  gainNode.connect(audioContext.destination)
+
+  oscillator.frequency.value = 800 // Higher pitch
+  oscillator.type = 'sine'
+
+  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1)
+
+  oscillator.start(audioContext.currentTime)
+  oscillator.stop(audioContext.currentTime + 0.1)
+}
+
+// Play completion sound (celebratory)
+function playCompletionSound() {
+  // First tone
+  const osc1 = audioContext.createOscillator()
+  const gain1 = audioContext.createGain()
+  osc1.connect(gain1)
+  gain1.connect(audioContext.destination)
+  osc1.frequency.value = 523.25 // C5
+  osc1.type = 'sine'
+  gain1.gain.setValueAtTime(0.3, audioContext.currentTime)
+  gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
+  osc1.start(audioContext.currentTime)
+  osc1.stop(audioContext.currentTime + 0.3)
+
+  // Second tone
+  const osc2 = audioContext.createOscillator()
+  const gain2 = audioContext.createGain()
+  osc2.connect(gain2)
+  gain2.connect(audioContext.destination)
+  osc2.frequency.value = 659.25 // E5
+  osc2.type = 'sine'
+  gain2.gain.setValueAtTime(0.3, audioContext.currentTime + 0.15)
+  gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.45)
+  osc2.start(audioContext.currentTime + 0.15)
+  osc2.stop(audioContext.currentTime + 0.45)
+
+  // Third tone
+  const osc3 = audioContext.createOscillator()
+  const gain3 = audioContext.createGain()
+  osc3.connect(gain3)
+  gain3.connect(audioContext.destination)
+  osc3.frequency.value = 783.99 // G5
+  osc3.type = 'sine'
+  gain3.gain.setValueAtTime(0.3, audioContext.currentTime + 0.3)
+  gain3.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6)
+  osc3.start(audioContext.currentTime + 0.3)
+  osc3.stop(audioContext.currentTime + 0.6)
+}
+
+// Watch for countdown beeps (last 3 seconds)
+watch(timeRemaining, (newTime) => {
+  if (newTime <= 3 && newTime > 0 && !isPaused.value && state.value !== TIMER_STATES.IDLE) {
+    playCountdownBeep()
+  }
+})
+
+// Confetti effect and completion sound when workout completes
 watch(state, (newState, oldState) => {
   if (newState === TIMER_STATES.COMPLETED && oldState !== TIMER_STATES.COMPLETED) {
+    playCompletionSound()
     triggerConfetti()
   }
 })
