@@ -35,14 +35,6 @@ import {
   TrashIcon,
 } from '@heroicons/vue/24/outline'
 
-const buildTime = new Date(__BUILD_TIME__).toLocaleString('sv-SE', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false
-}).replace(',', '')
 const router = useRouter()
 const { t } = useI18n()
 const {
@@ -59,7 +51,6 @@ const fileInput = ref(null)
 
 const url = ref(getLastImportUrl() || '')
 const uploading = ref(false)
-
 
 /**
  * Encode string to base64 (UTF-8 safe).
@@ -394,6 +385,5 @@ function handleFileChange(e) {
     </AppCard>
 
     <AppVersion />
-
   </ViewContainer>
 </template>

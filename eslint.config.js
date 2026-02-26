@@ -13,9 +13,19 @@ export default defineConfig([
   globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/public/**']),
 
   {
+    files: ['src/tests/**/*.{js,mjs,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+
+  {
     languageOptions: {
       globals: {
         ...globals.browser,
+        __BUILD_TIME__: 'readonly',
       },
     },
   },
