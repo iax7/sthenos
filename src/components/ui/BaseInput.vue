@@ -1,6 +1,4 @@
 <script setup>
-import { computed } from 'vue'
-
 const props = defineProps({
   modelValue: { type: [String, Number], default: '' },
   type: { type: String, default: 'text' },
