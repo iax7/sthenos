@@ -13,21 +13,17 @@
 - **Single source of truth:** All profile and test data is accessed via the `useProfileStore` composable. Never mutate state directly.
 - **Composables** (`src/composables/`):
   - `useProfileStore.js`: Reactive profile/test state with full CRUD, import/export, and localStorage persistence.
-  - `useTimerEngine.js`: Timer state machine for exercise protocols (idle → prep → interval → rest → completed). Includes Wake Lock API integration.
-  - `useTimerProtocols.js`: Loads pre-built protocols (Tabata, HIIT, Japanese Walking) from `src/data/default-protocols.js`.
   - `useToasts.js`: Ephemeral toast notification system.
 - **Views** (`src/views/`):
   - `HomeView.vue`: Dashboard — summary, chart, test table.
   - `ProfileView.vue`: Profile creation/edit.
   - `ExerciseEdit.vue`: Add or edit a test entry.
   - `ExerciseView.vue`: Read-only detail view for a single entry.
-  - `TimerList.vue` / `TimerRunner.vue`: Timer protocol list and active timer.
   - `SettingsView.vue` / `InfoView.vue`: App settings and info pages.
 - **Components** (`src/components/`):
   - `HomeTable.vue`: Test entries table with edit/delete.
   - `HomeChart.vue` / `HomeChartStats.vue`: Chart.js metric chart and stats.
   - `ExerciseForm.vue`: Shared form fields for exercise entries.
-  - `TimerCircle.vue` / `TimerProgressDots.vue`: Timer UI elements.
   - `AppNavbar.vue`, `AppVersion.vue`: Shell components.
   - UI primitives in `components/ui/`: `BaseButton`, `BaseInput`, `BaseNumberStepper`, `BaseSelect`, `AppCard`, `AppFooter`, `ExerciseCell`, `ExerciseMetricInput`, `ToastContainer`, `ViewContainer`.
 - **Services** (`src/services/`):
@@ -38,7 +34,7 @@
   - `chartColors.js`: Color palette for chart metrics.
 - **Routing** (`src/router.js`): Hash-based routing (required for GitHub Pages).
   - Route guard redirects to `/profile` unless `meta.noProfile: true`.
-  - Routes: `/` (dashboard), `/profile`, `/settings`, `/info`, `/exercise/new`, `/exercise/:index/edit`, `/exercise/:index`, `/timer`, `/timer/:id/run`.
+  - Routes: `/` (dashboard), `/profile`, `/settings`, `/info`, `/exercise/new`, `/exercise/:index/edit`, `/exercise/:index`.
 
 ## Developer Workflows
 
@@ -93,7 +89,6 @@ npm run test:ui     # Vitest with browser UI
 - `src/composables/useProfileStore.js`: Single source of truth
 - `src/router.js`: All routes and navigation guard
 - `src/locales/en.json` + `es.json`: i18n strings
-- `src/data/default-protocols.js`: Timer protocol definitions
 - `src/App.vue`: Mounts global containers (ToastContainer, etc.)
 
 ---
