@@ -110,14 +110,6 @@ function cancel() {
           <p v-if="dobError" class="mt-1 text-sm text-red-600">{{ dobError }}</p>
         </div>
 
-        <!-- Email -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t('profile.email') }}
-          </label>
-          <BaseInput v-model="email" type="email" :placeholder="t('profile.emailPlaceholder')" class="w-full" />
-        </div>
-
         <!-- Actions -->
         <div class="flex justify-end gap-3 pt-2">
           <BaseButton v-if="isEditing" type="button" variant="secondary" @click="cancel">
