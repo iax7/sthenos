@@ -2,17 +2,12 @@
 import { ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { useToasts } from '@/composables/useToasts.js'
-import { useProfileStore } from '@/composables/useProfileStore.js'
-import { TrashIcon, Bars3Icon, CogIcon, HomeIcon, InformationCircleIcon, RectangleStackIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, CogIcon, HomeIcon, InformationCircleIcon, RectangleStackIcon } from '@heroicons/vue/24/outline'
 
-const emit = defineEmits(['clear', 'imported'])
 const { t } = useI18n()
 
 const menuOpen = ref(false)
 const router = useRouter()
-const { pushToast } = useToasts()
-const { clearProfile } = useProfileStore()
 
 function goHome() {
   menuOpen.value = false
@@ -39,16 +34,6 @@ function toggleMenu() {
 }
 
 // fetchUrl removed: moved to Settings view
-
-function confirmClear() {
-  if (window.confirm(t('nav.clearConfirm'))) {
-    clearProfile()
-    emit('clear')
-    menuOpen.value = false
-    pushToast(t('nav.localDataCleared'), 'success')
-    router.push('/profile')
-  }
-}
 
 function closeOnOutside(e) {
   if (!menuOpen.value) return
@@ -92,13 +77,6 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
             </li>
             <li>
               <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="goToSettings">
-                <CogIcon class="h-5 w-5" />
-                <span>{{ t('nav.settings') }}</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
                 @click="goToInfo">
                 <InformationCircleIcon class="h-5 w-5" />
                 <span>{{ t('nav.info') }}</span>
@@ -106,13 +84,13 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
             </li>
             <hr class="my-1 border-gray-200" />
             <li>
-              <button type="button"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left text-red-600 hover:bg-red-100"
-                @click="confirmClear">
-                <TrashIcon class="h-5 w-5" />
-                <span>{{ t('nav.clear') }}</span>
+              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                @click="goToSettings">
+                <CogIcon class="h-5 w-5" />
+                <span>{{ t('nav.settings') }}</span>
               </button>
             </li>
+
           </ul>
         </div>
         <input ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />

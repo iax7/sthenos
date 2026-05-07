@@ -45,6 +45,7 @@ const {
   importProfile,
   hasProfile,
   loadProfile,
+  clearProfile,
 } = useProfileStore()
 const { pushToast } = useToasts()
 const fileInput = ref(null)
@@ -96,6 +97,14 @@ function goBack() {
   router.back()
 }
 
+function confirmClear() {
+  if (window.confirm(t('nav.clearConfirm'))) {
+    clearProfile()
+    pushToast(t('nav.localDataCleared'), 'success')
+    router.push('/profile')
+  }
+}
+
 /**
  * Upload profile backup to online paste service.
  */
@@ -143,15 +152,6 @@ async function backupOnline() {
   } finally {
     uploading.value = false
   }
-}
-
-function saveUrl() {
-  if (!url.value || !url.value.trim()) {
-    pushToast(t('settings.noUrl'), 'error')
-    return
-  }
-  saveLastImportUrl(url.value.trim())
-  pushToast(t('settings.urlSaved'), 'success')
 }
 
 async function fetchFromUrl() {
@@ -325,9 +325,9 @@ function handleFileChange(e) {
           {{ uploading ? t('settings.uploading') : t('settings.backupButton') }}
         </BaseButton>
       </div>
-    </AppCard>
 
-    <AppCard>
+      <hr class="my-4 border-gray-200" />
+
       <div class="flex items-center justify-between">
         <h3 class="text-xl font-semibold flex items-center gap-2">
           <LinkIcon class="size-5 text-gray-600" />
@@ -347,7 +347,6 @@ function handleFileChange(e) {
         </button>
       </div>
       <div class="flex gap-2">
-        <BaseButton @click.prevent="saveUrl">{{ t('settings.saveUrl') }}</BaseButton>
         <BaseButton @click.prevent="fetchFromUrl">
           <ArrowDownTrayIcon class="size-5 mr-1" />
           {{ t('settings.fetchUrl') }}
@@ -355,7 +354,7 @@ function handleFileChange(e) {
       </div>
     </AppCard>
 
-    <AppCard class="p-4">
+    <AppCard>
       <h3 class="mb-2 text-xl font-semibold flex items-center gap-2">
         <DocumentIcon class="size-5 text-gray-600" />
         {{ t('settings.fileActionsTitle') }}
@@ -364,14 +363,28 @@ function handleFileChange(e) {
       <div class="flex items-center gap-2">
         <BaseButton :disabled="!hasProfile" @click.prevent="downloadProfile">
           <ArrowDownTrayIcon class="size-5 mr-1" />
-          {{ t('nav.download') }}
+          {{ t('settings.fileDownload') }}
         </BaseButton>
         <BaseButton variant="secondary" @click.prevent="triggerUpload">
           <ArrowUpTrayIcon class="size-5 mr-1" />
-          {{ t('nav.upload') }}
+          {{ t('settings.fileLoad') }}
         </BaseButton>
       </div>
-      <input ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />
+    </AppCard>
+
+    <input hidden ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />
+
+    <AppCard class="border-red-400">
+      <h3 class="mb-2 text-xl font-semibold text-red-600">
+        {{ t('settings.dangerZoneTitle') }}
+      </h3>
+      <p class="text-sm text-gray-600">{{ t('settings.clearDataDescription') }}</p>
+      <div class="mt-3 flex justify-center">
+        <BaseButton variant="danger" :disabled="!hasProfile" @click.prevent="confirmClear">
+          <TrashIcon class="size-5 mr-1" />
+          {{ t('settings.clearDataButton') }}
+        </BaseButton>
+      </div>
     </AppCard>
 
     <AppVersion />
