@@ -61,6 +61,7 @@
     "cooperMaxScore": "Puntaje Base"
   },
   "exercise": {
+    "edit": "Editar",
     "editor": {
       "titleNew": "Nuevo Ejercicio",
       "titleEdit": "Editar Ejercicio",

@@ -81,7 +81,7 @@ const groupedByYear = computed(() => {
             <div class="font-semibold text-gray-800 capitalize leading-tight">
               {{ item.data._parts.month
               }}<span v-if="item.data._parts.day" class="ml-1 text-sm font-normal text-gray-400">{{ item.data._parts.day
-              }}</span>
+                }}</span>
             </div>
           </div>
 

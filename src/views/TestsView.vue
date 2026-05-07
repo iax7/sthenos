@@ -35,7 +35,7 @@ function onDeleteTest(i) {
 
 <template>
   <ViewContainer>
-    <div class="mb-4">
+    <div class="mb-4 flex justify-end">
       <BaseButton variant="secondary" @click="router.back()">
         <ArrowLeftIcon class="size-5 mr-1" />
         {{ t('app.back') }}

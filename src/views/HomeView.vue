@@ -7,9 +7,18 @@ import HomeHeader from '@/components/HomeHeader.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
 import { calculateTotalScore } from '@/services/exercises.js'
 import { toMeters, evaluateCooper } from '@/services/cooper.js'
-import { ChevronRightIcon } from '@heroicons/vue/24/outline'
+import { ChevronRightIcon, PencilIcon } from '@heroicons/vue/24/outline'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const { profile, tests } = useProfileStore()
+
+const lastTestIndex = computed(() => tests.value.length - 1)
+
+function editLastTest(e) {
+  e.preventDefault()
+  router.push(`/exercise/${lastTestIndex.value}/edit`)
+}
 const { t, locale } = useI18n()
 
 const lastTest = computed(() => {
@@ -49,10 +58,17 @@ const lastTest = computed(() => {
               class="ml-1 text-sm font-normal text-gray-400">{{ lastTest.day }}</span>
           </span>
         </div>
-        <div class="flex flex-col items-end">
-          <span class="text-xs uppercase tracking-wide text-gray-400">⭐️ Score</span>
-          <span class="text-2xl font-bold text-blue-600">{{ lastTest.score }} <span
-              class="text-sm font-medium text-blue-400">pts</span></span>
+        <div class="flex items-center gap-3">
+          <div class="flex flex-col items-end">
+            <span class="text-xs uppercase tracking-wide text-gray-400">⭐️ Score</span>
+            <span class="text-2xl font-bold text-blue-600">{{ lastTest.score }} <span
+                class="text-sm font-medium text-blue-400">pts</span></span>
+          </div>
+          <button @click="editLastTest"
+            class="rounded-lg border border-gray-200 p-2 text-gray-400 hover:border-blue-300 hover:text-blue-500 transition-colors"
+            :aria-label="t('exercise.edit')">
+            <PencilIcon class="size-4" />
+          </button>
         </div>
       </div>
     </router-link>

@@ -61,6 +61,7 @@
     "cooperMaxScore": "Base Score"
   },
   "exercise": {
+    "edit": "Edit",
     "editor": {
       "titleNew": "New Exercise",
       "titleEdit": "Edit Exercise",
