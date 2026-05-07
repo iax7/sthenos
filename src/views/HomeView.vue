@@ -22,10 +22,11 @@ const lastTest = computed(() => {
   const score = calculateTotalScore(test, level)
 
   const [y, m, d] = (test.date || '').split('-')
-  const date = new Date(y, parseInt(m, 10) - 1, d || 1)
-  const label = date.toLocaleDateString(locale.value, { month: 'long', year: 'numeric' })
+  const date = new Date(Number(y), Number(m) - 1, Number(d || 1))
+  const month = date.toLocaleDateString(locale.value, { month: 'long' })
+  const day = d && d !== '01' ? String(parseInt(d, 10)) : ''
 
-  return { label, score }
+  return { year: y, month, day, score }
 })
 </script>
 
@@ -43,7 +44,10 @@ const lastTest = computed(() => {
       <div v-if="lastTest" class="mt-3 flex items-end justify-between border-t border-gray-100 pt-3">
         <div class="flex flex-col">
           <span class="text-xs uppercase tracking-wide text-gray-400">{{ t('dashboard.lastTest') }}</span>
-          <span class="text-base font-semibold capitalize text-gray-700">{{ lastTest.label }}</span>
+          <span class="text-base font-semibold text-gray-700">
+            {{ lastTest.year }} <span class="capitalize">{{ lastTest.month }}</span><span v-if="lastTest.day"
+              class="ml-1 text-sm font-normal text-gray-400">{{ lastTest.day }}</span>
+          </span>
         </div>
         <div class="flex flex-col items-end">
           <span class="text-xs uppercase tracking-wide text-gray-400">⭐️ Score</span>

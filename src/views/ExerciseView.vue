@@ -61,13 +61,13 @@ const exerciseData = computed(() => {
 
 function formatPrettyDate(dateStr) {
   if (!dateStr) return ''
-  const [y, m, rest] = dateStr.split('-')
-  const iso = `${y}-${m}-${rest || '01'}`
-  const d = new Date(iso)
-  if (isNaN(d.getTime())) return dateStr
-  const locale = navigator?.language || navigator?.userLanguage || 'en'
+  const [y, m, d] = dateStr.split('-')
+  // Use numeric constructor to avoid UTC-to-local timezone shift
+  const date = new Date(Number(y), Number(m) - 1, Number(d || 1))
+  if (isNaN(date.getTime())) return dateStr
+  const locale = navigator?.language || 'en'
   const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  return d.toLocaleDateString(locale, options)
+  return date.toLocaleDateString(locale, options)
 }
 
 function goBack() {
@@ -173,31 +173,29 @@ const exercisesScore = computed(() => {
             </BaseButton>
           </div>
         </div>
-      </AppCard>
-
-      <AppCard class="bg-linear-to-br from-indigo-500 to-purple-600 text-white relative overflow-hidden">
-        <!-- Star watermark -->
-        <svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[calc(100%+2rem)] w-auto opacity-20"
-          viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
-              <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#ffa500;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-          <polygon points="50,15 61,40 88,40 67,57 74,82 50,67 26,82 33,57 12,40 39,40" fill="url(#goldGradient)" />
-        </svg>
-        <div class="text-center relative z-10">
-          <h2 class="mb-2 text-lg font-semibold uppercase tracking-wide opacity-90">
-            Score
-          </h2>
-          <p class="text-6xl font-bold">
-            {{ totalScore }}
-          </p>
-          <p class="mt-2 text-sm opacity-75">
-            {{ t('exercise.editor.totalPoints') }}
-          </p>
+        <hr class="border-gray-200" />
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-700">Score</h2>
+          <div class="relative">
+            <!-- Star watermark behind number -->
+            <svg
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[200%] w-auto opacity-30 pointer-events-none"
+              viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="50,15 61,40 88,40 67,57 74,82 50,67 26,82 33,57 12,40 39,40"
+                fill="url(#scoreStarGradient)" />
+              <defs>
+                <linearGradient id="scoreStarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+                  <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#ffa500;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <p
+              class="relative text-6xl font-black bg-linear-to-br from-indigo-600 to-purple-600 bg-clip-text text-transparent tabular-nums">
+              {{ totalScore }}
+            </p>
+          </div>
         </div>
       </AppCard>
 
@@ -207,65 +205,62 @@ const exercisesScore = computed(() => {
             {{ t('exercise.editor.cooperTest') }}
           </h2>
           <div class="text-right">
-            <p class="text-lg font-semibold text-blue-600">
-              {{ calculateCooperPoints(exerciseData.cooper.laps, exerciseData.cooper.level) }} pts
+            <p class="text-lg font-mono font-semibold text-blue-600">
+              {{ calculateCooperPoints(exerciseData.cooper.laps, exerciseData.cooper.level) }}<span
+                class="text-sm font-medium text-blue-400 ml-0.5">pts</span>
             </p>
           </div>
         </div>
         <div class="flex items-center gap-4">
           <div class="flex-1">
-            <p class="text-sm text-gray-600">{{ t('exercise.editor.cooperLaps') }}</p>
-            <p class="text-3xl font-bold text-blue-600">{{ exerciseData.cooper.km }} km</p>
-            <p class="text-sm text-gray-500">({{ exerciseData.cooper.meters }} {{ t('dashboard.table.headers.km') ===
-              'Km.' ? 'meters' : 'metros' }}) · {{ exerciseData.cooper.laps }} {{ t('cooper.laps') }}</p>
-          </div>
-          <div class="flex items-center" :hidden="exerciseData.cooper.laps <= 0">
-            <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide shadow" :style="{
-              backgroundColor: cooperLevelStyle.backgroundColor,
-              color: cooperLevelStyle.color
-            }">
-              {{ t(cooperLevelStyle.labelKey) }}
-            </span>
+            <div class="flex items-center gap-4">
+              <div class="flex items-baseline gap-2">
+                <p class="text-3xl font-bold text-gray-400">{{ exerciseData.cooper.laps }} <span class="text-lg">{{
+                  t('cooper.laps') }}</span></p>
+                <div class="w-px h-6 bg-gray-300 self-center"></div>
+                <p class="text-3xl font-bold text-blue-600">{{ exerciseData.cooper.km }} km</p>
+              </div>
+              <div :hidden="exerciseData.cooper.laps <= 0">
+                <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide shadow" :style="{
+                  backgroundColor: cooperLevelStyle.backgroundColor,
+                  color: cooperLevelStyle.color
+                }">
+                  {{ t(cooperLevelStyle.labelKey) }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </AppCard>
 
       <AppCard>
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between mb-3">
           <h2 class="text-xl font-semibold text-gray-700">
             {{ t('dashboard.table.title') }}
           </h2>
-          <div class="text-right">
-            <p class="text-lg font-semibold text-blue-600">
-              {{ exercisesScore }} pts
-            </p>
-          </div>
+          <p class="text-lg font-mono font-semibold text-blue-600">{{ exercisesScore }}<span
+              class="text-sm font-medium text-blue-400 ml-0.5">pts</span></p>
         </div>
-        <div class="grid gap-3 grid-cols-1 min-[350px]:grid-cols-2 sm:grid-cols-4 lg:grid-cols-5">
+        <div class="rounded-lg overflow-hidden divide-y divide-gray-100 border border-gray-100">
           <div v-for="(key, idx) in Object.keys(exerciseData.exercises)" :key="idx"
-            class="rounded-lg border border-gray-200 bg-linear-to-br from-white via-blue-50 to-indigo-100 p-4 shadow-sm hover:shadow-md transition-shadow">
-            <h3 class="mb-2 text-sm font-semibold uppercase text-gray-700">
-              {{ t(exerciseLabels[key]) }}
-            </h3>
-            <div class="mb-2">
-              <p class="text-2xl font-bold text-gray-800">
-                {{ exerciseData.exercises[key].reps }}
-              </p>
-              <p class="text-xs text-gray-500">
-                {{ t('exercise.editor.count') }}
-              </p>
+            class="flex items-center gap-3 px-4 py-3">
+            <div class="flex flex-1 items-center gap-2 min-w-0">
+              <span class="text-sm font-semibold text-gray-700">{{ t(exerciseLabels[key]) }}</span>
             </div>
-            <div class="mb-2">
-              <p class="text-lg font-semibold text-blue-600">
-                {{ exerciseData.exercises[key].points }} pts
-              </p>
-            </div>
-            <div v-if="exerciseData.exercises[key].versionLabel">
-              <span
-                class="inline-block rounded-md bg-linear-to-r from-orange-500 to-amber-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+            <span class="w-10 text-right text-base font-mono text-gray-800 tabular-nums">{{
+              exerciseData.exercises[key].reps }}</span>
+            <div class="w-24 shrink-0 flex justify-start">
+              <span v-if="exerciseData.exercises[key].versionLabel" :class="exerciseData.exercises[key].versionLabel.endsWith('.complete')
+                ? 'bg-linear-to-r from-green-500 to-emerald-500'
+                : 'bg-linear-to-r from-orange-500 to-amber-500'"
+                class="rounded-md px-2 py-0.5 text-xs font-bold text-white whitespace-nowrap">
                 {{ t(exerciseData.exercises[key].versionLabel) }}
               </span>
             </div>
+            <div class="w-px h-4 bg-gray-200 shrink-0"></div>
+            <span class="w-14 text-right text-sm font-mono font-bold text-blue-600 tabular-nums shrink-0">{{
+              exerciseData.exercises[key].points
+            }}<span class="text-xs font-medium text-blue-400 ml-0.5">pts</span></span>
           </div>
         </div>
       </AppCard>
