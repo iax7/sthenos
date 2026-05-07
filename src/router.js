@@ -17,6 +17,7 @@ const routes = [
   { path: '/exercise/new', name: 'exercise-new', component: ExerciseEdit },
   { path: '/exercise/:index/edit', name: 'exercise-edit', component: ExerciseEdit, props: true },
   { path: '/exercise/:index', name: 'exercise-view', component: ExerciseView, props: true },
+  { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
 export const router = createRouter({
