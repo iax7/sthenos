@@ -221,7 +221,7 @@ const exercisesScore = computed(() => {
                 <p class="text-3xl font-bold text-blue-600">{{ exerciseData.cooper.km }} km</p>
               </div>
               <div :hidden="exerciseData.cooper.laps <= 0">
-                <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide shadow" :style="{
+                <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide shadow whitespace-nowrap" :style="{
                   backgroundColor: cooperLevelStyle.backgroundColor,
                   color: cooperLevelStyle.color
                 }">
