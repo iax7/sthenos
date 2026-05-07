@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
+import { execSync } from 'node:child_process'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -17,6 +18,9 @@ export default defineConfig({
     },
   },
   define: {
-    __BUILD_TIME__: JSON.stringify(new Date().toISOString())
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+    __COMMIT_SHA__: JSON.stringify(
+      (() => { try { return execSync('git rev-parse --short=8 HEAD').toString().trim() } catch { return 'unknown' } })()
+    ),
   }
 })

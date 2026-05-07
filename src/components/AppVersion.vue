@@ -1,4 +1,5 @@
 <script setup>
+const commitSha = __COMMIT_SHA__
 const buildTime = new Date(__BUILD_TIME__).toLocaleString('sv-SE', {
   year: 'numeric',
   month: '2-digit',
@@ -14,6 +15,8 @@ const buildTime = new Date(__BUILD_TIME__).toLocaleString('sv-SE', {
     <p class="text-xs text-gray-400 font-mono">
       v{{ buildTime }}
     </p>
+    <p class="text-xs text-gray-400 font-mono">
+      {{ commitSha }}
+    </p>
   </div>
 </template>
-
