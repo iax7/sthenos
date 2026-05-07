@@ -35,7 +35,17 @@ const lastTest = computed(() => {
   const month = date.toLocaleDateString(locale.value, { month: 'long' })
   const day = d && d !== '01' ? String(parseInt(d, 10)) : ''
 
-  return { year: y, month, day, score }
+  let scoreDiff = null
+  if (tests.value.length >= 2) {
+    const prev = tests.value[tests.value.length - 2]
+    const prevAge = ageAtDate(profile.value?.dob, prev.date)
+    const prevMeters = toMeters(prev.cooper || 0)
+    const prevLevel = evaluateCooper(prevMeters, prevAge, genderKey)
+    const prevScore = calculateTotalScore(prev, prevLevel)
+    scoreDiff = score - prevScore
+  }
+
+  return { year: y, month, day, score, scoreDiff }
 })
 </script>
 
@@ -50,11 +60,11 @@ const lastTest = computed(() => {
           <ChevronRightIcon class="size-4" />
         </span>
       </div>
-      <div v-if="lastTest" class="mt-3 flex items-end justify-between border-t border-gray-100 pt-3">
+      <div v-if="lastTest" class="mt-3 flex items-start justify-between border-t border-gray-100 pt-3">
         <div class="flex flex-col">
           <span class="text-xs uppercase tracking-wide text-gray-400">{{ t('dashboard.lastTest') }}</span>
-          <span class="text-base font-semibold text-gray-700">
-            {{ lastTest.year }} <span class="capitalize">{{ lastTest.month }}</span><span v-if="lastTest.day"
+          <span class="text-base font-semibold text-gray-700 flex items-center">
+            {{ lastTest.year }} <span class="capitalize ml-1">{{ lastTest.month }}</span><span v-if="lastTest.day"
               class="ml-1 text-sm font-normal text-gray-400">{{ lastTest.day }}</span>
           </span>
         </div>
@@ -63,11 +73,15 @@ const lastTest = computed(() => {
             <span class="text-xs uppercase tracking-wide text-gray-400">⭐️ Score</span>
             <span class="text-2xl font-bold text-blue-600">{{ lastTest.score }} <span
                 class="text-sm font-medium text-blue-400">pts</span></span>
+            <span v-if="lastTest.scoreDiff !== null" class="text-xs font-medium"
+              :class="lastTest.scoreDiff >= 0 ? 'text-green-600' : 'text-red-500'">
+              {{ lastTest.scoreDiff >= 0 ? '+' : '' }}{{ lastTest.scoreDiff }} pts
+            </span>
           </div>
           <button @click="editLastTest"
-            class="rounded-lg border border-gray-200 p-2 text-gray-400 hover:border-blue-300 hover:text-blue-500 transition-colors"
+            class="rounded-lg border border-gray-200 p-2.5 text-gray-400 hover:border-blue-300 hover:text-blue-500 transition-colors"
             :aria-label="t('exercise.edit')">
-            <PencilIcon class="size-4" />
+            <PencilIcon class="size-5" />
           </button>
         </div>
       </div>
