@@ -24,7 +24,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["done", "cancel"]);
 const { pushToast } = useToasts();
-const { appendTest, updateTest, createTestMetric } = useProfileStore();
+const { appendTest, updateTest, createTestMetric, tests } = useProfileStore();
 
 function todayISO() {
   const now = new Date();
@@ -93,11 +93,22 @@ function hasPositiveValue() {
 
 const canSave = computed(() => {
   const dateOk = date.value && /\d{4}-\d{2}-\d{2}/.test(date.value);
-  return dateOk && hasPositiveValue();
+  return dateOk && hasPositiveValue() && !dateConflict.value;
+});
+
+const dateConflict = computed(() => {
+  if (!date.value) return false;
+  return tests.value.some((t, i) => {
+    if (props.mode === 'edit' && i === props.index) return false;
+    return t.date === date.value;
+  });
 });
 
 function save() {
-  if (!canSave.value) return;
+  if (!canSave.value) {
+    if (dateConflict.value) pushToast(t('exercise.editor.duplicateDate'), 'error');
+    return;
+  }
   const payload = {
     date: date.value,
     pullup: createTestMetric(pullUps.value, pullUpsVersion.value),
@@ -134,7 +145,8 @@ function save() {
         <label class="block text-sm font-medium text-gray-700 mb-2">
           {{ t('exercise.editor.date') }}
         </label>
-        <BaseInput v-model="date" type="date" required class="w-full" />
+        <BaseInput v-model="date" type="date" required class="w-full" :class="{ 'ring-2 ring-red-400': dateConflict }" />
+        <p v-if="dateConflict" class="mt-1 text-sm text-red-500">{{ t('exercise.editor.duplicateDate') }}</p>
       </div>
 
       <!-- Cooper Test -->

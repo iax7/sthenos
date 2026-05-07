@@ -31,7 +31,9 @@
     "localDataCleared": "Local data cleared",
     "fetchUrl": "Fetch data",
     "settings": "Settings",
-    "info": "Information"
+    "info": "Information",
+    "tests": "Tests",
+    "entries": "entries"
   },
   "settings": {
     "title": "Settings",
@@ -68,7 +70,8 @@
       "count": "Count",
       "cooperLaps": "Cooper Laps (in 12 minutes)",
       "cooperTest": "Cooper Test",
-      "totalPoints": "Total points"
+      "totalPoints": "Total points",
+      "duplicateDate": "A test for this date already exists."
     },
     "pullup": {
       "complete": "Complete",
@@ -108,6 +111,7 @@
     "vg": "VG"
   },
   "dashboard": {
+    "lastTest": "Last test",
     "deleteConfirm": "Delete this exercise test?",
     "deleteSuccess": "Test deleted.",
     "deleteFailure": "Failed to delete test.",

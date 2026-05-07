@@ -238,12 +238,13 @@ const chartOptions = computed(() => {
     <div class="mb-4">
       <h2 class="mb-3">{{ t("dashboard.chart.title") }}</h2>
       <div class="flex flex-wrap gap-2">
-        <button v-for="m in EXERCISES" :key="m.key" @click="selectedMetric = m.key" :class="[
-          'px-3 py-1.5 text-sm font-medium rounded-lg transition-all',
-          selectedMetric === m.key
-            ? 'bg-blue-600 text-white shadow-sm'
-            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-        ]">
+        <button v-for="m in EXERCISES" :key="m.key" @click="selectedMetric = m.key"
+          :aria-pressed="selectedMetric === m.key" :class="[
+            'px-3 py-1.5 text-sm font-medium rounded-full transition-all',
+            selectedMetric === m.key
+              ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-300'
+              : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
+          ]">
           {{ m.label }}
         </button>
       </div>

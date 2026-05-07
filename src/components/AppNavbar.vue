@@ -4,12 +4,12 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToasts } from '@/composables/useToasts.js'
 import { useProfileStore } from '@/composables/useProfileStore.js'
-import { TrashIcon, Bars3Icon, CogIcon, HomeIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, Bars3Icon, CogIcon, HomeIcon, InformationCircleIcon, RectangleStackIcon } from '@heroicons/vue/24/outline'
 
 const emit = defineEmits(['clear', 'imported'])
 const { t } = useI18n()
 
-  const menuOpen = ref(false)
+const menuOpen = ref(false)
 const router = useRouter()
 const { pushToast } = useToasts()
 const { clearProfile } = useProfileStore()
@@ -17,6 +17,11 @@ const { clearProfile } = useProfileStore()
 function goHome() {
   menuOpen.value = false
   router.push({ name: 'dashboard' })
+}
+
+function goToTests() {
+  menuOpen.value = false
+  router.push({ name: 'tests' })
 }
 
 function goToSettings() {
@@ -33,7 +38,7 @@ function toggleMenu() {
   menuOpen.value = !menuOpen.value
 }
 
-  // fetchUrl removed: moved to Settings view
+// fetchUrl removed: moved to Settings view
 
 function confirmClear() {
   if (window.confirm(t('nav.clearConfirm'))) {
@@ -62,75 +67,55 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
     <div class="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
       <h1 class="text-2xl font-bold tracking-wide">{{ t('nav.title') }}</h1>
       <div class="relative">
-        <button
-          id="global-menu-button"
-          type="button"
-          class="icon-btn"
-          @click="toggleMenu"
-          aria-haspopup="true"
-          :aria-expanded="menuOpen"
-          title="Menu"
-        >
+        <button id="global-menu-button" type="button" class="icon-btn" @click="toggleMenu" aria-haspopup="true"
+          :aria-expanded="menuOpen" title="Menu">
           <span class="sr-only">Open menu</span>
           <Bars3Icon class="size-7"></Bars3Icon>
         </button>
-        <div
-          v-if="menuOpen"
-          id="global-menu-dropdown"
-          class="absolute right-0 z-50 w-44 rounded-md border border-gray-200 bg-white shadow-sm"
-        >
+        <div v-if="menuOpen" id="global-menu-dropdown"
+          class="absolute right-0 z-50 w-44 rounded-md border border-gray-200 bg-white shadow-sm">
           <ul class="py-1 text-sm">
 
             <li>
-              <button
-                type="button"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="goHome"
-              >
+              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                @click="goHome">
                 <HomeIcon class="h-5 w-5" />
                 <span>{{ t('nav.home') }}</span>
               </button>
             </li>
             <li>
-              <button
-                type="button"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="goToSettings"
-              >
+              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                @click="goToTests">
+                <RectangleStackIcon class="h-5 w-5" />
+                <span>{{ t('nav.tests') }}</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                @click="goToSettings">
                 <CogIcon class="h-5 w-5" />
                 <span>{{ t('nav.settings') }}</span>
               </button>
             </li>
             <li>
-              <button
-                type="button"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="goToInfo"
-              >
+              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
+                @click="goToInfo">
                 <InformationCircleIcon class="h-5 w-5" />
                 <span>{{ t('nav.info') }}</span>
               </button>
             </li>
             <hr class="my-1 border-gray-200" />
             <li>
-              <button
-                type="button"
+              <button type="button"
                 class="flex w-full items-center gap-2 px-3 py-2 text-left text-red-600 hover:bg-red-100"
-                @click="confirmClear"
-              >
+                @click="confirmClear">
                 <TrashIcon class="h-5 w-5" />
                 <span>{{ t('nav.clear') }}</span>
               </button>
             </li>
           </ul>
         </div>
-        <input
-          ref="fileInput"
-          type="file"
-          accept="application/json"
-          class="hidden"
-          @change="handleFileChange"
-        />
+        <input ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />
       </div>
     </div>
   </nav>

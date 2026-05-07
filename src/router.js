@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import ProfileView from '@/views/ProfileView.vue'
 import HomeView from '@/views/HomeView.vue'
+import TestsView from '@/views/TestsView.vue'
 import ExerciseEdit from '@/views/ExerciseEdit.vue'
 import ExerciseView from '@/views/ExerciseView.vue'
 import SettingsView from '@/views/SettingsView.vue'
@@ -9,6 +10,7 @@ import { useProfileStore } from '@/composables/useProfileStore.js'
 
 const routes = [
   { path: '/', name: 'dashboard', component: HomeView },
+  { path: '/tests', name: 'tests', component: TestsView },
   { path: '/profile', name: 'profile', component: ProfileView },
   { path: '/settings', name: 'settings', component: SettingsView, meta: { noProfile: true } },
   { path: '/info', name: 'info', component: InfoView, meta: { noProfile: true } },

@@ -31,7 +31,9 @@
     "localDataCleared": "Datos locales borrados",
     "fetchUrl": "Obtener datos desde enlace",
     "settings": "Ajustes",
-    "info": "Información"
+    "info": "Información",
+    "tests": "Pruebas",
+    "entries": "entradas"
   },
   "settings": {
     "title": "Ajustes",
@@ -68,7 +70,8 @@
       "count": "Cantidad",
       "cooperLaps": "Vueltas Cooper (en 12 minutos)",
       "cooperTest": "Prueba Cooper",
-      "totalPoints": "Puntos totales"
+      "totalPoints": "Puntos totales",
+      "duplicateDate": "Ya existe una prueba para esta fecha."
     },
     "pullup": {
       "complete": "Completa",
@@ -108,6 +111,7 @@
     "vg": "MB"
   },
   "dashboard": {
+    "lastTest": "Último test",
     "deleteConfirm": "¿Eliminar esta prueba de ejercicio?",
     "deleteSuccess": "Prueba eliminada.",
     "deleteFailure": "Error al eliminar la prueba.",

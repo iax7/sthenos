@@ -35,8 +35,7 @@ const avatarClass = computed(() =>
 <template>
   <div class="flex items-center gap-4">
     <div
-      :class="['flex size-14 shrink-0 items-center justify-center rounded-full text-xl font-bold text-white shadow-md', avatarClass]"
-    >
+      :class="['flex size-14 shrink-0 items-center justify-center rounded-full text-xl font-bold text-white shadow-md', avatarClass]">
       {{ initials }}
     </div>
     <div class="min-w-0">
