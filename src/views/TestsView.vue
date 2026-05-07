@@ -2,7 +2,7 @@
 import { useProfileStore } from '@/composables/useProfileStore.js'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import HomeTable from '@/components/HomeTable.vue'
+import TestTable from '@/components/TestTable.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
@@ -41,6 +41,6 @@ function onDeleteTest(i) {
         {{ t('app.back') }}
       </BaseButton>
     </div>
-    <HomeTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
+    <TestTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
   </ViewContainer>
 </template>
