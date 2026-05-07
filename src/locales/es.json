@@ -13,9 +13,14 @@
     "male": "Hombre",
     "female": "Mujer",
     "age": "Edad",
+    "dob": "Fecha de Nacimiento",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "tu{'@'}correo.com",
     "edit": "Editar perfil",
     "saveSuccess": "Perfil creado",
-    "updateSuccess": "Perfil actualizado"
+    "updateSuccess": "Perfil actualizado",
+    "dobTooOld": "La edad no puede ser mayor de 120 años.",
+    "dobTooYoung": "La edad debe ser de al menos 11 años."
   },
   "nav": {
     "title": "Pruebas de Rendimiento",

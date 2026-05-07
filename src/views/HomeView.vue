@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useProfileStore } from '@/composables/useProfileStore.js'
+import { useProfileStore, ageAtDate } from '@/composables/useProfileStore.js'
 import { useI18n } from 'vue-i18n'
 import HomeChart from '@/components/HomeChart.vue'
 import HomeHeader from '@/components/HomeHeader.vue'
@@ -24,7 +24,7 @@ const { t, locale } = useI18n()
 const lastTest = computed(() => {
   if (!tests.value?.length) return null
   const test = tests.value[tests.value.length - 1]
-  const age = profile.value?.age || 0
+  const age = ageAtDate(profile.value?.dob, test.date)
   const genderKey = profile.value?.gender?.toLowerCase() || 'm'
   const meters = toMeters(test.cooper || 0)
   const level = evaluateCooper(meters, age, genderKey)

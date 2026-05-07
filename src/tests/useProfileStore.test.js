@@ -9,12 +9,13 @@ import {
   saveProfile,
   updateTest,
   useProfileStore,
+  ageAtDate,
 } from '@/composables/useProfileStore'
 
 const createBaseProfile = () => ({
   name: 'Taylor',
   gender: 'f',
-  age: 32,
+  dob: '1994-03-15',
   tests: [],
 })
 
@@ -47,14 +48,14 @@ describe('useProfileStore', () => {
   })
 
   it('saves and normalizes profile data', () => {
-    const saved = store.saveProfile({ ...createBaseProfile(), gender: 'm', age: '30' })
+    const saved = store.saveProfile({ ...createBaseProfile(), gender: 'm', dob: '1996-01-01' })
 
     expect(saved.gender).toBe('M')
-    expect(saved.age).toBe(30)
+    expect(saved.dob).toBe('1996-01-01')
     expect(store.hasProfile.value).toBe(true)
 
     const loaded = store.loadProfile()
-    expect(loaded).toMatchObject({ name: 'Taylor', gender: 'M', age: 30 })
+    expect(loaded).toMatchObject({ name: 'Taylor', gender: 'M', dob: '1996-01-01' })
   })
 
   it('appendTest adds and sorts entries by date', () => {
@@ -96,7 +97,7 @@ describe('useProfileStore', () => {
   })
 
   it('importProfile rejects invalid structures', () => {
-    const result = importProfile({ name: 'Sam', gender: 'X', age: 12 })
+    const result = importProfile({ name: 'Sam', gender: 'X', dob: '1997-05-01' })
     expect(result.ok).toBe(false)
   })
 
@@ -104,7 +105,7 @@ describe('useProfileStore', () => {
     const result = importProfile({
       name: 'Sam',
       gender: 'F',
-      age: 29,
+      dob: '1997-05-01',
       tests: [{ ...testEntry, cooper: '2200' }],
     })
 
@@ -138,6 +139,23 @@ describe('useProfileStore', () => {
   it('createTestMetric normalizes reps and version', () => {
     expect(createTestMetric('12', ' standard ')).toEqual({ reps: 12, version: 'standard' })
     expect(createTestMetric(undefined, '')).toEqual({ reps: 0, version: '' })
+  })
+
+  it('ageAtDate computes correct age relative to test date', () => {
+    expect(ageAtDate('1990-06-15', '2026-06-15')).toBe(36)
+    expect(ageAtDate('1990-06-15', '2026-06-14')).toBe(35)
+    expect(ageAtDate('', '2026-01-01')).toBe(0)
+    expect(ageAtDate('1990-01-01', '')).toBe(0)
+  })
+
+  it('migrates legacy age to dob on load', () => {
+    localStorage.setItem(
+      'user_profile_v1',
+      JSON.stringify({ name: 'Old', gender: 'M', age: 30, tests: [] }),
+    )
+    const loaded = store.loadProfile()
+    expect(loaded.dob).toBe(`${new Date().getFullYear() - 30}-01-01`)
+    expect(loaded).not.toHaveProperty('age')
   })
 
   it('legacy exports operate on storage', () => {

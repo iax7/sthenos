@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import { toMeters, evaluateCooper } from "@/services/cooper";
 import { useProfileStore } from "@/composables/useProfileStore.js";
+import { ageAtDate } from "@/composables/useProfileStore.js";
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
 import { calculateTotalScore } from "../services/exercises";
 
@@ -14,7 +15,6 @@ const props = defineProps({
 const { t } = useI18n();
 const { profile } = useProfileStore();
 const genderKey = profile.value?.gender?.toLowerCase() || "m";
-const age = profile.value?.age || 0;
 
 function parseDateParts(dateStr) {
   if (!dateStr) return { year: '', month: '', day: '' };
@@ -30,6 +30,7 @@ function parseDateParts(dateStr) {
 const groupedByYear = computed(() => {
   const mapped = props.tests.slice().map((r, idx) => {
     const meters = toMeters(r.cooper || 0);
+    const age = ageAtDate(profile.value?.dob, r.date);
     const level = evaluateCooper(meters, age, genderKey);
     const totalScore = calculateTotalScore(r, level);
     const parts = parseDateParts(r.date);

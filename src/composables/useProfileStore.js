@@ -6,7 +6,8 @@ import { ref, computed, readonly } from 'vue'
  * @typedef {Object} UserProfile
  * @property {string} name
  * @property {string} gender - 'M' or 'F'
- * @property {number} age
+ * @property {string} dob - ISO date string (YYYY-MM-DD)
+ * @property {string} [email]
  * @property {TestEntry[]=} tests
  */
 /**
@@ -28,7 +29,7 @@ import { ref, computed, readonly } from 'vue'
 const STORAGE_KEY = 'user_profile_v1'
 const URL_STORAGE_KEY = 'profile_import_url'
 const VALID_GENDERS = ['M', 'F']
-const DEFAULT_PROFILE = { name: '', gender: '', age: 0, tests: [] }
+const DEFAULT_PROFILE = { name: '', gender: '', dob: '', email: '', tests: [] }
 
 // Shared reactive state
 const profile = ref(null)
@@ -56,10 +57,19 @@ function loadFromStorage() {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
     const data = JSON.parse(raw)
+    // Migrate: if dob is missing but legacy age exists, synthesize an approximate dob
+    let dob = typeof data.dob === 'string' ? data.dob : ''
+    if (!dob) {
+      const rawAge = Number(data.age)
+      if (!isNaN(rawAge) && rawAge > 0) {
+        dob = `${new Date().getFullYear() - rawAge}-01-01`
+      }
+    }
     return {
       name: typeof data.name === 'string' ? data.name : '',
       gender: typeof data.gender === 'string' ? data.gender.toUpperCase() : '',
-      age: typeof data.age === 'number' ? data.age : Number(data.age) || 0,
+      email: typeof data.email === 'string' ? data.email : '',
+      dob,
       tests: Array.isArray(data.tests) ? data.tests : [],
     }
   } catch (e) {
@@ -85,7 +95,8 @@ function saveToStorage(data) {
   const normalized = {
     name: (data.name || '').trim(),
     gender: String(data.gender || '').toUpperCase(),
-    age: Number(data.age) || 0,
+    email: (data.email || '').trim(),
+    dob: (data.dob || '').trim(),
     tests: incomingHasTests ? data.tests : existing?.tests || [],
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized))
@@ -106,7 +117,6 @@ function isValidProfileShape(data) {
   if (!data || typeof data !== 'object') return false
   if (typeof data.name !== 'string') return false
   if (!VALID_GENDERS.includes(String(data.gender).toUpperCase())) return false
-  if (typeof data.age !== 'number' && isNaN(Number(data.age))) return false
   if (data.tests && !Array.isArray(data.tests)) return false
   return true
 }
@@ -258,10 +268,19 @@ export function useProfileStore() {
         cooper: Number(t.cooper) || 0,
       }))
     }
+    // Migrate: synthesize dob from legacy age field if needed
+    let dob = (data.dob || '').trim()
+    if (!dob && data.age) {
+      const rawAge = Number(data.age)
+      if (!isNaN(rawAge) && rawAge > 0) {
+        dob = `${new Date().getFullYear() - rawAge}-01-01`
+      }
+    }
     const stored = saveToStorage({
       name: data.name,
       gender: data.gender,
-      age: Number(data.age) || 0,
+      email: (data.email || '').trim(),
+      dob,
       tests: Array.isArray(data.tests) ? data.tests : [],
     })
     return { ok: true, profile: stored }
@@ -340,6 +359,32 @@ export function useProfileStore() {
     clearLastImportUrl,
     createTestMetric,
   }
+}
+
+/**
+ * Returns today's date as an ISO string (YYYY-MM-DD) in UTC.
+ * @returns {string}
+ */
+export function todayISO() {
+  return new Date().toISOString().slice(0, 10)
+}
+
+/**
+ * Compute integer age (years) of a person born on `dob` at the time of `testDate`.
+ * Returns 0 when either value is missing or invalid.
+ * @param {string} dob - Birth date as ISO string (YYYY-MM-DD)
+ * @param {string} testDate - Test date as ISO string (YYYY-MM-DD)
+ * @returns {number}
+ */
+export function ageAtDate(dob, testDate) {
+  if (!dob || !testDate) return 0
+  const birth = new Date(dob)
+  const test = new Date(testDate)
+  if (isNaN(birth.getTime()) || isNaN(test.getTime())) return 0
+  let age = test.getUTCFullYear() - birth.getUTCFullYear()
+  const m = test.getUTCMonth() - birth.getUTCMonth()
+  if (m < 0 || (m === 0 && test.getUTCDate() < birth.getUTCDate())) age--
+  return age < 0 ? 0 : age
 }
 
 // Legacy exports for backward compatibility
@@ -439,10 +484,19 @@ export function importProfile(data) {
       cooper: Number(t.cooper) || 0,
     }))
   }
+  // Migrate: synthesize dob from legacy age field if needed
+  let dob = (data.dob || '').trim()
+  if (!dob && data.age) {
+    const legacyAge = Number(data.age)
+    if (!isNaN(legacyAge) && legacyAge > 0) {
+      dob = `${new Date().getFullYear() - legacyAge}-01-01`
+    }
+  }
   const stored = saveProfile({
     name: data.name,
     gender: data.gender,
-    age: Number(data.age) || 0,
+    email: (data.email || '').trim(),
+    dob,
     tests: Array.isArray(data.tests) ? data.tests : [],
   })
   return { ok: true, profile: stored }

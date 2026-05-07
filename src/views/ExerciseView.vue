@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useProfileStore } from '@/composables/useProfileStore.js'
+import { useProfileStore, ageAtDate } from '@/composables/useProfileStore.js'
 import { toKilometers, toMeters, evaluateCooper } from '@/services/cooper'
 import { calculatePoints, calculateCooperPoints, calculateTotalScore, getExerciseKeys, getVersion, getReps } from '@/services/exercises'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -22,11 +22,11 @@ const testIndex = computed(() => parseInt(props.index, 10))
 const test = computed(() => tests.value[testIndex.value])
 const testCount = computed(() => tests.value.length)
 const genderKey = profile.value?.gender?.toLowerCase() || 'm'
-const age = profile.value?.age || 0
 
 const exerciseData = computed(() => {
   if (!test.value) return null
 
+  const age = ageAtDate(profile.value?.dob, test.value.date)
   const meters = toMeters(test.value.cooper || 0)
   const level = evaluateCooper(meters, age, genderKey)
 

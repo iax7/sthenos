@@ -13,9 +13,14 @@
     "male": "Male",
     "female": "Female",
     "age": "Age",
+    "dob": "Date of Birth",
+    "email": "Email",
+    "emailPlaceholder": "your{'@'}email.com",
     "edit": "Edit Profile",
     "saveSuccess": "Profile created",
-    "updateSuccess": "Profile updated"
+    "updateSuccess": "Profile updated",
+    "dobTooOld": "Age cannot exceed 120 years.",
+    "dobTooYoung": "Age must be at least 11 years."
   },
   "nav": {
     "title": "Performance Tests",

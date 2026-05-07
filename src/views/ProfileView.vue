@@ -2,12 +2,11 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToasts } from '@/composables/useToasts.js'
-import { useProfileStore } from '@/composables/useProfileStore.js'
+import { useProfileStore, ageAtDate, todayISO } from '@/composables/useProfileStore.js'
 import { useRouter } from 'vue-router'
 import AppCard from '@/components/ui/AppCard.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseNumberStepper from '@/components/ui/BaseNumberStepper.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
 import { UserCircleIcon } from '@heroicons/vue/24/outline'
 
@@ -19,24 +18,38 @@ const { profile, saveProfile } = useProfileStore()
 // Reactive state
 const name = ref('')
 const gender = ref('')
-const age = ref('')
+const email = ref('')
+const dob = ref('')
 const isEditing = ref(false)
 
 // Initialize from store
 if (profile.value) {
   name.value = profile.value.name
   gender.value = profile.value.gender
-  age.value = profile.value.age
+  email.value = profile.value.email || ''
+  dob.value = profile.value.dob || ''
   isEditing.value = true
 }
 
+const MIN_AGE = 11
+const MAX_AGE = 120
+
+const dobError = computed(() => {
+  if (!dob.value) return null
+  if (isNaN(new Date(dob.value).getTime())) return null
+  const age = ageAtDate(dob.value, todayISO())
+  if (age < MIN_AGE) return t('profile.dobTooYoung')
+  if (age > MAX_AGE) return t('profile.dobTooOld')
+  return null
+})
+
 const canSave = computed(
-  () => name.value.trim() && (gender.value === 'M' || gender.value === 'F') && age.value,
+  () => name.value.trim() && (gender.value === 'M' || gender.value === 'F') && dob.value && !dobError.value,
 )
 
 function save() {
   if (!canSave.value) return
-  saveProfile({ name: name.value, gender: gender.value, age: age.value })
+  saveProfile({ name: name.value, gender: gender.value, email: email.value, dob: dob.value })
   pushToast(t(isEditing.value ? 'profile.updateSuccess' : 'profile.saveSuccess'), 'success')
   router.push('/')
 }
@@ -88,12 +101,21 @@ function cancel() {
           </div>
         </div>
 
-        <!-- Age -->
+        <!-- Date of Birth -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            {{ t('profile.age') }}
+            {{ t('profile.dob') }}
           </label>
-          <BaseNumberStepper v-model="age" :min="11" :max="120" :step="1" :label="t('profile.age')" />
+          <BaseInput v-model="dob" type="date" class="w-full" />
+          <p v-if="dobError" class="mt-1 text-sm text-red-600">{{ dobError }}</p>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            {{ t('profile.email') }}
+          </label>
+          <BaseInput v-model="email" type="email" :placeholder="t('profile.emailPlaceholder')" class="w-full" />
         </div>
 
         <!-- Actions -->
