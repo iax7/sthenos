@@ -10,13 +10,8 @@ function onChange(e) {
 }
 </script>
 <template>
-  <select
-    :value="props.modelValue"
-    :disabled="props.disabled"
-    :required="props.required"
-    @change="onChange"
-    class="form-input"
-  >
+  <select :value="props.modelValue" :disabled="props.disabled" :required="props.required" @change="onChange"
+    class="form-input">
     <slot />
   </select>
 </template>

@@ -340,13 +340,9 @@ function handleFileChange(e) {
       </div>
       <div class="relative">
         <BaseInput v-model="url" type="text" placeholder="https://dpaste.com/XXXXX" class="pr-10" />
-        <button
-          v-if="url"
-          type="button"
+        <button v-if="url" type="button"
           class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-blue-700 transition-colors"
-          @click="copyUrl"
-          :title="t('settings.copyUrl')"
-        >
+          @click="copyUrl" :title="t('settings.copyUrl')">
           <ClipboardDocumentIcon class="size-5" />
         </button>
       </div>
@@ -375,13 +371,7 @@ function handleFileChange(e) {
           {{ t('nav.upload') }}
         </BaseButton>
       </div>
-      <input
-        ref="fileInput"
-        type="file"
-        accept="application/json"
-        class="hidden"
-        @change="handleFileChange"
-      />
+      <input ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />
     </AppCard>
 
     <AppVersion />

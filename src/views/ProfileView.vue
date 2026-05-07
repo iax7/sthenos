@@ -62,12 +62,7 @@ function cancel() {
           <label class="block text-sm font-medium text-gray-700 mb-2">
             {{ t('profile.name') }}
           </label>
-          <BaseInput
-            v-model="name"
-            :placeholder="t('profile.namePlaceholder')"
-            required
-            class="w-full"
-          />
+          <BaseInput v-model="name" :placeholder="t('profile.namePlaceholder')" required class="w-full" />
         </div>
 
         <!-- Gender -->
@@ -79,16 +74,14 @@ function cancel() {
             <label class="flex-1 cursor-pointer">
               <input type="radio" class="peer sr-only" value="M" v-model="gender" required />
               <span
-                class="block rounded-md px-4 py-2.5 text-center text-sm font-medium transition-all text-gray-600 hover:text-gray-900 peer-checked:bg-white peer-checked:text-gray-900 peer-checked:shadow-sm"
-              >
+                class="block rounded-md px-4 py-2.5 text-center text-sm font-medium transition-all text-gray-600 hover:text-gray-900 peer-checked:bg-white peer-checked:text-gray-900 peer-checked:shadow-sm">
                 {{ t('profile.male') }}
               </span>
             </label>
             <label class="flex-1 cursor-pointer">
               <input type="radio" class="peer sr-only" value="F" v-model="gender" required />
               <span
-                class="block rounded-md px-4 py-2.5 text-center text-sm font-medium transition-all text-gray-600 hover:text-gray-900 peer-checked:bg-white peer-checked:text-gray-900 peer-checked:shadow-sm"
-              >
+                class="block rounded-md px-4 py-2.5 text-center text-sm font-medium transition-all text-gray-600 hover:text-gray-900 peer-checked:bg-white peer-checked:text-gray-900 peer-checked:shadow-sm">
                 {{ t('profile.female') }}
               </span>
             </label>
@@ -100,13 +93,7 @@ function cancel() {
           <label class="block text-sm font-medium text-gray-700 mb-2">
             {{ t('profile.age') }}
           </label>
-          <BaseNumberStepper
-            v-model="age"
-            :min="11"
-            :max="120"
-            :step="1"
-            :label="t('profile.age')"
-          />
+          <BaseNumberStepper v-model="age" :min="11" :max="120" :step="1" :label="t('profile.age')" />
         </div>
 
         <!-- Actions -->

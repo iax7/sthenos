@@ -145,7 +145,8 @@ function save() {
         <label class="block text-sm font-medium text-gray-700 mb-2">
           {{ t('exercise.editor.date') }}
         </label>
-        <BaseInput v-model="date" type="date" required class="w-full" :class="{ 'ring-2 ring-red-400': dateConflict }" />
+        <BaseInput v-model="date" type="date" required class="w-full"
+          :class="{ 'ring-2 ring-red-400': dateConflict }" />
         <p v-if="dateConflict" class="mt-1 text-sm text-red-500">{{ t('exercise.editor.duplicateDate') }}</p>
       </div>
 
@@ -154,53 +155,22 @@ function save() {
         <label class="block text-sm font-medium text-gray-700 mb-2">
           {{ t("exercise.editor.cooperLaps") }}
         </label>
-        <BaseInput
-          v-model="laps"
-          type="number"
-          min="0"
-          step="0.5"
-          :placeholder="t('exercise.editor.count')"
-          class="w-full"
-        />
+        <BaseInput v-model="laps" type="number" min="0" step="0.5" :placeholder="t('exercise.editor.count')"
+          class="w-full" />
       </div>
 
       <!-- Exercises -->
       <div class="space-y-6">
-        <ExerciseMetricInput
-          label="Pull Ups"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="pullUps"
-          v-model:version="pullUpsVersion"
-          :versions="PULL_UP_VERSIONS"
-        />
-        <ExerciseMetricInput
-          label="Push Ups"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="pushUps"
-          v-model:version="pushUpsVersion"
-          :versions="PUSH_UP_VERSIONS"
-        />
-        <ExerciseMetricInput
-          label="Squats"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="squats"
-          v-model:version="squatsVersion"
-          :versions="SQUAT_VERSIONS"
-        />
-        <ExerciseMetricInput
-          label="V-Ups"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="vups"
-          v-model:version="vupsVersion"
-          :versions="VUP_VERSIONS"
-        />
-        <ExerciseMetricInput
-          label="Burpees"
-          :placeholder="t('exercise.editor.count')"
-          v-model:count="burpees"
-          v-model:version="burpeesVersion"
-          :versions="BURPEE_VERSIONS"
-        />
+        <ExerciseMetricInput label="Pull Ups" :placeholder="t('exercise.editor.count')" v-model:count="pullUps"
+          v-model:version="pullUpsVersion" :versions="PULL_UP_VERSIONS" />
+        <ExerciseMetricInput label="Push Ups" :placeholder="t('exercise.editor.count')" v-model:count="pushUps"
+          v-model:version="pushUpsVersion" :versions="PUSH_UP_VERSIONS" />
+        <ExerciseMetricInput label="Squats" :placeholder="t('exercise.editor.count')" v-model:count="squats"
+          v-model:version="squatsVersion" :versions="SQUAT_VERSIONS" />
+        <ExerciseMetricInput label="V-Ups" :placeholder="t('exercise.editor.count')" v-model:count="vups"
+          v-model:version="vupsVersion" :versions="VUP_VERSIONS" />
+        <ExerciseMetricInput label="Burpees" :placeholder="t('exercise.editor.count')" v-model:count="burpees"
+          v-model:version="burpeesVersion" :versions="BURPEE_VERSIONS" />
       </div>
 
       <!-- Actions -->

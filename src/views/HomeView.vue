@@ -36,7 +36,9 @@ const lastTest = computed(() => {
       class="mt-4 flex flex-col rounded-lg border border-gray-200 bg-white px-4 py-4 shadow-sm hover:bg-gray-50">
       <div class="flex items-center justify-between">
         <span class="text-lg font-semibold text-gray-800">{{ t('dashboard.table.title') }}</span>
-        <span class="text-sm text-gray-400 flex items-center gap-1">{{ tests.length }} {{ t('nav.entries') }} <ChevronRightIcon class="size-4" /></span>
+        <span class="text-sm text-gray-400 flex items-center gap-1">{{ tests.length }} {{ t('nav.entries') }}
+          <ChevronRightIcon class="size-4" />
+        </span>
       </div>
       <div v-if="lastTest" class="mt-3 flex items-end justify-between border-t border-gray-100 pt-3">
         <div class="flex flex-col">

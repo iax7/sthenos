@@ -14,33 +14,33 @@ const router = useRouter()
 const { t } = useI18n()
 
 function newEntry() {
-    router.push('/exercise/new')
+  router.push('/exercise/new')
 }
 function onViewTest(i) {
-    router.push(`/exercise/${i}`)
+  router.push(`/exercise/${i}`)
 }
 function onEditTest(i) {
-    router.push(`/exercise/${i}/edit`)
+  router.push(`/exercise/${i}/edit`)
 }
 function onDeleteTest(i) {
-    if (!confirm(t('dashboard.deleteConfirm'))) return
-    const ok = deleteTest(i)
-    if (ok) {
-        pushToast(t('dashboard.deleteSuccess'), 'success')
-    } else {
-        pushToast(t('dashboard.deleteFailure'), 'error')
-    }
+  if (!confirm(t('dashboard.deleteConfirm'))) return
+  const ok = deleteTest(i)
+  if (ok) {
+    pushToast(t('dashboard.deleteSuccess'), 'success')
+  } else {
+    pushToast(t('dashboard.deleteFailure'), 'error')
+  }
 }
 </script>
 
 <template>
-    <ViewContainer>
-        <div class="mb-4">
-            <BaseButton variant="secondary" @click="router.back()">
-                <ArrowLeftIcon class="size-5 mr-1" />
-                {{ t('app.back') }}
-            </BaseButton>
-        </div>
-        <HomeTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
-    </ViewContainer>
+  <ViewContainer>
+    <div class="mb-4">
+      <BaseButton variant="secondary" @click="router.back()">
+        <ArrowLeftIcon class="size-5 mr-1" />
+        {{ t('app.back') }}
+      </BaseButton>
+    </div>
+    <HomeTable :tests="tests" @view="onViewTest" @edit="onEditTest" @delete="onDeleteTest" @new="newEntry" />
+  </ViewContainer>
 </template>

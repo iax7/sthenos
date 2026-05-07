@@ -59,20 +59,14 @@ function goBack() {
       <!-- Grid responsivo: 1 columna en móvil, 2 en tablet, 3 en desktop -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
         <!-- Exercise Versions -->
-        <div
-          v-for="exercise in exerciseVersions"
-          :key="exercise.title"
-          class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm"
-        >
+        <div v-for="exercise in exerciseVersions" :key="exercise.title"
+          class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
           <h4 class="mb-3 font-semibold text-gray-800 text-sm border-b border-gray-300 pb-2">
             {{ t(exercise.title) }}
           </h4>
           <div class="space-y-0">
-            <div
-              v-for="version in exercise.versions"
-              :key="version.value"
-              class="flex items-center justify-between py-2 px-2 hover:bg-indigo-50 border-b border-gray-200 last:border-b-0 transition-colors"
-            >
+            <div v-for="version in exercise.versions" :key="version.value"
+              class="flex items-center justify-between py-2 px-2 hover:bg-indigo-50 border-b border-gray-200 last:border-b-0 transition-colors">
               <span class="text-xs text-gray-800 font-medium">{{ t(version.labelKey) }}</span>
               <span class="font-bold text-indigo-600 text-xs tabular-nums">
                 {{ Math.round(version.multiplier * 100) }}%
@@ -90,11 +84,8 @@ function goBack() {
             {{ t('settings.cooperMaxScore') }}: <span class="font-bold">{{ COOPER_MAX_SCORE }} pts</span>
           </p>
           <div class="space-y-0">
-            <div
-              v-for="level in cooperLevels"
-              :key="level.level"
-              class="flex items-center justify-between py-2 px-2 hover:bg-indigo-50 border-b border-gray-200 last:border-b-0 transition-colors"
-            >
+            <div v-for="level in cooperLevels" :key="level.level"
+              class="flex items-center justify-between py-2 px-2 hover:bg-indigo-50 border-b border-gray-200 last:border-b-0 transition-colors">
               <div class="flex items-center gap-2">
                 <CooperLevelIcon :level="level.level" :size="16" />
                 <span class="text-xs text-gray-800 font-medium">{{ t(level.labelKey) }}</span>
@@ -103,7 +94,8 @@ function goBack() {
                 <span class="font-bold text-indigo-600 text-xs tabular-nums">
                   {{ Math.round(level.multiplier * 100) }}%
                 </span>
-                <span class="text-xs text-gray-600 font-mono bg-gray-200 px-2 py-0.5 rounded tabular-nums font-semibold">
+                <span
+                  class="text-xs text-gray-600 font-mono bg-gray-200 px-2 py-0.5 rounded tabular-nums font-semibold">
                   {{ Math.round(COOPER_MAX_SCORE * level.multiplier) }} pts
                 </span>
               </div>
@@ -115,4 +107,3 @@ function goBack() {
 
   </ViewContainer>
 </template>
-

@@ -11,16 +11,12 @@ const base =
 </script>
 
 <template>
-  <button
-    :type="props.type"
-    :disabled="props.disabled"
-    :class="{
-      [base]: true,
-      'bg-blue-600 text-white hover:bg-blue-700': props.variant === 'primary',
-      'bg-gray-200 text-gray-700 hover:bg-gray-300': props.variant === 'secondary',
-      'bg-red-600 text-white hover:bg-red-700': props.variant === 'danger',
-    }"
-  >
+  <button :type="props.type" :disabled="props.disabled" :class="{
+    [base]: true,
+    'bg-blue-600 text-white hover:bg-blue-700': props.variant === 'primary',
+    'bg-gray-200 text-gray-700 hover:bg-gray-300': props.variant === 'secondary',
+    'bg-red-600 text-white hover:bg-red-700': props.variant === 'danger',
+  }">
     <slot />
   </button>
 </template>

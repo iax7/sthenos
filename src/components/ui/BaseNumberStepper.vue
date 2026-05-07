@@ -41,34 +41,15 @@ function dec() {
 
 <template>
   <div :class="[dark ? 'number-stepper-dark' : 'number-stepper', 'w-full']" :aria-label="label">
-    <button
-      type="button"
-      class="number-stepper-btn number-stepper-btn-fixed"
-      :disabled="disabled || current <= min"
-      @click="dec"
-      aria-label="Decrease"
-    >
+    <button type="button" class="number-stepper-btn number-stepper-btn-fixed" :disabled="disabled || current <= min"
+      @click="dec" aria-label="Decrease">
       -
     </button>
-    <input
-      class="number-stepper-input"
-      type="number"
-      :min="min"
-      :max="max"
-      :step="step"
-      :disabled="disabled"
-      :value="current"
-      @blur="set($event.target.value)"
-      @keydown.enter.prevent="$event.target.blur()"
-      aria-label="Numeric value"
-    />
-    <button
-      type="button"
-      class="number-stepper-btn number-stepper-btn-fixed"
-      :disabled="disabled || current >= max"
-      @click="inc"
-      aria-label="Increase"
-    >
+    <input class="number-stepper-input" type="number" :min="min" :max="max" :step="step" :disabled="disabled"
+      :value="current" @blur="set($event.target.value)" @keydown.enter.prevent="$event.target.blur()"
+      aria-label="Numeric value" />
+    <button type="button" class="number-stepper-btn number-stepper-btn-fixed" :disabled="disabled || current >= max"
+      @click="inc" aria-label="Increase">
       +
     </button>
   </div>

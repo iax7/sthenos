@@ -15,14 +15,6 @@ function onInput(e) {
 }
 </script>
 <template>
-  <input
-    :type="props.type"
-    :value="props.modelValue"
-    :placeholder="props.placeholder"
-    :disabled="props.disabled"
-    :min="props.min"
-    :required="props.required"
-    @input="onInput"
-    class="form-input w-full"
-  />
+  <input :type="props.type" :value="props.modelValue" :placeholder="props.placeholder" :disabled="props.disabled"
+    :min="props.min" :required="props.required" @input="onInput" class="form-input w-full" />
 </template>
