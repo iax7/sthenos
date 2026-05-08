@@ -1,39 +1,15 @@
 <script setup>
 import { ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
 import { Bars3Icon, CogIcon, HomeIcon, InformationCircleIcon, RectangleStackIcon } from '@heroicons/vue/24/outline'
 
 const { t } = useI18n()
 
 const menuOpen = ref(false)
-const router = useRouter()
-
-function goHome() {
-  menuOpen.value = false
-  router.push({ name: 'dashboard' })
-}
-
-function goToTests() {
-  menuOpen.value = false
-  router.push({ name: 'tests' })
-}
-
-function goToSettings() {
-  menuOpen.value = false
-  router.push({ name: 'settings' })
-}
-
-function goToInfo() {
-  menuOpen.value = false
-  router.push({ name: 'info' })
-}
 
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
 }
-
-// fetchUrl removed: moved to Settings view
 
 function closeOnOutside(e) {
   if (!menuOpen.value) return
@@ -62,33 +38,33 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
           <ul class="py-1 text-sm">
 
             <li>
-              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="goHome">
+              <RouterLink :to="{ name: 'home' }"
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100" @click="menuOpen = false">
                 <HomeIcon class="h-5 w-5" />
                 <span>{{ t('nav.home') }}</span>
-              </button>
+              </RouterLink>
             </li>
             <li>
-              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="goToTests">
+              <RouterLink :to="{ name: 'tests' }"
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100" @click="menuOpen = false">
                 <RectangleStackIcon class="h-5 w-5" />
                 <span>{{ t('nav.tests') }}</span>
-              </button>
+              </RouterLink>
             </li>
             <li>
-              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="goToInfo">
+              <RouterLink :to="{ name: 'info' }"
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100" @click="menuOpen = false">
                 <InformationCircleIcon class="h-5 w-5" />
                 <span>{{ t('nav.info') }}</span>
-              </button>
+              </RouterLink>
             </li>
             <hr class="my-1 border-gray-200" />
             <li>
-              <button type="button" class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100"
-                @click="goToSettings">
+              <RouterLink :to="{ name: 'settings' }"
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100" @click="menuOpen = false">
                 <CogIcon class="h-5 w-5" />
                 <span>{{ t('nav.settings') }}</span>
-              </button>
+              </RouterLink>
             </li>
 
           </ul>

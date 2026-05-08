@@ -1,22 +1,41 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import ProfileView from '@/views/ProfileView.vue'
 import HomeView from '@/views/HomeView.vue'
-import TestsView from '@/views/TestsView.vue'
-import ExerciseEdit from '@/views/ExerciseEdit.vue'
-import ExerciseView from '@/views/ExerciseView.vue'
-import SettingsView from '@/views/SettingsView.vue'
-import InfoView from '@/views/InfoView.vue'
 import { useProfileStore } from '@/composables/useProfileStore.js'
 
 const routes = [
-  { path: '/', name: 'dashboard', component: HomeView },
-  { path: '/tests', name: 'tests', component: TestsView },
-  { path: '/profile', name: 'profile', component: ProfileView },
-  { path: '/settings', name: 'settings', component: SettingsView, meta: { noProfile: true } },
-  { path: '/info', name: 'info', component: InfoView, meta: { noProfile: true } },
-  { path: '/exercise/new', name: 'exercise-new', component: ExerciseEdit },
-  { path: '/exercise/:index/edit', name: 'exercise-edit', component: ExerciseEdit, props: true },
-  { path: '/exercise/:index', name: 'exercise-view', component: ExerciseView, props: true },
+  { path: '/', name: 'home', component: HomeView },
+  { path: '/tests', name: 'tests', component: () => import('@/views/TestsView.vue') },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/ProfileView.vue'),
+    meta: { noProfile: true },
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('@/views/SettingsView.vue'),
+    meta: { noProfile: true },
+  },
+  {
+    path: '/info',
+    name: 'info',
+    component: () => import('@/views/InfoView.vue'),
+    meta: { noProfile: true },
+  },
+  { path: '/exercise/new', name: 'exercise-new', component: () => import('@/views/ExerciseEdit.vue') },
+  {
+    path: '/exercise/:index/edit',
+    name: 'exercise-edit',
+    component: () => import('@/views/ExerciseEdit.vue'),
+    props: true,
+  },
+  {
+    path: '/exercise/:index',
+    name: 'exercise-view',
+    component: () => import('@/views/ExerciseView.vue'),
+    props: true,
+  },
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
@@ -31,20 +50,11 @@ router.beforeEach((to) => {
     const { profile } = useProfileStore()
     const hasProfile = !!profile.value && !!profile.value.name
 
-    // Always allow navigating to the profile form itself
-    if (to.name === 'profile') {
+    if (to.meta.noProfile || hasProfile) {
       return
     }
 
-    // If route explicitly allows no profile via meta.noProfile, allow it
-    if (to.meta && to.meta.noProfile === true) {
-      return
-    }
-
-    // Otherwise, protect routes when no profile exists
-    if (!hasProfile) {
-      return { name: 'profile' }
-    }
+    return { name: 'profile' }
   } catch {
     return { name: 'profile' }
   }
