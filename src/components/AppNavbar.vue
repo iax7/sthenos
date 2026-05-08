@@ -39,21 +39,24 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
 
             <li>
               <RouterLink :to="{ name: 'home' }"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100" @click="menuOpen = false">
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 router-nav-link"
+                @click="menuOpen = false">
                 <HomeIcon class="h-5 w-5" />
                 <span>{{ t('nav.home') }}</span>
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="{ name: 'tests' }"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100" @click="menuOpen = false">
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 router-nav-link"
+                @click="menuOpen = false">
                 <RectangleStackIcon class="h-5 w-5" />
                 <span>{{ t('nav.tests') }}</span>
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="{ name: 'info' }"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100" @click="menuOpen = false">
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 router-nav-link"
+                @click="menuOpen = false">
                 <InformationCircleIcon class="h-5 w-5" />
                 <span>{{ t('nav.info') }}</span>
               </RouterLink>
@@ -61,7 +64,8 @@ onUnmounted(() => document.removeEventListener('click', closeOnOutside))
             <hr class="my-1 border-gray-200" />
             <li>
               <RouterLink :to="{ name: 'settings' }"
-                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100" @click="menuOpen = false">
+                class="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 router-nav-link"
+                @click="menuOpen = false">
                 <CogIcon class="h-5 w-5" />
                 <span>{{ t('nav.settings') }}</span>
               </RouterLink>
