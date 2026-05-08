@@ -2,7 +2,6 @@
 import { computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseInput from './BaseInput.vue'
-import BaseSelect from './BaseSelect.vue'
 
 const props = defineProps({
   label: { type: String, required: true },
@@ -44,15 +43,21 @@ watch(
 
 <template>
   <div>
-    <label class="block text-sm font-medium text-gray-700 mb-2">{{ label }}</label>
-    <div class="grid grid-cols-2 gap-3">
-      <BaseInput v-model="numberValue" :min="min" type="number" :placeholder="placeholder" class="w-full" />
-      <BaseSelect v-model="versionValue" required :disabled="versions.length <= 1" class="w-full">
-        <option v-for="v in versions" :key="typeof v === 'string' ? v : v.value"
-          :value="typeof v === 'string' ? v : v.value">
+    <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">{{ label }}</label>
+    <div class="flex flex-col gap-2 md:flex-row md:gap-3 md:items-center">
+      <div class="w-full md:w-28 md:shrink-0">
+        <BaseInput v-model="numberValue" :min="min" type="number" :placeholder="placeholder" />
+      </div>
+      <div v-if="versions.length > 1"
+        class="inline-flex rounded-md border border-gray-300 overflow-hidden bg-white shadow-sm w-full md:flex-1">
+        <button v-for="v in versions" :key="typeof v === 'string' ? v : v.value" type="button"
+          class="flex-1 px-1 md:px-2 py-2 text-xs font-medium transition border-r border-gray-300 last:border-r-0 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+          :class="versionValue === (typeof v === 'string' ? v : v.value)
+            ? (typeof v === 'string' ? v : v.value) === 'c' ? 'bg-emerald-600 text-white' : 'bg-orange-500 text-white'
+            : 'bg-white text-gray-700 hover:bg-gray-50'" @click="versionValue = typeof v === 'string' ? v : v.value">
           {{ typeof v === 'string' ? v : v.labelKey ? t(v.labelKey) : v.label }}
-        </option>
-      </BaseSelect>
+        </button>
+      </div>
     </div>
   </div>
 </template>

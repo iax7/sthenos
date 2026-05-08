@@ -79,7 +79,7 @@
       "date": "Fecha",
       "test": "Prueba",
       "count": "Cantidad",
-      "cooperLaps": "Vueltas Cooper (en 12 minutos)",
+      "cooperLaps": "Vueltas Cooper",
       "cooperTest": "Prueba Cooper",
       "totalPoints": "Puntos totales",
       "duplicateDate": "Ya existe una prueba para esta fecha."

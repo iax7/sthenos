@@ -221,10 +221,11 @@ const exercisesScore = computed(() => {
                 <p class="text-3xl font-bold text-blue-600">{{ exerciseData.cooper.km }} km</p>
               </div>
               <div :hidden="exerciseData.cooper.laps <= 0">
-                <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide shadow whitespace-nowrap" :style="{
-                  backgroundColor: cooperLevelStyle.backgroundColor,
-                  color: cooperLevelStyle.color
-                }">
+                <span class="rounded-lg px-4 py-2 text-sm font-bold uppercase tracking-wide shadow whitespace-nowrap"
+                  :style="{
+                    backgroundColor: cooperLevelStyle.backgroundColor,
+                    color: cooperLevelStyle.color
+                  }">
                   {{ t(cooperLevelStyle.labelKey) }}
                 </span>
               </div>
@@ -260,7 +261,7 @@ const exercisesScore = computed(() => {
             <div class="w-px h-4 bg-gray-200 shrink-0"></div>
             <span class="w-14 text-right text-sm font-mono font-bold text-blue-600 tabular-nums shrink-0">{{
               exerciseData.exercises[key].points
-            }}<span class="text-xs font-medium text-blue-400 ml-0.5">pts</span></span>
+              }}<span class="text-xs font-medium text-blue-400 ml-0.5">pts</span></span>
           </div>
         </div>
       </AppCard>

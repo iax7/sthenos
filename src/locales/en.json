@@ -79,7 +79,7 @@
       "date": "Date",
       "test": "Test",
       "count": "Count",
-      "cooperLaps": "Cooper Laps (in 12 minutes)",
+      "cooperLaps": "Cooper Laps",
       "cooperTest": "Cooper Test",
       "totalPoints": "Total points",
       "duplicateDate": "A test for this date already exists."

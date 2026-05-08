@@ -142,7 +142,7 @@ function save() {
     <form @submit.prevent="save" class="space-y-6">
       <!-- Date -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
+        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">
           {{ t('exercise.editor.date') }}
         </label>
         <BaseInput v-model="date" type="date" required class="w-full"
@@ -152,7 +152,7 @@ function save() {
 
       <!-- Cooper Test -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
+        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">
           {{ t("exercise.editor.cooperLaps") }}
         </label>
         <BaseInput v-model="laps" type="number" min="0" step="0.5" :placeholder="t('exercise.editor.count')"
