@@ -8,7 +8,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -191,3 +192,7 @@ stats.html
 
 .idea
 
+# Playwright E2E testing
+test-results/
+playwright-report/
+.playwright/
