@@ -39,7 +39,7 @@ const routes = [
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
-export const router = createRouter({
+const router = createRouter({
   history: createWebHashHistory(),
   routes,
 })
@@ -59,3 +59,5 @@ router.beforeEach((to) => {
     return { name: 'profile' }
   }
 })
+
+export default router
