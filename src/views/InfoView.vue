@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
-import CooperLevelIcon from '@/components/icons/CooperLevelIcon.vue'
+import CooperLevelDot from '@/components/CooperLevelDot.vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
 import {
   PULL_UP_VERSIONS,
@@ -87,7 +87,7 @@ function goBack() {
             <div v-for="level in cooperLevels" :key="level.level"
               class="flex items-center justify-between py-2 px-2 hover:bg-indigo-50 border-b border-gray-200 last:border-b-0 transition-colors">
               <div class="flex items-center gap-2">
-                <CooperLevelIcon :level="level.level" :size="16" />
+                <CooperLevelDot :level="level.level" :size="16" />
                 <span class="text-xs text-gray-800 font-medium">{{ t(level.labelKey) }}</span>
               </div>
               <div class="flex items-center gap-2">
