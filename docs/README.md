@@ -12,4 +12,8 @@ Save one test at a time, view results and take screenshots.
 Save many tests as you want. Detailed Test View and Scoring System
 
 ![v2 main](./img/v2-main.png)
-![v2 view test](./img/v2-view.png)
+![v2 mobile views](./img/v2-mobile.png)
+
+## v2.1.0
+
+![v2.1 mobile views](./img/v2.1-mobile.png)
