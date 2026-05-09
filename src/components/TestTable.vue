@@ -100,7 +100,7 @@ const groupedByYear = computed(() => {
               <PencilIcon class="size-5" />
             </button>
             <button type="button" class="icon-btn text-red-400 hover:text-red-600 hover:bg-red-50"
-              :aria-label="t('dashboard.table.actions.delete')" @click="$emit('delete', item.data._idx)">
+              :aria-label="t('dashboard.table.actions.delete')" @click="$emit('delete', { idx: item.data._idx, score: item.data._score, date: item.data.date, parts: item.data._parts })">
               <TrashIcon class="size-5" />
             </button>
           </div>

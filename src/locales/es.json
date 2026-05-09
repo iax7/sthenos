@@ -3,7 +3,8 @@
     "back": "Regresar",
     "save": "Guardar",
     "update": "Actualizar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "delete": "Eliminar"
   },
   "profile": {
     "title": "Perfil",
@@ -32,7 +33,7 @@
     "profileImported": "Perfil importado",
     "importFailed": "Error al importar",
     "invalidJson": "Archivo JSON inválido",
-    "clearConfirm": "¿Borrar todos los datos de perfil locales?",
+    "clearConfirm": "¿Borrar todos tus datos?",
     "localDataCleared": "Datos locales borrados",
     "fetchUrl": "Obtener datos desde enlace",
     "settings": "Ajustes",

@@ -24,6 +24,7 @@ import BaseInput from '@/components/ui/BaseInput.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import AppVersion from '@/components/AppVersion.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
+import ConfirmModal from '@/components/ui/ConfirmModal.vue'
 import {
   ArrowLeftIcon,
   ArrowDownTrayIcon,
@@ -48,6 +49,8 @@ const {
   clearProfile,
 } = useProfileStore()
 const { pushToast } = useToasts()
+
+const clearModalOpen = ref(false)
 const fileInput = ref(null)
 
 const url = ref(getLastImportUrl() || '')
@@ -98,11 +101,13 @@ function goBack() {
 }
 
 function confirmClear() {
-  if (window.confirm(t('nav.clearConfirm'))) {
-    clearProfile()
-    pushToast(t('nav.localDataCleared'), 'success')
-    router.push('/profile')
-  }
+  clearModalOpen.value = true
+}
+
+function onClearConfirmed() {
+  clearProfile()
+  pushToast(t('nav.localDataCleared'), 'success')
+  router.push('/profile')
 }
 
 /**
@@ -384,5 +389,11 @@ function handleFileChange(e) {
     </AppCard>
 
     <AppVersion />
+
+    <ConfirmModal v-model:open="clearModalOpen" :title="t('nav.clearConfirm')"
+      :message="t('settings.clearDataDescription')" confirm-variant="danger"
+      :confirm-label="t('settings.clearDataButton')" @confirm="onClearConfirmed">
+      <template #cancel-label>{{ t('app.cancel') }}</template>
+    </ConfirmModal>
   </ViewContainer>
 </template>
