@@ -1,4 +1,5 @@
 <script setup>
+import BaseButton from './BaseButton.vue'
 import { useToasts } from '@/composables/useToasts.js'
 const { toasts, removeToast } = useToasts()
 </script>
@@ -11,7 +12,7 @@ const { toasts, removeToast } = useToasts()
       t.variant === 'error' ? 'border-red-300 bg-red-50 text-red-800' : ''
     ]">
       <span class="grow">{{ t.message }}</span>
-      <button type="button" class="icon-btn" aria-label="Close" @click="removeToast(t.id)">✕</button>
+      <BaseButton variant="icon" aria-label="Close" @click="removeToast(t.id)">✕</BaseButton>
     </div>
   </div>
 </template>

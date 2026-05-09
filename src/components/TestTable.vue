@@ -82,7 +82,7 @@ const groupedByYear = computed(() => {
             <div class="font-semibold text-gray-800 capitalize leading-tight">
               {{ item.data._parts.month
               }}<span v-if="item.data._parts.day" class="ml-1 text-sm font-normal text-gray-400">{{ item.data._parts.day
-                }}</span>
+              }}</span>
             </div>
           </div>
 
@@ -95,14 +95,15 @@ const groupedByYear = computed(() => {
 
           <!-- Actions -->
           <div class="flex items-center gap-1 shrink-0" @click.stop>
-            <button type="button" class="icon-btn" :aria-label="t('dashboard.table.actions.edit')"
+            <BaseButton variant="icon" :aria-label="t('dashboard.table.actions.edit')"
               @click="$emit('edit', item.data._idx)">
               <PencilIcon class="size-5" />
-            </button>
-            <button type="button" class="icon-btn text-red-400 hover:text-red-600 hover:bg-red-50"
-              :aria-label="t('dashboard.table.actions.delete')" @click="$emit('delete', { idx: item.data._idx, score: item.data._score, date: item.data.date, parts: item.data._parts })">
+            </BaseButton>
+            <BaseButton variant="icon" class="text-red-400 hover:text-red-600 hover:bg-red-50"
+              :aria-label="t('dashboard.table.actions.delete')"
+              @click="$emit('delete', { idx: item.data._idx, score: item.data._score, date: item.data.date, parts: item.data._parts })">
               <TrashIcon class="size-5" />
-            </button>
+            </BaseButton>
           </div>
 
           <ChevronRightIcon class="size-4 text-gray-400 shrink-0" />

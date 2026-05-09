@@ -69,7 +69,9 @@ watchEffect(async () => {
       </h1>
       <p class="text-sm text-gray-500" v-if="profile">
         {{ genderLabel }}<template v-if="currentAge !== null"> · {{ t("profile.age") }}: {{ currentAge }}</template> ·
-        <router-link to="/profile" class="link-edit">{{ t("profile.edit") }}</router-link>
+        <router-link to="/profile"
+          class="text-sm text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline cursor-pointer select-none">{{
+            t("profile.edit") }}</router-link>
       </p>
     </div>
   </div>
