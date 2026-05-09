@@ -1,13 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  appendTest,
   createTestMetric,
-  deleteTest,
-  getProfileData,
-  importProfile,
-  loadProfile,
-  saveProfile,
-  updateTest,
   useProfileStore,
   ageAtDate,
 } from '@/composables/useProfileStore'
@@ -97,12 +90,12 @@ describe('useProfileStore', () => {
   })
 
   it('importProfile rejects invalid structures', () => {
-    const result = importProfile({ name: 'Sam', gender: 'X', dob: '1997-05-01' })
+    const result = store.importProfile({ name: 'Sam', gender: 'X', dob: '1997-05-01' })
     expect(result.ok).toBe(false)
   })
 
   it('importProfile normalizes cooper and stores profile', () => {
-    const result = importProfile({
+    const result = store.importProfile({
       name: 'Sam',
       gender: 'F',
       dob: '1997-05-01',
@@ -158,17 +151,17 @@ describe('useProfileStore', () => {
     expect(loaded).not.toHaveProperty('age')
   })
 
-  it('legacy exports operate on storage', () => {
+  it('storage persistence works correctly', () => {
     localStorage.clear()
-    saveProfile(createBaseProfile())
-    appendTest(testEntry)
+    store.saveProfile(createBaseProfile())
+    store.appendTest(testEntry)
 
-    const loaded = loadProfile()
+    const loaded = store.loadProfile()
     expect(loaded.tests.length).toBe(1)
 
-    updateTest(0, { ...testEntry, cooper: 2300 })
-    expect(JSON.parse(getProfileData()).tests[0].cooper).toBe(2300)
+    store.updateTest(0, { ...testEntry, cooper: 2300 })
+    expect(JSON.parse(store.getProfileData()).tests[0].cooper).toBe(2300)
 
-    expect(deleteTest(0)).toBe(true)
+    expect(store.deleteTest(0)).toBe(true)
   })
 })

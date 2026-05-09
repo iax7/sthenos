@@ -101,10 +101,6 @@ function saveToStorage(data) {
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized))
   profile.value = normalized
-  // Dispatch event for backward compatibility
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('profile-updated'))
-  }
   return normalized
 }
 
@@ -162,9 +158,6 @@ export function useProfileStore() {
   function clearProfile() {
     localStorage.removeItem(STORAGE_KEY)
     profile.value = null
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('profile-updated'))
-    }
   }
 
   /**
@@ -385,119 +378,4 @@ export function ageAtDate(dob, testDate) {
   const m = test.getUTCMonth() - birth.getUTCMonth()
   if (m < 0 || (m === 0 && test.getUTCDate() < birth.getUTCDate())) age--
   return age < 0 ? 0 : age
-}
-
-// Legacy exports for backward compatibility
-// These can be removed once all components migrate to the composable
-export function loadProfile() {
-  return loadFromStorage()
-}
-
-export function saveProfile(data) {
-  const result = saveToStorage(data)
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('profile-updated'))
-  }
-  return result
-}
-
-export function clearProfile() {
-  localStorage.removeItem(STORAGE_KEY)
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('profile-updated'))
-  }
-}
-
-export function appendTest(partial) {
-  const currentProfile = loadFromStorage() || DEFAULT_PROFILE
-  const entry = {
-    date: typeof partial.date === 'string' ? partial.date : new Date().toISOString().slice(0, 10),
-    pullup: partial.pullup,
-    pushup: partial.pushup,
-    squats: partial.squats,
-    vups: partial.vups,
-    burpees: partial.burpees,
-    cooper: partial.cooper,
-  }
-  currentProfile.tests.push(entry)
-  currentProfile.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)))
-  saveProfile(currentProfile)
-  return entry
-}
-
-export function updateTest(index, partial) {
-  const currentProfile = loadFromStorage()
-  if (
-    !currentProfile ||
-    !Array.isArray(currentProfile.tests) ||
-    index < 0 ||
-    index >= currentProfile.tests.length
-  )
-    return null
-  const current = currentProfile.tests[index]
-  const updated = {
-    date: typeof partial.date === 'string' ? partial.date : current.date,
-    pullup: partial.pullup,
-    pushup: partial.pushup,
-    squats: partial.squats,
-    vups: partial.vups,
-    burpees: partial.burpees,
-    cooper: partial.cooper,
-  }
-  currentProfile.tests.splice(index, 1, updated)
-  currentProfile.tests.sort((a, b) => String(a.date).localeCompare(String(b.date)))
-  saveProfile(currentProfile)
-  return updated
-}
-
-export function deleteTest(index) {
-  const currentProfile = loadFromStorage()
-  if (
-    !currentProfile ||
-    !Array.isArray(currentProfile.tests) ||
-    index < 0 ||
-    index >= currentProfile.tests.length
-  )
-    return false
-  currentProfile.tests.splice(index, 1)
-  saveProfile(currentProfile)
-  return true
-}
-
-export function getProfileData() {
-  const currentProfile = loadFromStorage()
-  return JSON.stringify(currentProfile || DEFAULT_PROFILE, null, 2)
-}
-
-export function importProfile(data) {
-  if (!isValidProfileShape(data)) {
-    return { ok: false, error: 'Invalid profile structure' }
-  }
-  if (Array.isArray(data.tests)) {
-    data.tests = data.tests.map((t) => ({
-      date: typeof t.date === 'string' ? t.date : new Date().toISOString().slice(0, 10),
-      pullup: t.pullup,
-      pushup: t.pushup,
-      squats: t.squats,
-      vups: t.vups,
-      burpees: t.burpees,
-      cooper: Number(t.cooper) || 0,
-    }))
-  }
-  // Migrate: synthesize dob from legacy age field if needed
-  let dob = (data.dob || '').trim()
-  if (!dob && data.age) {
-    const legacyAge = Number(data.age)
-    if (!isNaN(legacyAge) && legacyAge > 0) {
-      dob = `${new Date().getFullYear() - legacyAge}-01-01`
-    }
-  }
-  const stored = saveProfile({
-    name: data.name,
-    gender: data.gender,
-    email: (data.email || '').trim(),
-    dob,
-    tests: Array.isArray(data.tests) ? data.tests : [],
-  })
-  return { ok: true, profile: stored }
 }

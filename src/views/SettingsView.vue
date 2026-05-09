@@ -208,9 +208,7 @@ async function fetchFromUrl() {
           void e
         }
         pushToast(t('nav.profileImported'), 'success')
-        if (router.currentRoute.value.path === '/') {
-          window.dispatchEvent(new CustomEvent('profile-updated'))
-        } else {
+        if (router.currentRoute.value.path !== '/') {
           router.replace('/')
         }
       } else {
@@ -282,9 +280,7 @@ function handleFileChange(e) {
       const result = importProfile(parsed)
       if (result.ok) {
         pushToast(t('nav.profileImported'), 'success')
-        if (router.currentRoute.value.path === '/') {
-          window.dispatchEvent(new CustomEvent('profile-updated'))
-        } else {
+        if (router.currentRoute.value.path !== '/') {
           router.push('/')
         }
       } else {
