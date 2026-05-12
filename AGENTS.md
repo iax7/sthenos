@@ -39,18 +39,18 @@
 ## Developer Workflows
 
 ```bash
-npm install         # Install dependencies
-npm run dev         # Start Vite dev server with hot reload
-npm run build       # Production build (outputs to dist/)
-npm run preview     # Preview production build locally
-npm run lint        # ESLint with auto-fix
-npm run format      # Prettier formatting on src/
-npm run test        # Run Vitest unit tests
-npm run test:watch  # Vitest in watch mode
-npm run test:ui     # Vitest with browser UI
+pnpm install        # Install dependencies
+pnpm dev            # Start Vite dev server with hot reload
+pnpm build          # Production build (outputs to dist/)
+pnpm preview        # Preview production build locally
+pnpm lint           # ESLint with auto-fix
+pnpm format         # Prettier formatting on src/
+pnpm test           # Run Vitest unit tests
+pnpm test:watch     # Vitest in watch mode
+pnpm test:ui        # Vitest with browser UI
 ```
 
-**Tests** live in `src/tests/`. Run a single test file: `npx vitest src/tests/useProfileStore.test.js`.
+**Tests** live in `src/tests/`. Run a single test file: `pnpm vitest src/tests/useProfileStore.test.js`.
 
 ## Data Model
 

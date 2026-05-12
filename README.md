@@ -36,7 +36,7 @@ Profile data is accessed via the `useProfileStore` composable:
 ## Development
 
 ```bash
-npm install
-npm run dev
-npm run build
+pnpm install
+pnpm dev
+pnpm build
 ```
