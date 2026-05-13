@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useProfileStore } from '@/composables/useProfileStore.js'
+import { useProfileStore } from '@/stores/useProfileStore.js'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import TestTable from '@/components/TestTable.vue'

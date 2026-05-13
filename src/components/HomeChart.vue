@@ -24,7 +24,7 @@ import {
   EXERCISES,
   getExerciseType,
 } from "@/services/exercises.js";
-import { useProfileStore } from "@/composables/useProfileStore.js";
+import { useProfileStore } from '@/stores/useProfileStore.js';
 import { getGradientColors } from "@/services/chartColors.js";
 
 const { tests } = useProfileStore();

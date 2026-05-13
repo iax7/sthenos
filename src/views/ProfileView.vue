@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToasts } from '@/composables/useToasts.js'
-import { useProfileStore, ageAtDate, todayISO } from '@/composables/useProfileStore.js'
+import { useProfileStore, ageAtDate, todayISO } from '@/stores/useProfileStore.js'
 import { useRouter } from 'vue-router'
 import AppCard from '@/components/ui/AppCard.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'

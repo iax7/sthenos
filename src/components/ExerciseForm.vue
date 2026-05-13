@@ -5,7 +5,7 @@ import AppCard from "@/components/ui/AppCard.vue";
 import BaseInput from "@/components/ui/BaseInput.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import ExerciseMetricInput from "@/components/ui/ExerciseMetricInput.vue";
-import { useProfileStore } from "@/composables/useProfileStore.js";
+import { useProfileStore } from "@/stores/useProfileStore.js";
 import { useToasts } from "@/composables/useToasts.js";
 import {
   PULL_UP_VERSIONS,

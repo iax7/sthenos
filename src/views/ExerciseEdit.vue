@@ -5,7 +5,7 @@ import ExerciseForm from '@/components/ExerciseForm.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
 import { ArrowLeftIcon, EyeIcon } from '@heroicons/vue/24/outline'
-import { useProfileStore } from '@/composables/useProfileStore.js'
+import { useProfileStore } from '@/stores/useProfileStore.js'
 
 const route = useRoute()
 const router = useRouter()

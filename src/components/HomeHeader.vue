@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
-import { ageAtDate, todayISO } from "@/composables/useProfileStore.js";
+import { ageAtDate, todayISO } from "@/stores/useProfileStore.js";
 
 async function sha256hex(str) {
   const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))

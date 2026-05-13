@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
-import { useProfileStore } from '@/composables/useProfileStore.js'
+import { useProfileStore } from '@/stores/useProfileStore.js'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },

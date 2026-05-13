@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useProfileStore, ageAtDate } from '@/composables/useProfileStore.js'
+import { useProfileStore, ageAtDate } from '@/stores/useProfileStore.js'
 import { useI18n } from 'vue-i18n'
 import HomeChart from '@/components/HomeChart.vue'
 import HomeHeader from '@/components/HomeHeader.vue'

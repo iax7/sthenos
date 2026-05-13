@@ -3,7 +3,7 @@ import {
   createTestMetric,
   useProfileStore,
   ageAtDate,
-} from '@/composables/useProfileStore'
+} from '@/stores/useProfileStore'
 
 const createBaseProfile = () => ({
   name: 'Taylor',

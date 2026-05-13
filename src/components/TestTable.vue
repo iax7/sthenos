@@ -3,8 +3,8 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import { toMeters, evaluateCooper } from "@/services/cooper";
-import { useProfileStore } from "@/composables/useProfileStore.js";
-import { ageAtDate } from "@/composables/useProfileStore.js";
+import { useProfileStore } from "@/stores/useProfileStore.js";
+import { ageAtDate } from "@/stores/useProfileStore.js";
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
 import { calculateTotalScore } from "../services/exercises";
 
@@ -82,7 +82,7 @@ const groupedByYear = computed(() => {
             <div class="font-semibold text-gray-800 capitalize leading-tight">
               {{ item.data._parts.month
               }}<span v-if="item.data._parts.day" class="ml-1 text-sm font-normal text-gray-400">{{ item.data._parts.day
-              }}</span>
+                }}</span>
             </div>
           </div>
 
