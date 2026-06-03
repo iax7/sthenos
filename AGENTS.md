@@ -11,30 +11,34 @@
 ## Architecture & Data Flow
 
 - **Single source of truth:** All profile and test data is accessed via the `useProfileStore` composable. Never mutate state directly.
+- **Store** (`src/stores/`):
+  - `useProfileStore.js`: Reactive profile/test state with full CRUD, import/export, and localStorage persistence. Also exports `ageAtDate(dob, date)` helper.
 - **Composables** (`src/composables/`):
-  - `useProfileStore.js`: Reactive profile/test state with full CRUD, import/export, and localStorage persistence.
   - `useToasts.js`: Ephemeral toast notification system.
 - **Views** (`src/views/`):
-  - `HomeView.vue`: Dashboard — summary, chart, test table.
+  - `HomeView.vue`: Dashboard — summary, chart, last test overview.
+  - `TestsView.vue`: Full test history table with delete support.
   - `ProfileView.vue`: Profile creation/edit.
   - `ExerciseEdit.vue`: Add or edit a test entry.
   - `ExerciseView.vue`: Read-only detail view for a single entry.
   - `SettingsView.vue` / `InfoView.vue`: App settings and info pages.
 - **Components** (`src/components/`):
-  - `HomeTable.vue`: Test entries table with edit/delete.
+  - `TestTable.vue`: Test entries table with edit/delete (used in `TestsView`).
   - `HomeChart.vue` / `HomeChartStats.vue`: Chart.js metric chart and stats.
+  - `HomeHeader.vue`: Dashboard header with profile summary.
+  - `CooperLevelDot.vue`: Visual indicator for Cooper test fitness level.
   - `ExerciseForm.vue`: Shared form fields for exercise entries.
   - `AppNavbar.vue`, `AppVersion.vue`: Shell components.
-  - UI primitives in `components/ui/`: `BaseButton`, `BaseInput`, `BaseNumberStepper`, `BaseSelect`, `AppCard`, `AppFooter`, `ExerciseCell`, `ExerciseMetricInput`, `ToastContainer`, `ViewContainer`.
+  - UI primitives in `components/ui/`: `BaseButton`, `BaseInput`, `AppCard`, `AppFooter`, `ExerciseMetricInput`, `ToastContainer`, `ViewContainer`, `ConfirmModal`.
 - **Services** (`src/services/`):
   - `exercises.js`: Exercise metadata and point calculations.
   - `exerciseVersions.js`: Version multipliers (e.g., assisted vs strict).
   - `exerciseCollectionService.js`: Aggregation helpers for exercise collections.
   - `cooper.js`: Cooper test fitness level evaluation (1–5 scale).
   - `chartColors.js`: Color palette for chart metrics.
-- **Routing** (`src/router.js`): Hash-based routing (required for GitHub Pages).
+- **Routing** (`src/router/index.js`): Hash-based routing (required for GitHub Pages).
   - Route guard redirects to `/profile` unless `meta.noProfile: true`.
-  - Routes: `/` (dashboard), `/profile`, `/settings`, `/info`, `/exercise/new`, `/exercise/:index/edit`, `/exercise/:index`.
+  - Routes: `/` (dashboard), `/tests`, `/profile`, `/settings`, `/info`, `/exercise/new`, `/exercise/:index/edit`, `/exercise/:index`.
 
 ## Developer Workflows
 
@@ -48,9 +52,13 @@ pnpm format         # Prettier formatting on src/
 pnpm test           # Run Vitest unit tests
 pnpm test:watch     # Vitest in watch mode
 pnpm test:ui        # Vitest with browser UI
+pnpm test:e2e       # Run Playwright e2e tests
+pnpm test:e2e:ui    # Playwright with browser UI
+pnpm test:e2e:headed  # Playwright in headed mode
 ```
 
-**Tests** live in `src/tests/`. Run a single test file: `pnpm vitest src/tests/useProfileStore.test.js`.
+**Unit tests** live in `src/tests/`. Run a single test file: `pnpm vitest src/tests/useProfileStore.test.js`.
+**E2E tests** live in `tests/e2e/` (Playwright).
 
 ## Data Model
 
@@ -59,22 +67,24 @@ pnpm test:ui        # Vitest with browser UI
 {
   name: String,
   gender: 'M' | 'F',
-  age: Number,
+  dob: String,   // ISO date: 'YYYY-MM-DD' (replaces legacy `age` field; migrated on load)
+  email: String, // optional
   tests: [{ date: 'YYYY-MM-DD', pullup, pushup, squats, vups, burpees, cooper }]
 }
 // Each exercise (except cooper): { reps: Number, version: String }
-// cooper: Number (distance/laps)
+// cooper: Number (distance in meters or laps)
 ```
 
 ## Patterns & Conventions
 
-- **State access:** `const { profile, tests, saveProfile } = useProfileStore()`
+- **State access:** `const { profile, tests, saveProfile } = useProfileStore()` — import from `@/stores/useProfileStore.js`
 - **Import/Export:** Export triggers JSON download; import replaces profile+tests after validation.
 - **Clear:** Removes `user_profile_v1` from localStorage and redirects to `/profile`.
 - **Toasts:** `import { useToasts } from '@/composables/useToasts.js'` → `pushToast('message', 'success' | 'error')`.
 - **i18n:** Auto-detects browser language (English/Spanish fallback). `$t('key')` in templates; `const { t } = useI18n()` in `<script setup>`. Translations: `src/locales/en.json`, `src/locales/es.json`.
 - **Tailwind CSS:** Inline utility classes; minimal use of `@apply`.
 - **Readonly state:** Composables expose `readonly(profile)` to prevent accidental mutations.
+- **Icons:** Use `@heroicons/vue/24/outline` (e.g., `import { ArrowLeftIcon } from '@heroicons/vue/24/outline'`).
 
 ## Code Style
 
@@ -86,8 +96,8 @@ pnpm test:ui        # Vitest with browser UI
 
 ## Key Files
 
-- `src/composables/useProfileStore.js`: Single source of truth
-- `src/router.js`: All routes and navigation guard
+- `src/stores/useProfileStore.js`: Single source of truth
+- `src/router/index.js`: All routes and navigation guard
 - `src/locales/en.json` + `es.json`: i18n strings
 - `src/App.vue`: Mounts global containers (ToastContainer, etc.)
 

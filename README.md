@@ -2,7 +2,7 @@
 
 [Live Site](https://iax7.github.io/sthenos/)
 
-Sthenos is a lightweight single-page app for tracking a fitness profile (name, gender, age) and a series of exercise test entries (pull-ups, push-ups, squats, v-ups, burpees, Cooper laps). All data is stored locally in the browser via `localStorage` under a single key.
+Sthenos is a lightweight single-page app for tracking a fitness profile (name, gender, date of birth) and a series of exercise test entries (pull-ups, push-ups, squats, v-ups, burpees, Cooper laps). All data is stored locally in the browser via `localStorage` under a single key.
 
 ## Technology
 
@@ -18,7 +18,8 @@ Profile data is accessed via the `useProfileStore` composable:
 {
   name: String,
   gender: 'M' | 'F',
-  age: Number,
+  dob: String,     // ISO date: 'YYYY-MM-DD' (replaces legacy `age` field; migrated on load)
+  email: String,   // optional
   tests: [
     {
       date: 'YYYY-MM-DD',
