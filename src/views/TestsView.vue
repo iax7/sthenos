@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useProfileStore } from '@/stores/useProfileStore.js'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -10,7 +11,9 @@ import ConfirmModal from '@/components/ui/ConfirmModal.vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
 import { useToasts } from '@/composables/useToasts.js'
 
-const { tests, deleteTest } = useProfileStore()
+const store = useProfileStore()
+const { tests } = storeToRefs(store)
+const { deleteTest } = store
 const { pushToast } = useToasts()
 const router = useRouter()
 const { t } = useI18n()

@@ -1,11 +1,12 @@
 <script setup>
 import { ref, computed, watch } from "vue";
+import { storeToRefs } from 'pinia';
 import { useI18n } from "vue-i18n";
 import AppCard from "@/components/ui/AppCard.vue";
 import BaseInput from "@/components/ui/BaseInput.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import ExerciseMetricInput from "@/components/ui/ExerciseMetricInput.vue";
-import { useProfileStore } from "@/stores/useProfileStore.js";
+import { useProfileStore, createTestMetric } from "@/stores/useProfileStore.js";
 import { useToasts } from "@/composables/useToasts.js";
 import {
   PULL_UP_VERSIONS,
@@ -24,7 +25,9 @@ const props = defineProps({
 });
 const emit = defineEmits(["done", "cancel"]);
 const { pushToast } = useToasts();
-const { appendTest, updateTest, createTestMetric, tests } = useProfileStore();
+const store = useProfileStore();
+const { tests } = storeToRefs(store);
+const { appendTest, updateTest } = store;
 
 function todayISO() {
   const now = new Date();

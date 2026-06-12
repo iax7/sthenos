@@ -18,6 +18,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useToasts } from '@/composables/useToasts.js'
+import { storeToRefs } from 'pinia'
 import { useProfileStore } from '@/stores/useProfileStore.js'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
@@ -38,19 +39,23 @@ import {
 
 const router = useRouter()
 const { t } = useI18n()
+const store = useProfileStore()
+const { hasProfile } = storeToRefs(store)
 const {
-  getProfileData,
+  exportProfile,
   saveLastImportUrl,
   getLastImportUrl,
   clearLastImportUrl,
   importProfile,
-  hasProfile,
   loadProfile,
   clearProfile,
-} = useProfileStore()
+} = store
 const { pushToast } = useToasts()
 
 const clearModalOpen = ref(false)
+const importModalOpen = ref(false)
+const pendingImportData = ref(null)
+const pendingImportSource = ref(null) // 'url' or 'file'
 const fileInput = ref(null)
 
 const url = ref(getLastImportUrl() || '')
@@ -104,6 +109,55 @@ function confirmClear() {
   clearModalOpen.value = true
 }
 
+/**
+ * Extract preview info from parsed profile data for the confirmation dialog.
+ */
+function importPreview(data) {
+  const tests = Array.isArray(data.tests) ? data.tests : []
+  const sorted = [...tests].sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')))
+  const lastDate = sorted.length > 0 ? sorted[sorted.length - 1].date : null
+  return { name: data.name || '—', testCount: tests.length, lastTestDate: lastDate }
+}
+
+/**
+ * Show import confirmation dialog with parsed data.
+ */
+function showImportConfirm(parsed, source) {
+  pendingImportData.value = parsed
+  pendingImportSource.value = source
+  importModalOpen.value = true
+}
+
+/**
+ * Execute the actual import after user confirms.
+ */
+function onImportConfirmed() {
+  const parsed = pendingImportData.value
+  const source = pendingImportSource.value
+  pendingImportData.value = null
+  pendingImportSource.value = null
+  if (!parsed) return
+
+  const result = importProfile(parsed)
+  if (result.ok) {
+    if (source === 'url') {
+      const rawUrl = (url.value || '').trim()
+      saveLastImportUrl(rawUrl)
+      try {
+        loadProfile()
+      } catch (e) {
+        void e
+      }
+    }
+    pushToast(t('nav.profileImported'), 'success')
+    if (router.currentRoute.value.path !== '/') {
+      router.replace('/')
+    }
+  } else {
+    pushToast(result.error || t('nav.importFailed'), 'error')
+  }
+}
+
 function onClearConfirmed() {
   clearProfile()
   pushToast(t('nav.localDataCleared'), 'success')
@@ -116,7 +170,7 @@ function onClearConfirmed() {
 async function backupOnline() {
   try {
     uploading.value = true
-    const json = getProfileData()
+    const json = exportProfile()
 
     const encodedContent = encodeToBase64(json)
 
@@ -200,25 +254,14 @@ async function fetchFromUrl() {
       jsonString = text
     }
 
-    // Parse the JSON and import profile
+    // Parse the JSON and show confirmation dialog
     try {
       const parsed = JSON.parse(jsonString)
-      const result = importProfile(parsed)
-      if (result.ok) {
-        saveLastImportUrl(rawUrl)
-        // reload composable state and notify app so UI updates
-        try {
-          loadProfile()
-        } catch (e) {
-          void e
-        }
-        pushToast(t('nav.profileImported'), 'success')
-        if (router.currentRoute.value.path !== '/') {
-          router.replace('/')
-        }
-      } else {
-        pushToast(result.error || t('nav.importFailed'), 'error')
+      if (!parsed || typeof parsed !== 'object' || typeof parsed.name !== 'string') {
+        pushToast(t('nav.importFailed'), 'error')
+        return
       }
+      showImportConfirm(parsed, 'url')
     } catch {
       pushToast(t('nav.importFailed'), 'error')
     }
@@ -253,7 +296,7 @@ async function copyUrl() {
  * DO NOT apply base64 encoding here - users should see readable JSON.
  */
 function downloadProfile() {
-  const json = getProfileData()
+  const json = exportProfile()
   const blob = new Blob([json], { type: 'application/json' })
   const a = document.createElement('a')
   const date = new Date().toISOString().slice(0, 10)
@@ -282,15 +325,11 @@ function handleFileChange(e) {
   reader.onload = () => {
     try {
       const parsed = JSON.parse(reader.result)
-      const result = importProfile(parsed)
-      if (result.ok) {
-        pushToast(t('nav.profileImported'), 'success')
-        if (router.currentRoute.value.path !== '/') {
-          router.push('/')
-        }
-      } else {
-        pushToast(result.error || t('nav.importFailed'), 'error')
+      if (!parsed || typeof parsed !== 'object' || typeof parsed.name !== 'string') {
+        pushToast(t('nav.importFailed'), 'error')
+        return
       }
+      showImportConfirm(parsed, 'file')
     } catch {
       pushToast(t('nav.invalidJson'), 'error')
     }
@@ -393,6 +432,21 @@ function handleFileChange(e) {
     <ConfirmModal v-model:open="clearModalOpen" :title="t('nav.clearConfirm')"
       :message="t('settings.clearDataDescription')" confirm-variant="danger"
       :confirm-label="t('settings.clearDataButton')" @confirm="onClearConfirmed">
+      <template #cancel-label>{{ t('app.cancel') }}</template>
+    </ConfirmModal>
+
+    <ConfirmModal v-model:open="importModalOpen" :title="t('settings.importConfirmTitle')"
+      confirm-variant="primary" :confirm-label="t('settings.fetchUrl')" @confirm="onImportConfirmed">
+      <template v-if="pendingImportData" #default>
+        <ul class="space-y-1">
+          <li><span class="font-medium">{{ t('settings.importConfirmName') }}:</span> {{ importPreview(pendingImportData).name }}</li>
+          <li><span class="font-medium">{{ t('settings.importConfirmTests') }}:</span> {{ importPreview(pendingImportData).testCount }}</li>
+          <li>
+            <span class="font-medium">{{ t('settings.importConfirmLastTest') }}:</span>
+            {{ importPreview(pendingImportData).lastTestDate || t('settings.importConfirmNoTests') }}
+          </li>
+        </ul>
+      </template>
       <template #cancel-label>{{ t('app.cancel') }}</template>
     </ConfirmModal>
   </ViewContainer>

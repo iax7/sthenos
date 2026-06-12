@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue";
+import { storeToRefs } from 'pinia';
 import { useI18n } from "vue-i18n";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import { toMeters, evaluateCooper } from "@/services/cooper";
@@ -13,7 +14,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
-const { profile } = useProfileStore();
+const store = useProfileStore();
+const { profile } = storeToRefs(store);
 const genderKey = profile.value?.gender?.toLowerCase() || "m";
 
 function parseDateParts(dateStr) {
@@ -95,11 +97,12 @@ const groupedByYear = computed(() => {
 
           <!-- Actions -->
           <div class="flex items-center gap-1 shrink-0" @click.stop>
-            <BaseButton variant="icon" :aria-label="t('dashboard.table.actions.edit')"
+            <BaseButton variant="icon" class="text-blue-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-300"
+              :aria-label="t('dashboard.table.actions.edit')"
               @click="$emit('edit', item.data._idx)">
               <PencilIcon class="size-5" />
             </BaseButton>
-            <BaseButton variant="icon" class="text-red-400 hover:text-red-600 hover:bg-red-50"
+            <BaseButton variant="icon" class="text-red-400 hover:text-red-600 hover:bg-red-50 hover:border-red-300"
               :aria-label="t('dashboard.table.actions.delete')"
               @click="$emit('delete', { idx: item.data._idx, score: item.data._score, date: item.data.date, parts: item.data._parts })">
               <TrashIcon class="size-5" />

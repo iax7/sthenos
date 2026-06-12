@@ -26,6 +26,8 @@ const versionValue = computed({
 
 const { t } = useI18n()
 
+const hasSingleVersion = computed(() => props.versions.length === 1)
+
 function selectFirstIfEmpty() {
   if (!versionValue.value && props.versions.length) {
     const first = props.versions[0]
@@ -48,13 +50,15 @@ watch(
       <div class="w-full md:w-28 md:shrink-0">
         <BaseInput v-model="numberValue" :min="min" type="number" :placeholder="placeholder" />
       </div>
-      <div v-if="versions.length > 1"
+      <div v-if="versions.length"
         class="inline-flex rounded-md border border-gray-300 overflow-hidden bg-white shadow-sm w-full md:flex-1">
         <button v-for="v in versions" :key="typeof v === 'string' ? v : v.value" type="button"
           class="flex-1 px-1 md:px-2 py-2 text-xs font-medium transition border-r border-gray-300 last:border-r-0 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
           :class="versionValue === (typeof v === 'string' ? v : v.value)
             ? (typeof v === 'string' ? v : v.value) === 'c' ? 'bg-emerald-600 text-white' : 'bg-orange-500 text-white'
-            : 'bg-white text-gray-700 hover:bg-gray-50'" @click="versionValue = typeof v === 'string' ? v : v.value">
+            : hasSingleVersion ? 'bg-white text-gray-700' : 'bg-white text-gray-700 hover:bg-gray-50'"
+          :disabled="hasSingleVersion"
+          @click="!hasSingleVersion && (versionValue = typeof v === 'string' ? v : v.value)">
           {{ typeof v === 'string' ? v : v.labelKey ? t(v.labelKey) : v.label }}
         </button>
       </div>

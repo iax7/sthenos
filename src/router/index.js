@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import HomeView from '@/views/HomeView.vue'
 import { useProfileStore } from '@/stores/useProfileStore.js'
 
@@ -47,7 +48,8 @@ const router = createRouter({
 // Simple guard: if no stored profile, redirect protected routes to profile form
 router.beforeEach((to) => {
   try {
-    const { profile } = useProfileStore()
+    const store = useProfileStore()
+    const { profile } = storeToRefs(store)
     const hasProfile = !!profile.value && !!profile.value.name
 
     if (to.meta.noProfile || hasProfile) {

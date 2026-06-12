@@ -52,7 +52,10 @@ function onConfirm() {
             </div>
             <div>
               <h3 class="text-base font-semibold text-gray-900">{{ title }}</h3>
-              <p v-if="message" class="mt-1 text-sm text-gray-600">{{ message }}</p>
+              <p v-if="!$slots.default && message" class="mt-1 text-sm text-gray-600">{{ message }}</p>
+              <div v-if="$slots.default" class="mt-1 text-sm text-gray-600">
+                <slot />
+              </div>
             </div>
           </div>
           <div class="mt-6 flex justify-end gap-3">

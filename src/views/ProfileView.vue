@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useToasts } from '@/composables/useToasts.js'
 import { useProfileStore, ageAtDate, todayISO } from '@/stores/useProfileStore.js'
@@ -13,7 +14,9 @@ import { UserCircleIcon } from '@heroicons/vue/24/outline'
 const { t } = useI18n()
 const { pushToast } = useToasts()
 const router = useRouter()
-const { profile, saveProfile } = useProfileStore()
+const store = useProfileStore()
+const { profile } = storeToRefs(store)
+const { saveProfile } = store
 
 // Reactive state
 const name = ref('')

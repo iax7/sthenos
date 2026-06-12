@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
+import { storeToRefs } from 'pinia';
 import { useI18n } from "vue-i18n";
 import { Line } from "vue-chartjs";
 import {
@@ -27,7 +28,8 @@ import {
 import { useProfileStore } from '@/stores/useProfileStore.js';
 import { getGradientColors } from "@/services/chartColors.js";
 
-const { tests } = useProfileStore();
+const store = useProfileStore();
+const { tests } = storeToRefs(store);
 
 const crosshairPlugin = {
   id: 'crosshair',

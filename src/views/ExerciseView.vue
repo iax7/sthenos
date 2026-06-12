@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useProfileStore, ageAtDate } from '@/stores/useProfileStore.js'
@@ -16,7 +17,8 @@ const props = defineProps({
 
 const { t } = useI18n()
 const router = useRouter()
-const { profile, tests } = useProfileStore()
+const store = useProfileStore()
+const { profile, tests } = storeToRefs(store)
 
 const testIndex = computed(() => parseInt(props.index, 10))
 const test = computed(() => tests.value[testIndex.value])

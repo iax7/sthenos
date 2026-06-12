@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useProfileStore, ageAtDate } from '@/stores/useProfileStore.js'
 import { useI18n } from 'vue-i18n'
 import HomeChart from '@/components/HomeChart.vue'
@@ -11,7 +12,8 @@ import { ChevronRightIcon, PencilIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const { profile, tests } = useProfileStore()
+const store = useProfileStore()
+const { profile, tests } = storeToRefs(store)
 
 const lastTestIndex = computed(() => tests.value.length - 1)
 
@@ -79,7 +81,7 @@ const lastTest = computed(() => {
             </span>
           </div>
           <button @click="editLastTest"
-            class="rounded-lg border border-gray-200 p-2.5 text-gray-400 hover:border-blue-300 hover:text-blue-500 transition-colors"
+            class="rounded-lg border border-gray-200 p-2.5 text-blue-400 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-colors"
             :aria-label="t('exercise.edit')">
             <PencilIcon class="size-5" />
           </button>

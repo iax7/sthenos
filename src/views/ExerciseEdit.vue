@@ -1,5 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import ExerciseForm from '@/components/ExerciseForm.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -10,7 +11,8 @@ import { useProfileStore } from '@/stores/useProfileStore.js'
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
-const { tests } = useProfileStore()
+const store = useProfileStore()
+const { tests } = storeToRefs(store)
 
 const isEdit = route.name === 'exercise-edit'
 const index = isEdit ? Number(route.params.index) : null
