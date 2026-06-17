@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import AppNavbar from '@/components/AppNavbar.vue'
 import AppFooter from '@/components/ui/AppFooter.vue'
 import ToastContainer from '@/components/ui/ToastContainer.vue'
+import ReloadPrompt from '@/components/ReloadPrompt.vue'
 
 const { locale } = useI18n()
 
@@ -25,5 +26,6 @@ watch(
     </main>
     <AppFooter />
     <ToastContainer />
+    <ReloadPrompt />
   </div>
 </template>
