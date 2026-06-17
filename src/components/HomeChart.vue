@@ -19,6 +19,7 @@ import AppCard from "@/components/ui/AppCard.vue";
 import ChartStats from "@/components/HomeChartStats.vue";
 import {
   filterTestsByMetric,
+  filterTestsByTotalScore,
   calculateStats,
 } from "@/services/exerciseCollectionService.js";
 import {
@@ -29,7 +30,12 @@ import { useProfileStore } from '@/stores/useProfileStore.js';
 import { getGradientColors } from "@/services/chartColors.js";
 
 const store = useProfileStore();
-const { tests } = storeToRefs(store);
+const { tests, profile } = storeToRefs(store);
+
+const CHART_METRICS = computed(() => [
+  ...EXERCISES,
+  { key: 'score', label: t('dashboard.chart.scoreLabel') },
+]);
 
 const crosshairPlugin = {
   id: 'crosshair',
@@ -72,6 +78,9 @@ const { t } = useI18n();
 const selectedMetric = ref(EXERCISES[0].key);
 
 const selectedData = computed(() => {
+  if (selectedMetric.value === 'score') {
+    return filterTestsByTotalScore(tests.value, profile.value) || [];
+  }
   return filterTestsByMetric(tests.value, selectedMetric.value) || [];
 });
 
@@ -134,7 +143,9 @@ const chartData = computed(() => {
     labels: data.map((d) => formatDateLabel(d.date)),
     datasets: [
       {
-        label: getExerciseType(selectedMetric.value)?.label || "",
+        label: selectedMetric.value === 'score'
+          ? t('dashboard.chart.scoreLabel')
+          : (getExerciseType(selectedMetric.value)?.label || ""),
         data: values,
         borderColor: baseColor,
         backgroundColor: gradientFill,
@@ -218,6 +229,10 @@ const chartOptions = computed(() => {
         callbacks: {
           label: (context) => {
             const dataPoint = selectedData.value[context.dataIndex];
+            // Handle total score metric (no reps/version)
+            if (selectedMetric.value === 'score') {
+              return `${t('dashboard.chart.scoreLabel')}: ${context.parsed.y} pts`;
+            }
             const metric = getExerciseType(selectedMetric.value);
             let versionLabel = "";
             if (dataPoint?.version && metric?.versions) {
@@ -283,7 +298,7 @@ const chartOptions = computed(() => {
     <div class="mb-4">
       <h2 class="mb-3">{{ t("dashboard.chart.title") }}</h2>
       <div class="flex flex-wrap gap-2">
-        <button v-for="m in EXERCISES" :key="m.key" @click="selectedMetric = m.key"
+        <button v-for="m in CHART_METRICS" :key="m.key" @click="selectedMetric = m.key"
           :aria-pressed="selectedMetric === m.key" :class="[
             'px-3 py-1.5 text-sm font-medium rounded-full transition-all',
             selectedMetric === m.key

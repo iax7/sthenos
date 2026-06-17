@@ -1,4 +1,28 @@
-import { getExerciseType, calculatePoints } from '@/services/exercises.js'
+import { getExerciseType, calculatePoints, calculateTotalScore } from '@/services/exercises.js'
+import { toMeters, evaluateCooper } from '@/services/cooper.js'
+import { ageAtDate } from '@/stores/useProfileStore.js'
+
+/**
+ * Maps test entries to total score values for trend visualization.
+ * @param {Array<object>} tests - Array of test entry objects.
+ * @param {object} profile - User profile with dob and gender.
+ * @returns {Array<{date: string, value: number}>} Mapped score data.
+ */
+export function filterTestsByTotalScore(tests, profile) {
+  if (!tests || !profile) return []
+  const genderKey = profile.gender?.toLowerCase() || 'm'
+  return tests
+    .slice()
+    .filter((t) => t.date)
+    .map((t) => {
+      const age = ageAtDate(profile.dob, t.date)
+      const meters = toMeters(t.cooper || 0)
+      const level = evaluateCooper(meters, age, genderKey)
+      const score = calculateTotalScore(t, level)
+      return { date: t.date, value: score }
+    })
+    .filter((entry) => entry.value > 0)
+}
 
 /**
  Filters and maps test entries by the selected exercise.
