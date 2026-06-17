@@ -164,7 +164,8 @@
       "selectMetric": "Select exercise metric",
       "notEnoughData": "Not enough data points for a trend (need at least 2).",
       "needOneMore": "Add one more test to see the trend.",
-      "needTwoTests": "Add at least 2 tests to see the trend."
+      "needTwoTests": "Add at least 2 tests to see the trend.",
+      "movingAverage": "3-point trend"
     },
     "stats": {
       "size": "Sample",

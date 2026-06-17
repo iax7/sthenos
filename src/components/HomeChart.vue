@@ -88,6 +88,17 @@ function formatDateLabel(dateStr) {
   return `${yearShort}-${monthShort}`;
 }
 
+function calculateMovingAverage(values, windowSize = 3) {
+  if (!values || values.length < 2) return [];
+  return values.map((_, index) => {
+    const start = Math.max(0, index - Math.floor(windowSize / 2));
+    const end = Math.min(values.length, index + Math.ceil(windowSize / 2));
+    const window = values.slice(start, end);
+    const sum = window.reduce((a, b) => a + b, 0);
+    return sum / window.length;
+  });
+}
+
 const chartData = computed(() => {
   const data = selectedData.value;
   if (!data || !data.length) {
@@ -116,21 +127,59 @@ const chartData = computed(() => {
     return grad;
   };
 
+  const values = data.map((d) => d.value);
+  const movingAvg = calculateMovingAverage(values, 3);
+
   return {
     labels: data.map((d) => formatDateLabel(d.date)),
     datasets: [
       {
         label: getExerciseType(selectedMetric.value)?.label || "",
-        data: data.map((d) => d.value),
+        data: values,
         borderColor: baseColor,
         backgroundColor: gradientFill,
         fill: true,
         tension: 0.3,
-        pointRadius: 6,
-        pointHoverRadius: 7,
+        pointRadius: 8,
+        pointHoverRadius: 9,
         pointBackgroundColor: pointColor,
         pointBorderColor: "#fff",
         pointBorderWidth: 2,
+        datalabels: {
+          anchor: "end",
+          align: "end",
+          color: baseColor,
+          font: { weight: "bold", size: 12 },
+          formatter: (value) => {
+            if (value == null) return "";
+            return Number.isInteger(value) ? value : value.toFixed(1);
+          },
+          display: true,
+          clip: false,
+        },
+      },
+      {
+        label: `${t("dashboard.chart.movingAverage") || "3-point trend"}`,
+        data: movingAvg,
+        borderColor: 'rgba(156, 163, 175, 0.6)',
+        backgroundColor: 'transparent',
+        fill: false,
+        tension: 0.4,
+        borderDash: [5, 5],
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 0,
+        pointBackgroundColor: 'transparent',
+        datalabels: {
+          anchor: "end",
+          align: "end",
+          color: 'rgba(107, 114, 128, 0.6)',
+          font: { weight: "normal", size: 10 },
+          formatter: (value) => (value != null ? value.toFixed(1) : ""),
+          display: true,
+          clip: false,
+          offset: 8,
+        },
       },
     ],
   };
@@ -155,7 +204,7 @@ const chartOptions = computed(() => {
     },
     layout: {
       padding: {
-        top: 27, // Add some top padding for better label visibility
+        top: 45, // Increased padding for label visibility
       },
     },
     plugins: {
@@ -197,13 +246,7 @@ const chartOptions = computed(() => {
         },
       },
       datalabels: {
-        anchor: "end",
-        align: "end",
-        color: baseColor,
-        font: { weight: "bold", size: 12 },
-        formatter: (value) => (value != null ? value : ""),
-        display: true,
-        clip: false,
+        display: false,
       },
     },
     scales: {

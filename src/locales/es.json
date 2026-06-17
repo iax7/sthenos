@@ -164,7 +164,8 @@
       "selectMetric": "Seleccionar métrica de ejercicio",
       "notEnoughData": "No hay suficientes datos para mostrar una tendencia (se necesitan al menos 2).",
       "needOneMore": "Agrega un test más para ver la tendencia.",
-      "needTwoTests": "Agrega al menos 2 tests para ver la tendencia."
+      "needTwoTests": "Agrega al menos 2 tests para ver la tendencia.",
+      "movingAverage": "Tendencia de 3 puntos"
     },
     "stats": {
       "size": "Muestra",
