@@ -3,11 +3,9 @@ import { computed } from "vue";
 import { storeToRefs } from 'pinia';
 import { useI18n } from "vue-i18n";
 import BaseButton from "@/components/ui/BaseButton.vue";
-import { toMeters, evaluateCooper } from "@/services/cooper";
 import { useProfileStore } from "@/stores/useProfileStore.js";
-import { ageAtDate } from "@/stores/useProfileStore.js";
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
-import { calculateTotalScore } from "../services/exercises";
+import { getTestScore } from "@/services/exercises.js";
 
 const props = defineProps({
   tests: { type: Array, default: () => [] },
@@ -16,7 +14,6 @@ const props = defineProps({
 const { t } = useI18n();
 const store = useProfileStore();
 const { profile } = storeToRefs(store);
-const genderKey = profile.value?.gender?.toLowerCase() || "m";
 
 function parseDateParts(dateStr) {
   if (!dateStr) return { year: '', month: '', day: '' };
@@ -31,10 +28,7 @@ function parseDateParts(dateStr) {
 
 const groupedByYear = computed(() => {
   const mapped = props.tests.slice().map((r, idx) => {
-    const meters = toMeters(r.cooper || 0);
-    const age = ageAtDate(profile.value?.dob, r.date);
-    const level = evaluateCooper(meters, age, genderKey);
-    const totalScore = calculateTotalScore(r, level);
+    const totalScore = getTestScore(r, profile.value);
     const parts = parseDateParts(r.date);
     return { ...r, _score: totalScore, _idx: idx, _parts: parts };
   });
@@ -84,7 +78,7 @@ const groupedByYear = computed(() => {
             <div class="font-semibold text-gray-800 capitalize leading-tight">
               {{ item.data._parts.month
               }}<span v-if="item.data._parts.day" class="ml-1 text-sm font-normal text-gray-400">{{ item.data._parts.day
-                }}</span>
+              }}</span>
             </div>
           </div>
 
@@ -98,8 +92,7 @@ const groupedByYear = computed(() => {
           <!-- Actions -->
           <div class="flex items-center gap-1 shrink-0" @click.stop>
             <BaseButton variant="icon" class="text-blue-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-300"
-              :aria-label="t('dashboard.table.actions.edit')"
-              @click="$emit('edit', item.data._idx)">
+              :aria-label="t('dashboard.table.actions.edit')" @click="$emit('edit', item.data._idx)">
               <PencilIcon class="size-5" />
             </BaseButton>
             <BaseButton variant="icon" class="text-red-400 hover:text-red-600 hover:bg-red-50 hover:border-red-300"

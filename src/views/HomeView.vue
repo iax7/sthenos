@@ -1,13 +1,12 @@
 <script setup>
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useProfileStore, ageAtDate } from '@/stores/useProfileStore.js'
+import { useProfileStore } from '@/stores/useProfileStore.js'
 import { useI18n } from 'vue-i18n'
 import HomeChart from '@/components/HomeChart.vue'
 import HomeHeader from '@/components/HomeHeader.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
-import { calculateTotalScore } from '@/services/exercises.js'
-import { toMeters, evaluateCooper } from '@/services/cooper.js'
+import { getTestScore } from '@/services/exercises.js'
 import { ChevronRightIcon, PencilIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
 
@@ -26,11 +25,7 @@ const { t, locale } = useI18n()
 const lastTest = computed(() => {
   if (!tests.value?.length) return null
   const test = tests.value[tests.value.length - 1]
-  const age = ageAtDate(profile.value?.dob, test.date)
-  const genderKey = profile.value?.gender?.toLowerCase() || 'm'
-  const meters = toMeters(test.cooper || 0)
-  const level = evaluateCooper(meters, age, genderKey)
-  const score = calculateTotalScore(test, level)
+  const score = getTestScore(test, profile.value)
 
   const [y, m, d] = (test.date || '').split('-')
   const date = new Date(Number(y), Number(m) - 1, Number(d || 1))
@@ -40,10 +35,7 @@ const lastTest = computed(() => {
   let scoreDiff = null
   if (tests.value.length >= 2) {
     const prev = tests.value[tests.value.length - 2]
-    const prevAge = ageAtDate(profile.value?.dob, prev.date)
-    const prevMeters = toMeters(prev.cooper || 0)
-    const prevLevel = evaluateCooper(prevMeters, prevAge, genderKey)
-    const prevScore = calculateTotalScore(prev, prevLevel)
+    const prevScore = getTestScore(prev, profile.value)
     scoreDiff = score - prevScore
   }
 

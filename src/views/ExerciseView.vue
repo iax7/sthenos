@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useProfileStore, ageAtDate } from '@/stores/useProfileStore.js'
 import { toKilometers, toMeters, evaluateCooper } from '@/services/cooper'
-import { calculatePoints, calculateCooperPoints, calculateTotalScore, getExerciseKeys, getVersion, getReps } from '@/services/exercises'
+import { calculatePoints, calculateCooperPoints, getTestScore, getExerciseKeys, getVersion, getReps } from '@/services/exercises'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppCard from '@/components/ui/AppCard.vue'
 import ViewContainer from '@/components/ui/ViewContainer.vue'
@@ -123,7 +123,7 @@ const cooperLevelStyle = computed(() => {
 
 const totalScore = computed(() => {
   if (!test.value || !exerciseData.value) return 0
-  return calculateTotalScore(test.value, exerciseData.value.cooper.level)
+  return getTestScore(test.value, profile.value)
 })
 
 const exercisesScore = computed(() => {
@@ -140,7 +140,7 @@ const exercisesScore = computed(() => {
           {{ t('exercise.editor.test') }}
         </h2>
         <span class="font-semibold text-gray-400 rounded-full bg-gray-200 px-2 py-1">{{ testIndex + 1 }}/{{ testCount
-          }}</span>
+        }}</span>
       </span>
       <div class="flex items-center gap-2">
         <BaseButton variant="secondary" type="button" @click="goBack" aria-label="Back to dashboard">
@@ -263,7 +263,7 @@ const exercisesScore = computed(() => {
             <div class="w-px h-4 bg-gray-200 shrink-0"></div>
             <span class="w-14 text-right text-sm font-mono font-bold text-blue-600 tabular-nums shrink-0">{{
               exerciseData.exercises[key].points
-            }}<span class="text-xs font-medium text-blue-400 ml-0.5">pts</span></span>
+              }}<span class="text-xs font-medium text-blue-400 ml-0.5">pts</span></span>
           </div>
         </div>
       </AppCard>

@@ -7,6 +7,8 @@ import {
   COOPER_MULTIPLIERS,
   COOPER_MAX_SCORE
 } from '@/services/exerciseVersions.js'
+import { toMeters, evaluateCooper } from '@/services/cooper.js'
+import { ageAtDate } from '@/stores/useProfileStore.js'
 
 const VERSION_MAP = {
   pullup: PULL_UP_VERSIONS,
@@ -104,4 +106,19 @@ export function calculateTotalScore(test, cooperLevel) {
   totalScore += cooperPoints
 
   return totalScore
+}
+
+/**
+ * Calculate total score for a test given a profile (handles Cooper level calculation).
+ * @param {Object} test - Test object containing exercise data
+ * @param {Object} profile - User profile with dob and gender
+ * @returns {number} Total score
+ */
+export function getTestScore(test, profile) {
+  if (!test || !profile) return 0
+  const genderKey = profile.gender?.toLowerCase() || 'm'
+  const age = ageAtDate(profile.dob, test.date)
+  const meters = toMeters(test.cooper || 0)
+  const level = evaluateCooper(meters, age, genderKey)
+  return calculateTotalScore(test, level)
 }

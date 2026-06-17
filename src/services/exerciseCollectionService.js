@@ -1,6 +1,4 @@
-import { getExerciseType, calculatePoints, calculateTotalScore } from '@/services/exercises.js'
-import { toMeters, evaluateCooper } from '@/services/cooper.js'
-import { ageAtDate } from '@/stores/useProfileStore.js'
+import { getExerciseType, calculatePoints, getTestScore } from '@/services/exercises.js'
 
 /**
  * Maps test entries to total score values for trend visualization.
@@ -10,17 +8,10 @@ import { ageAtDate } from '@/stores/useProfileStore.js'
  */
 export function filterTestsByTotalScore(tests, profile) {
   if (!tests || !profile) return []
-  const genderKey = profile.gender?.toLowerCase() || 'm'
   return tests
     .slice()
     .filter((t) => t.date)
-    .map((t) => {
-      const age = ageAtDate(profile.dob, t.date)
-      const meters = toMeters(t.cooper || 0)
-      const level = evaluateCooper(meters, age, genderKey)
-      const score = calculateTotalScore(t, level)
-      return { date: t.date, value: score }
-    })
+    .map((t) => ({ date: t.date, value: getTestScore(t, profile) }))
     .filter((entry) => entry.value > 0)
 }
 
