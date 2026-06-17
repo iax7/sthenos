@@ -44,14 +44,21 @@ const avatarClass = computed(() =>
 
 const gravatarUrl = ref(null)
 
-watchEffect(async () => {
+watchEffect((onCleanup) => {
+  let cancelled = false
+  onCleanup(() => { cancelled = true })
+
   const email = props.profile?.email?.trim().toLowerCase()
   if (!email) {
     gravatarUrl.value = null
     return
   }
-  const hash = await sha256hex(email)
-  gravatarUrl.value = `https://gravatar.com/avatar/${hash}?s=112&d=404`
+
+  sha256hex(email).then((hash) => {
+    if (!cancelled) {
+      gravatarUrl.value = `https://gravatar.com/avatar/${hash}?s=112&d=404`
+    }
+  })
 })
 </script>
 
