@@ -60,6 +60,41 @@ const crosshairPlugin = {
   }
 };
 
+// Plugin to draw year divider lines
+const yearDividerPlugin = {
+  id: 'yearDivider',
+  afterDraw: (chart) => {
+    const yearBoundaries = chart.options.plugins?.yearDivider?.boundaries;
+    if (!yearBoundaries?.length) return;
+
+    const ctx = chart.ctx;
+    const xScale = chart.scales.x;
+    const yScale = chart.scales.y;
+
+    yearBoundaries.forEach(({ index, year }) => {
+      // Get x position between current and previous point
+      const x = xScale.getPixelForValue(index) - (xScale.getPixelForValue(1) - xScale.getPixelForValue(0)) / 2;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, yScale.top);
+      ctx.lineTo(x, yScale.bottom);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(139, 92, 246, 0.35)';
+      ctx.setLineDash([3, 3]);
+      ctx.stroke();
+
+      // Draw year label
+      ctx.fillStyle = 'rgba(124, 58, 237, 0.5)';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(year, x + 4, yScale.bottom - 6);
+
+      ctx.restore();
+    });
+  }
+};
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -71,6 +106,7 @@ ChartJS.register(
   Filler,
   ChartDataLabels,
   crosshairPlugin,
+  yearDividerPlugin,
 );
 
 const { t } = useI18n();
@@ -86,15 +122,29 @@ const selectedData = computed(() => {
 
 const stats = computed(() => calculateStats(selectedData.value));
 
+// Calculate year boundaries for divider lines
+const yearBoundaries = computed(() => {
+  const data = selectedData.value;
+  if (!data || data.length < 2) return [];
+
+  const boundaries = [];
+  for (let i = 1; i < data.length; i++) {
+    const prevYear = data[i - 1].date?.split('-')[0];
+    const currYear = data[i].date?.split('-')[0];
+    if (prevYear && currYear && prevYear !== currYear) {
+      boundaries.push({ index: i, year: currYear });
+    }
+  }
+  return boundaries;
+});
+
 function formatDateLabel(dateStr) {
   if (!dateStr) return "";
   const parts = dateStr.split("-");
   if (parts.length < 3) return dateStr;
   const [year, month, day] = parts;
   const date = new Date(year, parseInt(month, 10) - 1, day || 1);
-  const yearShort = date.toLocaleDateString(undefined, { year: '2-digit' });
-  const monthShort = date.toLocaleDateString(undefined, { month: 'short' });
-  return `${yearShort}-${monthShort}`;
+  return date.toLocaleDateString(undefined, { month: 'short' });
 }
 
 function calculateMovingAverage(values, windowSize = 3) {
@@ -262,6 +312,9 @@ const chartOptions = computed(() => {
       },
       datalabels: {
         display: false,
+      },
+      yearDivider: {
+        boundaries: yearBoundaries.value,
       },
     },
     scales: {
