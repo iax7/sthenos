@@ -72,6 +72,11 @@
     "exerciseVersions": "Versiones de Ejercicios",
     "exerciseVersionsDescription": "Multiplicadores de puntos para cada variación de ejercicio. Tu puntuación se calcula como: repeticiones × multiplicador.",
     "cooperMaxScore": "Puntaje Base",
+    "llmPromptTitle": "Recomendaciones IA",
+    "llmPromptDescription": "Genera un prompt con tu perfil y datos de pruebas para pegar en cualquier asistente de IA (ChatGPT, Claude, Gemini, etc.) y obtener recomendaciones personalizadas de fitness.",
+    "llmPromptButton": "Copiar Prompt",
+    "llmPromptCopied": "Prompt copiado al portapapeles",
+    "llmPromptNoData": "Agrega al menos una prueba para generar el prompt",
     "dangerZoneTitle": "Zona de Peligro",
     "clearDataDescription": "Elimina permanentemente todos los datos locales de perfil y pruebas. Esta acción no se puede deshacer.",
     "clearDataButton": "Borrar todos los datos"

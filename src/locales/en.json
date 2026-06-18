@@ -72,6 +72,11 @@
     "exerciseVersions": "Exercise Versions",
     "exerciseVersionsDescription": "Point multipliers for each exercise variation. Your score is calculated as: reps × multiplier.",
     "cooperMaxScore": "Base Score",
+    "llmPromptTitle": "AI Recommendations",
+    "llmPromptDescription": "Generate a prompt with your profile and test data to paste into any AI assistant (ChatGPT, Claude, Gemini, etc.) for personalized fitness recommendations.",
+    "llmPromptButton": "Copy Prompt",
+    "llmPromptCopied": "Prompt copied to clipboard",
+    "llmPromptNoData": "Add at least one test to generate a prompt",
     "dangerZoneTitle": "Danger Zone",
     "clearDataDescription": "Permanently delete all local profile and test data. This action cannot be undone.",
     "clearDataButton": "Clear all data"

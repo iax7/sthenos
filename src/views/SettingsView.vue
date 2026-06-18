@@ -14,12 +14,13 @@
  *
  * DO NOT remove base64 encoding from online backups - it's intentional privacy protection.
  */
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useToasts } from '@/composables/useToasts.js'
 import { storeToRefs } from 'pinia'
 import { useProfileStore } from '@/stores/useProfileStore.js'
+import { generateLLMPrompt } from '@/services/promptGenerator.js'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import AppCard from '@/components/ui/AppCard.vue'
@@ -35,10 +36,11 @@ import {
   CloudArrowUpIcon,
   ClipboardDocumentIcon,
   TrashIcon,
+  SparklesIcon,
 } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const store = useProfileStore()
 const { hasProfile } = storeToRefs(store)
 const {
@@ -50,7 +52,10 @@ const {
   loadProfile,
   clearProfile,
 } = store
+const { profile, tests } = storeToRefs(store)
 const { pushToast } = useToasts()
+
+const hasTests = computed(() => tests.value && tests.value.length > 0)
 
 const clearModalOpen = ref(false)
 const importModalOpen = ref(false)
@@ -60,6 +65,20 @@ const fileInput = ref(null)
 
 const url = ref(getLastImportUrl() || '')
 const uploading = ref(false)
+
+async function copyLLMPrompt() {
+  if (!hasTests.value) {
+    pushToast(t('settings.llmPromptNoData'), 'error')
+    return
+  }
+  const prompt = generateLLMPrompt(profile.value, tests.value, locale.value)
+  try {
+    await navigator.clipboard.writeText(prompt)
+    pushToast(t('settings.llmPromptCopied'), 'success')
+  } catch {
+    pushToast(t('settings.copyFailed'), 'error')
+  }
+}
 
 /**
  * Encode string to base64 (UTF-8 safe).
@@ -414,6 +433,20 @@ function handleFileChange(e) {
 
     <input hidden ref="fileInput" type="file" accept="application/json" class="hidden" @change="handleFileChange" />
 
+    <AppCard>
+      <h3 class="mb-2 text-xl font-semibold flex items-center gap-2">
+        <SparklesIcon class="size-6 text-gray-600" />
+        {{ t('settings.llmPromptTitle') }}
+      </h3>
+      <p class="text-sm text-gray-600">{{ t('settings.llmPromptDescription') }}</p>
+      <div class="mt-3 flex items-center">
+        <BaseButton :disabled="!hasProfile || !hasTests" @click.prevent="copyLLMPrompt">
+          <ClipboardDocumentIcon class="size-5 mr-1" />
+          {{ t('settings.llmPromptButton') }}
+        </BaseButton>
+      </div>
+    </AppCard>
+
     <AppCard class="border-red-400">
       <h3 class="mb-2 text-xl font-semibold text-red-600">
         {{ t('settings.dangerZoneTitle') }}
@@ -435,12 +468,14 @@ function handleFileChange(e) {
       <template #cancel-label>{{ t('app.cancel') }}</template>
     </ConfirmModal>
 
-    <ConfirmModal v-model:open="importModalOpen" :title="t('settings.importConfirmTitle')"
-      confirm-variant="primary" :confirm-label="t('settings.fetchUrl')" @confirm="onImportConfirmed">
+    <ConfirmModal v-model:open="importModalOpen" :title="t('settings.importConfirmTitle')" confirm-variant="primary"
+      :confirm-label="t('settings.fetchUrl')" @confirm="onImportConfirmed">
       <template v-if="pendingImportData" #default>
         <ul class="space-y-1">
-          <li><span class="font-medium">{{ t('settings.importConfirmName') }}:</span> {{ importPreview(pendingImportData).name }}</li>
-          <li><span class="font-medium">{{ t('settings.importConfirmTests') }}:</span> {{ importPreview(pendingImportData).testCount }}</li>
+          <li><span class="font-medium">{{ t('settings.importConfirmName') }}:</span> {{
+            importPreview(pendingImportData).name }}</li>
+          <li><span class="font-medium">{{ t('settings.importConfirmTests') }}:</span> {{
+            importPreview(pendingImportData).testCount }}</li>
           <li>
             <span class="font-medium">{{ t('settings.importConfirmLastTest') }}:</span>
             {{ importPreview(pendingImportData).lastTestDate || t('settings.importConfirmNoTests') }}

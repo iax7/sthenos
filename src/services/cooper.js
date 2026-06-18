@@ -63,3 +63,15 @@ export const toMeters = (laps) => {
 export const toKilometers = (meters) => {
   return meters / 1000
 }
+
+/**
+ * Get Cooper reference ranges for a given age and gender.
+ * @param {number} age
+ * @param {string} genderKey - 'm' or 'f'
+ * @returns {number[]|null} Array of 4 thresholds [veryBad, bad, normal, good] in meters, or null
+ */
+export const getCooperRanges = (age, genderKey) => {
+  const ageIndex = getAgeIndex(age)
+  if (ageIndex === null) return null
+  return COOPER_RANGES[genderKey]?.[ageIndex] || null
+}
