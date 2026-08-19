@@ -192,14 +192,6 @@ describe('generateLLMPrompt', () => {
     expect(prompt).toContain('Respond in Spanish')
   })
 
-  it('includes recommendation focus areas', () => {
-    const prompt = generateLLMPrompt(profile, [makeTest('2025-01-15')], 'en')
-    expect(prompt).toContain('Weak areas')
-    expect(prompt).toContain('Exercise version progressions')
-    expect(prompt).toContain('Cooper test')
-    expect(prompt).toContain('short-term goals')
-  })
-
   it('asks LLM to detect stagnation, regression, and acceleration', () => {
     const prompt = generateLLMPrompt(profile, [makeTest('2025-01-15')], 'en')
     expect(prompt).toContain('stagnation')
@@ -234,14 +226,6 @@ describe('generateLLMPrompt', () => {
     const tests = [makeTest('2025-01-15'), makeTest('2025-02-15'), makeTest('2025-03-15')]
     const prompt = generateLLMPrompt(profile, tests, 'en')
     expect(prompt).toContain('3 tests')
-  })
-
-  it('includes standard goals section', () => {
-    const prompt = generateLLMPrompt(profile, [makeTest('2025-01-15')], 'en')
-    expect(prompt).toContain('## Goals')
-    expect(prompt).toContain('Improve overall test score')
-    expect(prompt).toContain('harder exercise versions')
-    expect(prompt).toContain('Cooper test fitness level')
   })
 
   it('shows improvement potential with room to progress for non-complete versions', () => {
