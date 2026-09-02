@@ -2,7 +2,7 @@
 
 Canonical guidance for any coding agent working in this repo (Copilot, Claude Code, Codex, …). `CLAUDE.md` imports this file — edit here, not there.
 
-**All generated code and comments must be written in English.**
+**All generated code, comments, commit messages, and issue/PR text must be written in English.**
 
 ## Project Overview
 
@@ -132,6 +132,20 @@ pnpm playwright test tests/e2e/chart.spec.js --project=chromium
 - `src/locales/en.json` + `es.json`: i18n strings
 - `src/App.vue`: Mounts global containers (ToastContainer, etc.)
 - `src/main.js`: Registers Pinia, router, and i18n
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as GitHub issues in `iax7/sthenos`, created and read via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five canonical roles with default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` plus `docs/adr/` at the repo root. See `docs/agents/domain.md`.
 
 ---
 
