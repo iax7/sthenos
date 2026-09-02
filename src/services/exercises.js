@@ -5,7 +5,7 @@ import {
   SQUAT_VERSIONS,
   VUP_VERSIONS,
   COOPER_MULTIPLIERS,
-  COOPER_MAX_SCORE
+  COOPER_MAX_SCORE,
 } from '@/services/exerciseVersions.js'
 import { toMeters, evaluateCooper } from '@/services/cooper.js'
 import { ageAtDate } from '@/stores/useProfileStore.js'
@@ -109,6 +109,23 @@ export function calculateTotalScore(test, cooperLevel) {
 }
 
 /**
+ * Compute the Cooper fitness level (1-5) for a test, from its laps and the
+ * profile's age/gender bands. Returns null when there are no laps or the data
+ * is missing. This is the single source of truth for the Cooper derivation.
+ * @param {Object} test - Test object containing a cooper lap count and date.
+ * @param {Object} profile - User profile with dob and gender.
+ * @returns {number|null} Cooper fitness level 1-5, or null.
+ */
+export function getCooperLevel(test, profile) {
+  if (!test || !profile) return null
+  if (!test.cooper || test.cooper <= 0) return null
+  const genderKey = profile.gender?.toLowerCase() || 'm'
+  const age = ageAtDate(profile.dob, test.date)
+  const meters = toMeters(test.cooper || 0)
+  return evaluateCooper(meters, age, genderKey)
+}
+
+/**
  * Calculate total score for a test given a profile (handles Cooper level calculation).
  * @param {Object} test - Test object containing exercise data
  * @param {Object} profile - User profile with dob and gender
@@ -116,9 +133,6 @@ export function calculateTotalScore(test, cooperLevel) {
  */
 export function getTestScore(test, profile) {
   if (!test || !profile) return 0
-  const genderKey = profile.gender?.toLowerCase() || 'm'
-  const age = ageAtDate(profile.dob, test.date)
-  const meters = toMeters(test.cooper || 0)
-  const level = evaluateCooper(meters, age, genderKey)
+  const level = getCooperLevel(test, profile)
   return calculateTotalScore(test, level)
 }

@@ -31,37 +31,30 @@ const cooperLabel = computed(() => {
   return cooperLevel.value && keys[cooperLevel.value] ? t(keys[cooperLevel.value]) : null
 })
 
-const improvementTileClass = computed(() => {
-  if (improvement.value == null) return 'border-gray-300'
-  if (improvement.value > 0) return 'border-green-400 bg-green-50'
-  if (improvement.value < 0) return 'border-red-400 bg-red-50'
-  return 'border-gray-300'
+const improvementTheme = computed(() => {
+  const v = improvement.value
+  if (v == null) return { tileClass: 'border-gray-300', valueClass: '', sign: null }
+  if (v > 0)
+    return {
+      tileClass: 'border-green-400 bg-green-50',
+      valueClass: 'text-green-700',
+      sign: ArrowUpIcon,
+    }
+  if (v < 0)
+    return {
+      tileClass: 'border-red-400 bg-red-50',
+      valueClass: 'text-red-600',
+      sign: ArrowDownIcon,
+    }
+  return { tileClass: 'border-gray-300', valueClass: 'text-gray-700', sign: MinusIcon }
 })
 
-const improvementValueClass = computed(() => {
-  if (improvement.value == null) return ''
-  if (improvement.value > 0) return 'text-green-700'
-  if (improvement.value < 0) return 'text-red-600'
-  return 'text-gray-700'
-})
-
-const improvementSign = computed(() => {
-  if (improvement.value == null) return null
-  if (improvement.value > 0) return ArrowUpIcon
-  if (improvement.value < 0) return ArrowDownIcon
-  return MinusIcon
-})
-
-const cooperTileClass = computed(() => {
-  if (cooperLevel.value <= 2) return 'border-red-300 bg-red-50'
-  if (cooperLevel.value === 3) return 'border-gray-300'
-  return 'border-green-400 bg-green-50'
-})
-
-const cooperValueClass = computed(() => {
-  if (cooperLevel.value <= 2) return 'text-red-600'
-  if (cooperLevel.value === 3) return 'text-gray-700'
-  return 'text-green-700'
+const cooperTheme = computed(() => {
+  const l = cooperLevel.value
+  if (!l) return { tileClass: 'border-gray-300', valueClass: 'text-gray-700' }
+  if (l <= 2) return { tileClass: 'border-red-300 bg-red-50', valueClass: 'text-red-600' }
+  if (l === 3) return { tileClass: 'border-gray-300', valueClass: 'text-gray-700' }
+  return { tileClass: 'border-green-400 bg-green-50', valueClass: 'text-green-700' }
 })
 </script>
 
@@ -84,7 +77,7 @@ const cooperValueClass = computed(() => {
     <div v-else class="flex flex-wrap items-stretch gap-2">
       <div
         class="flex min-w-[130px] flex-1 flex-col rounded-lg border px-3 py-2.5 text-center"
-        :class="improvementTileClass"
+        :class="improvementTheme.tileClass"
       >
         <div class="text-xs uppercase tracking-wide text-gray-500">
           {{ t('dashboard.summary.improvement') }}
@@ -93,8 +86,11 @@ const cooperValueClass = computed(() => {
           {{ t('dashboard.summary.needOneMore') }}
         </div>
         <template v-else>
-          <div class="text-2xl font-bold tabular-nums sm:text-3xl" :class="improvementValueClass">
-            <component :is="improvementSign" class="mr-0.5 inline size-5 align-baseline" />
+          <div
+            class="text-2xl font-bold tabular-nums sm:text-3xl"
+            :class="improvementTheme.valueClass"
+          >
+            <component :is="improvementTheme.sign" class="mr-0.5 inline size-5 align-baseline" />
             {{ (improvement > 0 ? '+' : '') + nf.format(improvement) }}
           </div>
           <div class="mt-0.5 text-[10px] uppercase tracking-wider text-gray-400">
@@ -121,12 +117,12 @@ const cooperValueClass = computed(() => {
       <div
         v-if="cooperLabel"
         class="flex min-w-[130px] flex-1 flex-col rounded-lg border px-3 py-2.5 text-center"
-        :class="cooperTileClass"
+        :class="cooperTheme.tileClass"
       >
         <div class="text-xs uppercase tracking-wide text-gray-500">
           {{ t('dashboard.summary.fitnessLevel') }}
         </div>
-        <div class="text-2xl font-bold sm:text-3xl" :class="cooperValueClass">
+        <div class="text-2xl font-bold sm:text-3xl" :class="cooperTheme.valueClass">
           {{ cooperLabel }}
         </div>
       </div>

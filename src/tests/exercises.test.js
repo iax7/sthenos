@@ -7,6 +7,7 @@ import {
   calculateCooperPoints,
   calculateTotalScore,
   getTestScore,
+  getCooperLevel,
 } from '@/services/exercises.js'
 
 describe('getReps', () => {
@@ -116,6 +117,24 @@ describe('calculateTotalScore', () => {
   it('excludes cooper points when there are no laps', () => {
     const test = { pullup: { reps: 10, version: 'c' }, cooper: 0 }
     expect(calculateTotalScore(test, 5)).toBe(10)
+  })
+})
+
+describe('getCooperLevel', () => {
+  const profile = { gender: 'M', dob: '1994-06-15' }
+
+  it('returns null when test or profile is missing', () => {
+    expect(getCooperLevel(null, profile)).toBeNull()
+    expect(getCooperLevel({ date: '2025-01-15' }, null)).toBeNull()
+  })
+
+  it('returns null when no laps were recorded', () => {
+    expect(getCooperLevel({ date: '2025-01-15', cooper: 0 }, profile)).toBeNull()
+  })
+
+  it('returns the level for the test date age/gender', () => {
+    const test = { date: '2025-01-15', cooper: 1 } // age 30 -> male 30-39 [1500,1900,2300,2700]; 320m < 1500 -> 1
+    expect(getCooperLevel(test, profile)).toBe(1)
   })
 })
 

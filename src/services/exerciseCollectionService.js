@@ -1,6 +1,9 @@
-import { getExerciseType, calculatePoints, getTestScore } from '@/services/exercises.js'
-import { toMeters, evaluateCooper } from '@/services/cooper.js'
-import { ageAtDate } from '@/stores/useProfileStore.js'
+import {
+  getExerciseType,
+  calculatePoints,
+  getTestScore,
+  getCooperLevel,
+} from '@/services/exercises.js'
 
 /**
  * Maps test entries to total score values for trend visualization.
@@ -113,9 +116,8 @@ export function calculateDashboardSummary(tests, profile) {
 
 /**
  * Returns the Cooper fitness level (1-5) of the most recent test that recorded
- * laps, or null when no test has a positive lap count. Mirrors getTestScore's
- * meters conversion and age/gender evaluation so it stays consistent with the
- * total score.
+ * laps, or null when no test has a positive lap count. Reuses getCooperLevel so
+ * the derivation stays identical to the one behind the total score.
  *
  * @param {Array<object>} tests - Test entries that have a date.
  * @param {object} profile - User profile with dob and gender.
@@ -124,10 +126,8 @@ export function calculateDashboardSummary(tests, profile) {
 function latestCooperLevel(tests, profile) {
   const ordered = tests.slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''))
   for (let i = ordered.length - 1; i >= 0; i--) {
-    const laps = ordered[i].cooper
-    if (!laps || laps <= 0) continue
-    const age = ageAtDate(profile.dob, ordered[i].date)
-    const level = evaluateCooper(toMeters(laps), age, profile.gender?.toLowerCase())
+    if (!ordered[i].cooper || ordered[i].cooper <= 0) continue
+    const level = getCooperLevel(ordered[i], profile)
     if (level != null) return level
   }
   return null
