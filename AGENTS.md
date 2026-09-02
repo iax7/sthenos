@@ -28,7 +28,8 @@ Canonical guidance for any coding agent working in this repo (Copilot, Claude Co
   - `SettingsView.vue` / `InfoView.vue`: App settings and info pages.
 - **Components** (`src/components/`):
   - `TestTable.vue`: Test entries table with edit/delete (used in `TestsView`).
-  - `HomeChart.vue` / `HomeChartStats.vue`: Chart.js metric chart and stats.
+  - `HomeChart.vue`: Chart.js metric chart (per-metric toggle, trend).
+  - `DashboardSummary.vue`: Plain-language dashboard summary (improvement, best, fitness level).
   - `HomeHeader.vue`: Dashboard header with profile summary.
   - `CooperLevelDot.vue`: Visual indicator for Cooper test fitness level.
   - `ExerciseForm.vue`: Shared form fields for exercise entries.
@@ -38,7 +39,7 @@ Canonical guidance for any coding agent working in this repo (Copilot, Claude Co
   - `exerciseVersions.js`: Version multipliers per exercise (e.g. pullup `n` = 0.7) plus `COOPER_MULTIPLIERS` / `COOPER_MAX_SCORE`.
   - `cooper.js`: `toMeters(laps)` (320 m per lap) and `evaluateCooper(meters, age, genderKey)` → fitness level 1–5, from age/gender range tables.
   - `exercises.js`: `EXERCISES` metadata, `getReps`/`getVersion`, `calculatePoints`, `calculateCooperPoints`, `calculateTotalScore`, and `getTestScore(test, profile)` — the entry point most callers want.
-  - `exerciseCollectionService.js`: `filterTestsByMetric`, `filterTestsByTotalScore`, `calculateStats` — shapes `{date, value}` series for charts.
+  - `exerciseCollectionService.js`: `filterTestsByMetric`, `filterTestsByTotalScore`, `calculateStats`, `calculateDashboardSummary` — shapes `{date, value}` series for charts and a plain-language dashboard summary.
   - `chartColors.js`: Color palette for chart metrics.
   - `promptGenerator.js`: `generateLLMPrompt(profile, tests, locale)` — composes an external-LLM prompt; carries its own human-readable version labels because the app's own labels are i18n keys.
   - Scoring details worth knowing: points are rounded **only** when a version multiplier applies, and Cooper scores 0 when no laps were recorded (no points for non-participation).

@@ -186,6 +186,17 @@
       "minTooltip": "Puntuación más baja registrada",
       "deltaTooltip": "Cambio del primero al último (pts)",
       "pctTooltip": "Porcentaje de mejora del primero al último"
+    },
+    "summary": {
+      "title": "Tu Progreso",
+      "improvement": "Mejora",
+      "best": "Récord",
+      "fitnessLevel": "Nivel de fitness",
+      "tests": "tests",
+      "since": "desde",
+      "points": "pts",
+      "addFirst": "Agrega tu primer test para ver tu progreso.",
+      "needOneMore": "Agrega un test más para ver tu mejora."
     }
   }
 }

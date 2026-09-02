@@ -58,17 +58,9 @@ test.describe('Chart Rendering', () => {
     const canvas = page.locator('canvas')
     await expect(canvas.first()).toBeVisible()
 
-    // The default metric is "Pull Ups": entries sorted chronologically are
-    // yesterday (8 pts) then today (12 pts). HomeChartStats renders, in order:
-    // size, first, last, min, max, delta, pct.
-    const statsBar = page.locator('.tabular-nums')
-    await expect(statsBar).toHaveCount(7)
-    await expect(statsBar.nth(0)).toHaveText('2') // size
-    await expect(statsBar.nth(1)).toHaveText('8') // first
-    await expect(statsBar.nth(2)).toHaveText('12') // last
-    await expect(statsBar.nth(3)).toHaveText('8') // min
-    await expect(statsBar.nth(4)).toHaveText('12') // max
-    await expect(statsBar.nth(5)).toHaveText('+4') // delta
-    await expect(statsBar.nth(6)).toHaveText('+50.0') // pct
+    // The plain-language summary replaces the old analyst stat tiles.
+    const summary = page.locator('[data-testid="dashboard-summary"]')
+    await expect(summary).toBeVisible()
+    await expect(summary).toContainText('Best')
   })
 })

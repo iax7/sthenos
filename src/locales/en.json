@@ -186,6 +186,17 @@
       "minTooltip": "Lowest score recorded",
       "deltaTooltip": "Change from first to last (pts)",
       "pctTooltip": "Percentage improvement from first to last"
+    },
+    "summary": {
+      "title": "Your Progress",
+      "improvement": "Improvement",
+      "best": "Best",
+      "fitnessLevel": "Fitness level",
+      "tests": "tests",
+      "since": "since",
+      "points": "pts",
+      "addFirst": "Add your first test to see your progress.",
+      "needOneMore": "Add one more test to see your improvement."
     }
   }
 }

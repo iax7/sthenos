@@ -3,6 +3,7 @@ import {
   filterTestsByTotalScore,
   filterTestsByMetric,
   calculateStats,
+  calculateDashboardSummary,
 } from '@/services/exerciseCollectionService.js'
 
 const profile = { gender: 'M', dob: '1994-06-15' }
@@ -109,5 +110,91 @@ describe('calculateStats', () => {
     const stats = calculateStats(data)
     expect(stats.first).toBe(10)
     expect(stats.pct).toBe(0)
+  })
+})
+
+describe('calculateDashboardSummary', () => {
+  const blank = {
+    testCount: 0,
+    firstYear: null,
+    best: null,
+    bestDate: null,
+    improvement: null,
+    cooperLevel: null,
+  }
+
+  it('returns a blank summary when tests or profile are missing', () => {
+    expect(calculateDashboardSummary(null, profile)).toEqual(blank)
+    expect(calculateDashboardSummary([], profile)).toEqual(blank)
+    expect(calculateDashboardSummary([{ date: '2025-01-15' }], null)).toEqual(blank)
+  })
+
+  it('counts tests and reports the first year', () => {
+    const tests = [
+      { date: '2025-01-15', pullup: { reps: 10, version: 'c' }, cooper: 0 },
+      { date: '2026-01-15', pullup: { reps: 20, version: 'c' }, cooper: 0 },
+    ]
+    const s = calculateDashboardSummary(tests, profile)
+    expect(s.testCount).toBe(2)
+    expect(s.firstYear).toBe(2025)
+  })
+
+  it('omits improvement for a single test but reports best', () => {
+    const s = calculateDashboardSummary(
+      [{ date: '2025-01-15', pullup: { reps: 10, version: 'c' }, cooper: 0 }],
+      profile,
+    )
+    expect(s.testCount).toBe(1)
+    expect(s.best).toBe(10)
+    expect(s.bestDate).toBe('2025-01-15')
+    expect(s.improvement).toBeNull()
+  })
+
+  it('computes improvement as latest minus earliest valid score', () => {
+    const tests = [
+      { date: '2025-01-15', pullup: { reps: 10, version: 'c' }, cooper: 0 },
+      { date: '2025-02-15', pullup: { reps: 20, version: 'c' }, cooper: 0 },
+    ]
+    expect(calculateDashboardSummary(tests, profile).improvement).toBe(10)
+  })
+
+  it('reports a negative improvement on regression', () => {
+    const tests = [
+      { date: '2025-01-15', pullup: { reps: 20, version: 'c' }, cooper: 0 },
+      { date: '2025-02-15', pullup: { reps: 10, version: 'c' }, cooper: 0 },
+    ]
+    expect(calculateDashboardSummary(tests, profile).improvement).toBe(-10)
+  })
+
+  it('ignores zero-score tests when deriving improvement and best', () => {
+    const tests = [
+      { date: '2025-01-01', cooper: 0 }, // no exercises, no cooper -> score 0
+      { date: '2025-02-01', pullup: { reps: 10, version: 'c' }, cooper: 0 },
+      { date: '2025-03-01', pullup: { reps: 20, version: 'c' }, cooper: 0 },
+    ]
+    const s = calculateDashboardSummary(tests, profile)
+    expect(s.testCount).toBe(3)
+    expect(s.firstYear).toBe(2025)
+    expect(s.best).toBe(20)
+    expect(s.bestDate).toBe('2025-03-01')
+    expect(s.improvement).toBe(10)
+  })
+
+  it('derives the Cooper fitness level from the latest test with laps', () => {
+    const tests = [
+      { date: '2025-01-15', pullup: { reps: 10, version: 'c' }, cooper: 1 },
+      { date: '2025-02-15', pullup: { reps: 20, version: 'c' }, cooper: 1 },
+    ]
+    // dob 1994-06-15, test 2025-02-15 -> age 30 -> male index 5.
+    // 1 lap = 320m < 1500 (very bad) -> level 1.
+    expect(calculateDashboardSummary(tests, profile).cooperLevel).toBe(1)
+  })
+
+  it('returns a null Cooper level when no test has laps', () => {
+    const s = calculateDashboardSummary(
+      [{ date: '2025-01-15', pullup: { reps: 10, version: 'c' }, cooper: 0 }],
+      profile,
+    )
+    expect(s.cooperLevel).toBeNull()
   })
 })
