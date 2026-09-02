@@ -22,6 +22,19 @@ function goBack() {
   router.back()
 }
 
+function goToSource() {
+  const source = route.query.from
+  if (source === 'view' && index !== null) {
+    router.replace({ name: 'exercise-view', params: { index } })
+  } else if (source === 'tests') {
+    router.replace({ name: 'tests' })
+  } else if (source === 'home') {
+    router.replace({ name: 'home' })
+  } else {
+    router.back()
+  }
+}
+
 function viewTest() {
   if (isEdit && index !== null) {
     router.replace({ name: 'exercise-view', params: { index } })
@@ -46,7 +59,7 @@ function viewTest() {
         </BaseButton>
       </div>
     </div>
-    <ExerciseForm v-if="isEdit && test" mode="edit" :index="index" :test="test" @done="goBack" @cancel="goBack" />
+    <ExerciseForm v-if="isEdit && test" mode="edit" :index="index" :test="test" @done="goToSource" @cancel="goBack" />
     <ExerciseForm v-else mode="create" @done="goBack" @cancel="goBack" />
   </ViewContainer>
 </template>

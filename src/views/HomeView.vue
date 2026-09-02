@@ -18,7 +18,7 @@ const lastTestIndex = computed(() => tests.value.length - 1)
 
 function editLastTest(e) {
   e.preventDefault()
-  router.push(`/exercise/${lastTestIndex.value}/edit`)
+  router.push({ name: 'exercise-edit', params: { index: lastTestIndex.value }, query: { from: 'home' } })
 }
 const { t, locale } = useI18n()
 

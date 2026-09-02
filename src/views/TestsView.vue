@@ -28,7 +28,7 @@ function onViewTest(i) {
   router.push(`/exercise/${i}`)
 }
 function onEditTest(i) {
-  router.push(`/exercise/${i}/edit`)
+  router.push({ name: 'exercise-edit', params: { index: i }, query: { from: 'tests' } })
 }
 function onDeleteTest(payload) {
   pendingDelete.value = payload

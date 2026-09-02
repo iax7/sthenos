@@ -77,7 +77,7 @@ function goBack() {
 }
 
 function editTest() {
-  router.replace({ name: 'exercise-edit', params: { index: testIndex.value } })
+  router.replace({ name: 'exercise-edit', params: { index: testIndex.value }, query: { from: 'view' } })
 }
 
 const isFirstTest = computed(() => testIndex.value === 0)
@@ -253,11 +253,13 @@ const exercisesScore = computed(() => {
             <span class="w-10 text-right text-base font-mono text-gray-800 tabular-nums">{{
               exerciseData.exercises[key].reps }}</span>
             <div class="w-24 shrink-0 flex justify-start">
-              <span v-if="exerciseData.exercises[key].versionLabel" :class="exerciseData.exercises[key].versionLabel.endsWith('.complete')
-                ? 'bg-linear-to-r from-green-500 to-emerald-500'
-                : 'bg-linear-to-r from-orange-500 to-amber-500'"
-                class="rounded-md px-2 py-0.5 text-xs font-bold text-white whitespace-nowrap">
-                {{ t(exerciseData.exercises[key].versionLabel) }}
+              <span v-if="exerciseData.exercises[key].versionLabel" :class="exerciseData.exercises[key].reps === 0
+                ? 'bg-gray-100 text-gray-400'
+                : exerciseData.exercises[key].versionLabel.endsWith('.complete')
+                  ? 'bg-linear-to-r from-green-500 to-emerald-500 text-white'
+                  : 'bg-linear-to-r from-orange-500 to-amber-500 text-white'"
+                class="rounded-md px-2 py-0.5 text-xs font-bold whitespace-nowrap">
+                {{ exerciseData.exercises[key].reps === 0 ? 'N/A' : t(exerciseData.exercises[key].versionLabel) }}
               </span>
             </div>
             <div class="w-px h-4 bg-gray-200 shrink-0"></div>
