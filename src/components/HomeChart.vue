@@ -110,6 +110,7 @@ ChartJS.register(
 const { t } = useI18n()
 
 const selectedMetric = ref(EXERCISES[0].key)
+const showMovingAverage = ref(false)
 
 const selectedData = computed(() => {
   if (selectedMetric.value === 'score') {
@@ -178,63 +179,69 @@ const chartData = computed(() => {
   }
 
   const values = data.map((d) => d.value)
-  const movingAvg = calculateMovingAverage(values, 3)
+
+  const datasets = [
+    {
+      label:
+        selectedMetric.value === 'score'
+          ? t('dashboard.chart.scoreLabel')
+          : getExerciseType(selectedMetric.value)?.label || '',
+      data: values,
+      order: 1,
+      borderColor: baseColor,
+      backgroundColor: gradientFill,
+      fill: true,
+      tension: 0.3,
+      pointRadius: 8,
+      pointHoverRadius: 9,
+      pointBackgroundColor: pointColor,
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+        color: baseColor,
+        font: { weight: 'bold', size: 12 },
+        formatter: (value) => {
+          if (value == null) return ''
+          return Number.isInteger(value) ? value : value.toFixed(1)
+        },
+        display: true,
+        clip: false,
+      },
+    },
+  ]
+
+  if (showMovingAverage.value) {
+    datasets.push({
+      label: `${t('dashboard.chart.movingAverage') || '3-point trend'}`,
+      data: calculateMovingAverage(values, 3),
+      order: 3,
+      borderColor: '#4b5563',
+      backgroundColor: 'transparent',
+      fill: false,
+      tension: 0.4,
+      borderDash: [5, 5],
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 0,
+      pointBackgroundColor: 'transparent',
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+        color: '#4b5563',
+        font: { weight: 'medium', size: 11 },
+        formatter: (value) => (value != null ? value.toFixed(1) : ''),
+        display: true,
+        clip: false,
+        offset: 8,
+      },
+    })
+  }
 
   return {
     labels: data.map((d) => formatDateLabel(d.date)),
-    datasets: [
-      {
-        label:
-          selectedMetric.value === 'score'
-            ? t('dashboard.chart.scoreLabel')
-            : getExerciseType(selectedMetric.value)?.label || '',
-        data: values,
-        borderColor: baseColor,
-        backgroundColor: gradientFill,
-        fill: true,
-        tension: 0.3,
-        pointRadius: 8,
-        pointHoverRadius: 9,
-        pointBackgroundColor: pointColor,
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        datalabels: {
-          anchor: 'end',
-          align: 'end',
-          color: baseColor,
-          font: { weight: 'bold', size: 12 },
-          formatter: (value) => {
-            if (value == null) return ''
-            return Number.isInteger(value) ? value : value.toFixed(1)
-          },
-          display: true,
-          clip: false,
-        },
-      },
-      {
-        label: `${t('dashboard.chart.movingAverage') || '3-point trend'}`,
-        data: movingAvg,
-        borderColor: 'rgba(156, 163, 175, 0.6)',
-        backgroundColor: 'transparent',
-        fill: false,
-        tension: 0.4,
-        borderDash: [5, 5],
-        borderWidth: 2,
-        pointRadius: 0,
-        pointHoverRadius: 0,
-        pointBackgroundColor: 'transparent',
-        datalabels: {
-          anchor: 'end',
-          align: 'end',
-          color: 'rgba(107, 114, 128, 0.6)',
-          font: { weight: 'normal', size: 10 },
-          formatter: (value) => (value != null ? value.toFixed(1) : ''),
-          display: true,
-          clip: false,
-          offset: 8,
-        },
-      },
-    ],
+    datasets,
   }
 })
 
@@ -367,6 +374,21 @@ const chartOptions = computed(() => {
     <div v-else class="transition-opacity duration-300">
       <div class="h-64 sm:h-72 md:h-80 w-full">
         <Line :data="chartData" :options="chartOptions" />
+      </div>
+      <div class="mt-3 flex justify-center">
+        <button
+          type="button"
+          :aria-pressed="showMovingAverage"
+          @click="showMovingAverage = !showMovingAverage"
+          :class="[
+            'px-3 py-1.5 text-sm font-medium rounded-full transition-all',
+            showMovingAverage
+              ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-300'
+              : 'border border-gray-200 text-gray-600 hover:bg-gray-50',
+          ]"
+        >
+          {{ showMovingAverage ? t('dashboard.chart.hideTrend') : t('dashboard.chart.showTrend') }}
+        </button>
       </div>
     </div>
   </AppCard>

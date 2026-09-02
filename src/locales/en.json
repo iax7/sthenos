@@ -171,6 +171,8 @@
       "needOneMore": "Add one more test to see the trend.",
       "needTwoTests": "Add at least 2 tests to see the trend.",
       "movingAverage": "3-point trend",
+      "showTrend": "Show trend",
+      "hideTrend": "Hide trend",
       "scoreLabel": "Scores"
     },
     "stats": {
