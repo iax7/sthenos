@@ -1,4 +1,3 @@
-pmOnFail: ignore
 minimumReleaseAgeExclude:
   - '@vue/compiler-core@3.5.38'
   - '@vue/compiler-dom@3.5.38'
